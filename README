@@ -1,0 +1,28 @@
+No installation program.  Simply make icdiff.py excecutable and put it
+somewhere on your path.
+
+Run icdiff.py for the most up-to-date usage, but this is the cached
+usage:
+
+
+Usage: icdiff.py [options] left_file right_file
+
+Show differences between files in a two column view.
+
+Options:
+  -h, --help           show this help message and exit
+  --cols=COLS          specify the width of the screen. Autodetection
+                       is Linux only
+  --context            print only differences with some context
+  --numlines=NUMLINES  how many lines of context to print; only
+                       meaningful with --context
+  --line-numbers       generate output with line numbers
+  --head=HEAD          consider only the first N lines of each file
+  --highlight          color by changing the background color instead
+                       of the foreground color.  Very fast, ugly, displays
+                       all changes
+  --show-all-spaces    color all non-matching whitespace including
+                       that which is not needed for drawing the eye to
+                       changes. Slow, ugly, displays all changes
+  --print-headers      label the left and right sides with their file
+                       names
