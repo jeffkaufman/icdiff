@@ -26,3 +26,12 @@ Options:
                        changes. Slow, ugly, displays all changes
   --print-headers      label the left and right sides with their file
                        names
+
+License:
+
+  This file is derived from difflib.HtmlDiff which is under the license:
+
+    http://www.python.org/download/releases/2.6.2/license/
+
+  I release my changes here under the same license.  This is GPL compatible.
+  
