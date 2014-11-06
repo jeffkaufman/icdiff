@@ -30,7 +30,7 @@ class ConsoleDiff(object):
     implemented and the file can be invoked on the command line.
     Run::
 
-      python concoldiff.py --help
+      python icdiff.py --help
 
     for command line usage information.
 
