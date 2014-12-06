@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """ icdiff.py
 
 Author: Jeff Kaufman, derived from difflib.HtmlDiff
