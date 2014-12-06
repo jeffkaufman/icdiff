@@ -1,9 +1,4 @@
-No installation program.  Simply make icdiff.py excecutable and put it
-somewhere on your path.
-
-Run icdiff.py for the most up-to-date usage, but this is the cached
-usage:
-
+Installation: Put icdiff.py on your path.
 
 Usage: icdiff.py [options] left_file right_file
 
