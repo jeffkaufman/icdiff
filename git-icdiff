@@ -1,2 +1,2 @@
 #!/bin/bash
-git difftool --no-prompt --extcmd "icdiff --print-headers" "$@"
+git difftool --no-prompt --extcmd icdiff "$@"

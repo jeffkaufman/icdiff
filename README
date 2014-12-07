@@ -13,9 +13,10 @@ Options:
                        foreground color.  Very fast, ugly, displays all
                        changes
   --line-numbers       generate output with line numbers
+  --no-headers         don't label the left and right sides with their file
+                       names
   --numlines=NUMLINES  how many lines of context to print; only meaningful
                        with --context
-  --print-headers      label the left and right sides with their file names
   --show-all-spaces    color all non-matching whitespace including that which
                        is not needed for drawing the eye to changes.  Slow,
                        ugly, displays all changes
