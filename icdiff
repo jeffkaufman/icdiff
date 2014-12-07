@@ -342,8 +342,8 @@ class ConsoleDiff(object):
         s = []
 
         if fromdesc or todesc:
-            s.append((self.colorize(fromdesc, "cyan"),
-                      self.colorize(todesc,   "cyan")))
+            s.append((self.colorize(fromdesc, "blue"),
+                      self.colorize(todesc,   "blue")))
 
         for i in range(len(flaglist)):
             if flaglist[i] is None:
