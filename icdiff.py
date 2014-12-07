@@ -430,9 +430,6 @@ if __name__ == "__main__":
                                    description="Show differences between files in a two column view.")
     parser.add_option("--cols", default=None,
                       help="specify the width of the screen. Autodetection is Linux only")
-    parser.add_option("--context", default=False,
-                      action="store_true",
-                      help="print only differences with some context")
     parser.add_option("--head", default=0,
                       help="consider only the first N lines of each file")
     parser.add_option("--highlight", default=False,
@@ -452,7 +449,9 @@ if __name__ == "__main__":
     parser.add_option("--version", default=False,
                       action="store_true",
                       help="print version and exit")
-
+    parser.add_option("--whole-file", default=False,
+                      action="store_true",
+                      help="show the whole file instead of just changed lines and context")
 
     (options, args) = parser.parse_args()
 
@@ -496,4 +495,4 @@ if __name__ == "__main__":
                       show_all_spaces=options.show_all_spaces,
                       highlight=options.highlight,
                       line_numbers=options.line_numbers).make_table(
-        lines_a, lines_b, headers[0], headers[1], context=options.context, numlines=int(options.numlines))
+        lines_a, lines_b, headers[0], headers[1], context=(not options.whole_file), numlines=int(options.numlines))
