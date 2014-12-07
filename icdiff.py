@@ -433,22 +433,22 @@ if __name__ == "__main__":
     parser.add_option("--context", default=False,
                       action="store_true",
                       help="print only differences with some context")
-    parser.add_option("--numlines", default=5,
-                      help="how many lines of context to print; only meaningful with --context")
-    parser.add_option("--line-numbers", default=False,
-                      action="store_true",
-                      help="generate output with line numbers")
     parser.add_option("--head", default=0,
                       help="consider only the first N lines of each file")
     parser.add_option("--highlight", default=False,
                       action="store_true",
                       help="color by changing the background color instead of the foreground color.  Very fast, ugly, displays all changes")
-    parser.add_option("--show-all-spaces", default=False,
+    parser.add_option("--line-numbers", default=False,
                       action="store_true",
-                      help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
+                      help="generate output with line numbers")
+    parser.add_option("--numlines", default=5,
+                      help="how many lines of context to print; only meaningful with --context")
     parser.add_option("--print-headers", default=False,
                       action="store_true",
                       help="label the left and right sides with their file names")
+    parser.add_option("--show-all-spaces", default=False,
+                      action="store_true",
+                      help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
                       
 
     (options, args) = parser.parse_args()
