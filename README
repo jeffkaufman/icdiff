@@ -15,8 +15,8 @@ Options:
   --line-numbers       generate output with line numbers
   --no-headers         don't label the left and right sides with their file
                        names
-  --numlines=NUMLINES  how many lines of context to print; only meaningful
-                       with --context
+  --numlines=NUMLINES  how many lines of context to print; can't be combined
+                       with --whole-file
   --show-all-spaces    color all non-matching whitespace including that which
                        is not needed for drawing the eye to changes.  Slow,
                        ugly, displays all changes
