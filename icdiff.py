@@ -65,7 +65,7 @@ class ConsoleDiff(object):
                 wrapcolumn = self.cols/2-2
             else:
                 wrapcolumn = self.cols/2-10
-        
+
         self._wrapcolumn = wrapcolumn
         self._linejunk = linejunk
         self._charjunk = charjunk
@@ -213,7 +213,7 @@ class ConsoleDiff(object):
             id = ''
 
         text = text.rstrip()
-            
+
         if not self.line_numbers:
             return text
         return '%s %s' % (self._rpad(id, 8), text)
@@ -234,10 +234,10 @@ class ConsoleDiff(object):
                     l += 1
             prev = c
 
-        #print "len '%s' is %d." % (s, l) 
-        return l                
-            
-        
+        #print "len '%s' is %d." % (s, l)
+        return l
+
+
     def _rpad(self, s, field_width):
         return self._pad(s, field_width) + s
 
@@ -380,7 +380,7 @@ class ConsoleDiff(object):
 
         if self.highlight:
             C_ADD, C_SUB, C_CHG = background(C_ADD), background(C_SUB), background(C_CHG)
-        
+
         C_NONE = '\033[m'
         colors = (C_ADD, C_SUB, C_CHG, C_NONE)
 
@@ -391,7 +391,7 @@ class ConsoleDiff(object):
 
         if not self.show_all_spaces:
             return re.sub("\033\\[1;3([123])m(\\s+)(\033\\[)", "\033[7;3\\1m\\2\\3", s)
-        
+
         def will_see_coloredspace(i, s):
             while i < len(s) and s[i].isspace():
                 i += 1
@@ -412,7 +412,7 @@ class ConsoleDiff(object):
                         in_color = color
                 if ns_end.endswith(C_NONE):
                     in_color = False
-                     
+
             if c.isspace() and in_color and (self.show_all_spaces or not (seen_coloredspace or will_see_coloredspace(i, s))):
                 n_s.extend([C_NONE, background(in_color), c, C_NONE, in_color])
             else:
@@ -421,9 +421,9 @@ class ConsoleDiff(object):
                 n_s.append(c)
 
         joined = "".join(n_s)
-        
+
         return joined
-            
+
 if __name__ == "__main__":
     # If you change any of these, also update README.
     parser = optparse.OptionParser(usage="usage: %prog [options] left_file right_file",
@@ -449,14 +449,21 @@ if __name__ == "__main__":
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
                       help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
-                      
+    parser.add_option("--version", default=False,
+                      action="store_true",
+                      help="print version and exit")
+
 
     (options, args) = parser.parse_args()
+
+    if options.version:
+        print "icdiff version 0.1"
+        sys.exit()
 
     if len(args) != 2:
         parser.print_help()
         sys.exit()
-        
+
     a, b = args
 
     if not options.cols:
@@ -484,7 +491,7 @@ if __name__ == "__main__":
     if head != 0:
         lines_a = lines_a[:head]
         lines_b = lines_b[:head]
-        
+
     print ConsoleDiff(cols=int(options.cols),
                       show_all_spaces=options.show_all_spaces,
                       highlight=options.highlight,
