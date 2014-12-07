@@ -425,7 +425,7 @@ class ConsoleDiff(object):
         return joined
             
 if __name__ == "__main__":
-
+    # If you change any of these, also update README.
     parser = optparse.OptionParser(usage="usage: %prog [options] left_file right_file",
                                    description="Show differences between files in a two column view.")
     parser.add_option("--cols", default=None,
