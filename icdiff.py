@@ -374,9 +374,9 @@ class ConsoleDiff(object):
         def background(color):
             return color.replace("\033[1;", "\033[7;")
 
-        C_ADD = '\033[1;31m'
-        C_SUB = '\033[1;32m'
-        C_CHG = '\033[1;33m'
+        C_ADD = '\033[1;32m'   # green
+        C_SUB = '\033[1;31m'   # red
+        C_CHG = '\033[1;33m'   # yellow
 
         if self.highlight:
             C_ADD, C_SUB, C_CHG = background(C_ADD), background(C_SUB), background(C_CHG)
