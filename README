@@ -1,4 +1,4 @@
-Installation: Put icdiff.py on your path.
+Installation: Put 'icdiff' on your PATH.
 
 Usage: icdiff [options] left_file right_file
 
@@ -22,6 +22,17 @@ Options:
   --version            print version and exit
   --whole-file         show the whole file instead of just changed lines and
                        context
+
+Using with git:
+
+  To see what it looks like, try:
+
+    git difftool --extcmd icdiff
+
+  To install this as a tool you can use with git, copy
+  git-icdiff onto your path and run:
+
+    git icdiff
 
 License:
 

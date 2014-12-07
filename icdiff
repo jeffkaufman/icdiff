@@ -342,14 +342,16 @@ class ConsoleDiff(object):
         s = []
 
         if fromdesc or todesc:
-            s.append((fromdesc, todesc))
+            s.append((self.colorize(fromdesc, "magenta"),
+                      self.colorize(todesc, "magenta")))
 
         for i in range(len(flaglist)):
             if flaglist[i] is None:
                 # mdiff yields None on separator lines skip the bogus ones
                 # generated for the first line
                 if i > 0:
-                    s.append( ('---', '---') )
+                    s.append( (self.colorize('---', "blue"),
+                               self.colorize('---', "blue")) )
             else:
                 s.append( (fromlist[i], tolist[i]) )
 
@@ -366,22 +368,31 @@ class ConsoleDiff(object):
 
         return colorized_table_line_string
 
-    def colorize(self, s):
-
-        import time
-        initial_time = time.time()
-
+    def colorize(self, s, chosen_color=None):
         def background(color):
             return color.replace("\033[1;", "\033[7;")
 
-        C_ADD = '\033[1;32m'   # green
-        C_SUB = '\033[1;31m'   # red
-        C_CHG = '\033[1;33m'   # yellow
+        codes = {
+            "red":     '\033[1;31m',
+            "green":   '\033[1;32m',
+            "yellow":  '\033[1;33m',
+            "blue":    '\033[1;34m',
+            "magenta": '\033[1;35m',
+            "cyan":    '\033[1;36m',
+            "none":    '\033[m',
+        }
+
+        C_ADD = codes["green"]
+        C_SUB = codes["red"]
+        C_CHG = codes["yellow"]
 
         if self.highlight:
             C_ADD, C_SUB, C_CHG = background(C_ADD), background(C_SUB), background(C_CHG)
 
-        C_NONE = '\033[m'
+        if chosen_color:
+            return "%s%s%s" % (codes[chosen_color], s, codes["none"])
+
+        C_NONE = codes["none"]
         colors = (C_ADD, C_SUB, C_CHG, C_NONE)
 
         s = s.replace('\0+', C_ADD).replace('\0-', C_SUB).replace('\0^', C_CHG).replace('\1', C_NONE).replace('\t',' ')
