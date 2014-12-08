@@ -21,7 +21,9 @@ class ConsoleDiff(object):
     Based on difflib.HtmlDiff
 
     This class can be used to create a text-mode table showing a side
+
     by side, line by line comparison of text with inter-line and
+    intra-line change highlights in ansi color escape sequences as
     intra-line change highlights in ansi color escape sequences as
     read by xterm.  The table can be generated in either full or
     contextual difference mode.
@@ -42,7 +44,8 @@ class ConsoleDiff(object):
                  charjunk=difflib.IS_CHARACTER_JUNK, cols=80,
                  line_numbers=False,
                  show_all_spaces=False,
-                 highlight=False):
+                 highlight=False,
+                 no_bold=False):
         """ConsoleDiff instance initializer
 
         Arguments:
@@ -58,7 +61,8 @@ class ConsoleDiff(object):
         self.line_numbers = line_numbers
         self.cols = cols
         self.show_all_spaces = show_all_spaces
-        self.highlight=highlight
+        self.highlight = highlight
+        self.no_bold = no_bold
 
         if wrapcolumn is None:
             if not line_numbers:
@@ -374,18 +378,30 @@ class ConsoleDiff(object):
             return color.replace("\033[1;", "\033[7;")
 
         codes = {
-            "red":     '\033[1;31m',
-            "green":   '\033[1;32m',
-            "yellow":  '\033[1;33m',
-            "blue":    '\033[1;34m',
-            "magenta": '\033[1;35m',
-            "cyan":    '\033[1;36m',
+            "red":     '\033[0;31m',
+            "green":   '\033[0;32m',
+            "yellow":  '\033[0;33m',
+            "blue":    '\033[0;34m',
+            "magenta": '\033[0;35m',
+            "cyan":    '\033[0;36m',
+            "none":    '\033[m',
+            "red_bold":     '\033[1;31m',
+            "green_bold":   '\033[1;32m',
+            "yellow_bold":  '\033[1;33m',
+            "blue_bold":    '\033[1;34m',
+            "magenta_bold": '\033[1;35m',
+            "cyan_bold":    '\033[1;36m',
             "none":    '\033[m',
         }
 
-        C_ADD = codes["green"]
-        C_SUB = codes["red"]
-        C_CHG = codes["yellow"]
+        if self.no_bold:
+            C_ADD = codes["green"]
+            C_SUB = codes["red"]
+            C_CHG = codes["yellow"]
+        else:
+            C_ADD = codes["green_bold"]
+            C_SUB = codes["red_bold"]
+            C_CHG = codes["yellow_bold"]
 
         if self.highlight:
             C_ADD, C_SUB, C_CHG = background(C_ADD), background(C_SUB), background(C_CHG)
@@ -402,7 +418,8 @@ class ConsoleDiff(object):
             return s
 
         if not self.show_all_spaces:
-            return re.sub("\033\\[1;3([123])m(\\s+)(\033\\[)", "\033[7;3\\1m\\2\\3", s)
+            # If there's a change consisting entirely of whitespace, don't color it.
+            return re.sub("\033\\[[01];3([123])m(\\s+)(\033\\[)", "\033[7;3\\1m\\2\\3", s)
 
         def will_see_coloredspace(i, s):
             while i < len(s) and s[i].isspace():
@@ -450,6 +467,9 @@ if __name__ == "__main__":
     parser.add_option("--line-numbers", default=False,
                       action="store_true",
                       help="generate output with line numbers")
+    parser.add_option("--no-bold", default=False,
+                      action="store_true",
+                      help="use non-bold colors; recommended for with solarized")
     parser.add_option("--no-headers", default=False,
                       action="store_true",
                       help="don't label the left and right sides with their file names")
@@ -468,7 +488,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     if options.version:
-        print("icdiff version 1.0.0")
+        print("icdiff version 1.1.0")
         sys.exit()
 
     if len(args) != 2:
@@ -506,5 +526,6 @@ if __name__ == "__main__":
     print(ConsoleDiff(cols=int(options.cols),
                       show_all_spaces=options.show_all_spaces,
                       highlight=options.highlight,
+                      no_bold=options.no_bold,
                       line_numbers=options.line_numbers).make_table(
         lines_a, lines_b, headers[0], headers[1], context=(not options.whole_file), numlines=int(options.numlines)))

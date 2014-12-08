@@ -13,6 +13,7 @@ Options:
                        foreground color.  Very fast, ugly, displays all
                        changes
   --line-numbers       generate output with line numbers
+  --no-bold            use non-bold colors; recommended for with solarized
   --no-headers         don't label the left and right sides with their file
                        names
   --numlines=NUMLINES  how many lines of context to print; can't be combined
