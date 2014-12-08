@@ -1,0 +1,15 @@
+1.2.0
+	Add --recursive to support diffing directory trees.
+
+1.1.2
+	Flush stdout when done.
+
+1.1.1
+	Don't print stack traces on Ctrl+C or when piping into something
+	that quits.
+1.1.0
+	Add --no-bold option useful with the solarized colorscheme and for
+	people who just don't like bold.
+
+1.0.0
+	First Release
