@@ -9,7 +9,6 @@ License: This code is usable under the same open terms as the rest of
 
 """
 
-import os
 import sys
 import difflib
 import optparse
@@ -500,7 +499,7 @@ if __name__ == "__main__":
     if not options.cols:
         def ioctl_GWINSZ(fd):
             try:
-                import fcntl, termios, struct, os
+                import fcntl, termios, struct
                 cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
             except Exception:
                 return None
