@@ -488,7 +488,7 @@ def start():
     (options, args) = parser.parse_args()
 
     if options.version:
-        print("icdiff version 1.1.1")
+        print("icdiff version 1.1.2")
         sys.exit()
 
     if len(args) != 2:
@@ -529,6 +529,7 @@ def start():
                       no_bold=options.no_bold,
                       line_numbers=options.line_numbers).make_table(
         lines_a, lines_b, headers[0], headers[1], context=(not options.whole_file), numlines=int(options.numlines)))
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     try:
