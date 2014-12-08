@@ -16,6 +16,7 @@ import difflib
 import optparse
 import re
 import filecmp
+import unicodedata
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -116,6 +117,15 @@ class ConsoleDiff(object):
         tolines = [expand_tabs(line) for line in tolines]
         return fromlines, tolines
 
+    def _display_len(self, s):
+        # Handle wide characters like chinese.
+        def width(c):
+            if type(c) == type(u"") and unicodedata.east_asian_width(c) == 'W':
+                return 2
+            return 1
+
+        return sum(width(c) for c in s)
+
     def _split_line(self, data_list, line_num, text):
         """Builds list of text lines by splitting text lines at wrap point
 
@@ -131,7 +141,7 @@ class ConsoleDiff(object):
             return
 
         # if line text doesn't need wrapping, just add it to the output list
-        size = len(text)
+        size = self._display_len(text)
         if (size <= self._wrapcolumn) or ((size - (text.count('\0') * 3)) <= self._wrapcolumn):
             data_list.append((line_num, text))
             return
@@ -151,7 +161,7 @@ class ConsoleDiff(object):
                 mark = ''
             else:
                 i += 1
-                n += 1
+                n += self._display_len(text[i])
 
         # wrap point is inside text, break it up into separate lines
         line1 = text[:i]
@@ -252,7 +262,7 @@ class ConsoleDiff(object):
                     in_esc = True
                     l -= 1 # we counted prev when we shouldn't have
                 else:
-                    l += 1
+                    l += self._display_len(c)
             prev = c
 
         #print("len '%s' is %d." % (s, l))
@@ -491,7 +501,7 @@ def start():
     (options, args) = parser.parse_args()
 
     if options.version:
-        print("icdiff version 1.2.0")
+        print("icdiff version 1.2.1")
         sys.exit()
 
     if len(args) != 2:

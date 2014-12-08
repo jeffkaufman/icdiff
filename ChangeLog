@@ -1,3 +1,6 @@
+1.2.1
+	Space fullwidth characters properly when treating input as unicode.
+
 1.2.0
 	Add --recursive to support diffing directory trees.
 
