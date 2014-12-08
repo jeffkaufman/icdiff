@@ -114,8 +114,7 @@ class ConsoleDiff(object):
 
         # if line text doesn't need wrapping, just add it to the output list
         size = len(text)
-        max = self._wrapcolumn
-        if (size <= max) or ((size - (text.count('\0') * 3)) <= max):
+        if (size <= self._wrapcolumn) or ((size - (text.count('\0') * 3)) <= self._wrapcolumn):
             data_list.append((line_num, text))
             return
 
@@ -124,7 +123,7 @@ class ConsoleDiff(object):
         i = 0
         n = 0
         mark = ''
-        while n < max and i < size:
+        while n < self._wrapcolumn and i < size:
             if text[i] == '\0':
                 i += 1
                 mark = text[i]
@@ -211,16 +210,16 @@ class ConsoleDiff(object):
         text -- line text to be marked up
         """
         try:
-            id = '%d' % linenum
+            lid = '%d' % linenum
         except TypeError:
             # handle blank lines where linenum is '>' or ''
-            id = ''
+            lid = ''
 
         text = text.rstrip()
 
         if not self.line_numbers:
             return text
-        return '%s %s' % (self._rpad(id, 8), text)
+        return '%s %s' % (self._rpad(lid, 8), text)
 
     def _real_len(self, s):
         l = 0
