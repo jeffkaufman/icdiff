@@ -390,7 +390,6 @@ class ConsoleDiff(object):
             "blue_bold":    '\033[1;34m',
             "magenta_bold": '\033[1;35m',
             "cyan_bold":    '\033[1;36m',
-            "none":    '\033[m',
         }
 
         if self.no_bold:
