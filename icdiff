@@ -9,17 +9,13 @@ License: This code is usable under the same open terms as the rest of
 
 """
 
+__version__ = "1.1.0"
+
 import os
 import sys
 import difflib
 import optparse
 import re
-import pkg_resources
-
-try:
-    __version__ = pkg_resources.get_distribution("icdiff").version
-except pkg_resources.DistributionNotFound:
-    __version__ = "(local)"
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
