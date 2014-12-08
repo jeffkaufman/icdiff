@@ -9,11 +9,29 @@ License: This code is usable under the same open terms as the rest of
 
 """
 
+import os
 import sys
 import errno
 import difflib
 import optparse
 import re
+import filecmp
+
+color_codes = {
+    "red":     '\033[0;31m',
+    "green":   '\033[0;32m',
+    "yellow":  '\033[0;33m',
+    "blue":    '\033[0;34m',
+    "magenta": '\033[0;35m',
+    "cyan":    '\033[0;36m',
+    "none":    '\033[m',
+    "red_bold":     '\033[1;31m',
+    "green_bold":   '\033[1;32m',
+    "yellow_bold":  '\033[1;33m',
+    "blue_bold":    '\033[1;34m',
+    "magenta_bold": '\033[1;35m',
+    "cyan_bold":    '\033[1;36m',
+}
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -345,8 +363,8 @@ class ConsoleDiff(object):
         s = []
 
         if fromdesc or todesc:
-            s.append((self.colorize(fromdesc, "blue"),
-                      self.colorize(todesc, "blue")))
+            s.append((simple_colorize(fromdesc, "blue"),
+                      simple_colorize(todesc, "blue")))
 
         for i in range(len(flaglist)):
             if flaglist[i] is None:
@@ -354,8 +372,8 @@ class ConsoleDiff(object):
                 # generated for the first line
 
                 if i > 0:
-                    s.append((self.colorize('---', "blue"),
-                               self.colorize('---', "blue")))
+                    s.append((simple_colorize('---', "blue"),
+                              simple_colorize('---', "blue")))
             else:
                 s.append((fromlist[i], tolist[i]))
 
@@ -372,42 +390,23 @@ class ConsoleDiff(object):
 
         return colorized_table_line_string
 
-    def colorize(self, s, chosen_color=None):
+    def colorize(self, s):
         def background(color):
             return color.replace("\033[1;", "\033[7;")
 
-        codes = {
-            "red":     '\033[0;31m',
-            "green":   '\033[0;32m',
-            "yellow":  '\033[0;33m',
-            "blue":    '\033[0;34m',
-            "magenta": '\033[0;35m',
-            "cyan":    '\033[0;36m',
-            "none":    '\033[m',
-            "red_bold":     '\033[1;31m',
-            "green_bold":   '\033[1;32m',
-            "yellow_bold":  '\033[1;33m',
-            "blue_bold":    '\033[1;34m',
-            "magenta_bold": '\033[1;35m',
-            "cyan_bold":    '\033[1;36m',
-        }
-
         if self.no_bold:
-            C_ADD = codes["green"]
-            C_SUB = codes["red"]
-            C_CHG = codes["yellow"]
+            C_ADD = color_codes["green"]
+            C_SUB = color_codes["red"]
+            C_CHG = color_codes["yellow"]
         else:
-            C_ADD = codes["green_bold"]
-            C_SUB = codes["red_bold"]
-            C_CHG = codes["yellow_bold"]
+            C_ADD = color_codes["green_bold"]
+            C_SUB = color_codes["red_bold"]
+            C_CHG = color_codes["yellow_bold"]
 
         if self.highlight:
             C_ADD, C_SUB, C_CHG = background(C_ADD), background(C_SUB), background(C_CHG)
 
-        if chosen_color:
-            return "%s%s%s" % (codes[chosen_color], s, codes["none"])
-
-        C_NONE = codes["none"]
+        C_NONE = color_codes["none"]
         colors = (C_ADD, C_SUB, C_CHG, C_NONE)
 
         s = s.replace('\0+', C_ADD).replace('\0-', C_SUB).replace('\0^', C_CHG).replace('\1', C_NONE).replace('\t', ' ')
@@ -451,6 +450,9 @@ class ConsoleDiff(object):
 
         return joined
 
+def simple_colorize(s, chosen_color):
+    return "%s%s%s" % (color_codes[chosen_color], s, color_codes["none"])
+
 def start():
     # If you change any of these, also update README.
     parser = optparse.OptionParser(usage="usage: %prog [options] left_file right_file",
@@ -473,6 +475,9 @@ def start():
                       help="don't label the left and right sides with their file names")
     parser.add_option("--numlines", default=5,
                       help="how many lines of context to print; can't be combined with --whole-file")
+    parser.add_option("--recursive", default=False,
+                      action="store_true",
+                      help="recursively compare subdirectories")
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
                       help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
@@ -486,7 +491,7 @@ def start():
     (options, args) = parser.parse_args()
 
     if options.version:
-        print("icdiff version 1.1.2")
+        print("icdiff version 1.2.0")
         sys.exit()
 
     if len(args) != 2:
@@ -509,11 +514,50 @@ def start():
         else:
             options.cols = 80
 
+    if options.recursive:
+        diff_recursively(options, a, b)
+    else:
+        diff_files(options, a, b)
+
+def diff_recursively(options, a, b):
+    def print_meta(s):
+        print(simple_colorize(s, "magenta"))
+
+    if os.path.isfile(a) and os.path.isfile(b):
+        if not filecmp.cmp(a, b):
+            diff_files(options, a, b)
+
+    elif os.path.isdir(a) and os.path.isdir(b):
+        a_contents = set(os.listdir(a))
+        b_contents = set(os.listdir(b))
+
+        for child in sorted(a_contents.union(b_contents)):
+            if child not in b_contents:
+                print_meta("Only in %s: %s" % (a, child))
+            elif child not in a_contents:
+                print_meta("Only in %s: %s" % (b, child))
+            else:
+                diff_recursively(options,
+                                 os.path.join(a, child),
+                                 os.path.join(b, child))
+
+    elif os.path.isdir(a) and os.path.isfile(b):
+        print_meta("File %s is a directory while %s is a file" % (a, b))
+
+    elif os.path.isfile(a) and os.path.isdir(b):
+        print_meta("File %s is a file while %s is a directory" % (a, b))
+
+def diff_files(options, a, b):
     headers = a, b
     if options.no_headers:
         headers = None, None
 
     head = int(options.head)
+
+    for x in [a, b]:
+        if os.path.isdir(x):
+            sys.stderr.write("error: %s is a directory; did you mean to pass --recursive?\n" % x)
+            sys.exit(1)
     lines_a = open(a, "U").readlines()
     lines_b = open(b, "U").readlines()
 

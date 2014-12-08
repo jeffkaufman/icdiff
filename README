@@ -18,6 +18,7 @@ Options:
                        names
   --numlines=NUMLINES  how many lines of context to print; can't be combined
                        with --whole-file
+  --recursive          recursively compare subdirectories
   --show-all-spaces    color all non-matching whitespace including that which
                        is not needed for drawing the eye to changes.  Slow,
                        ugly, displays all changes
