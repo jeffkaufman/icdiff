@@ -2,8 +2,7 @@ from distutils.util import convert_path
 import setuptools
 
 package_data = {}
-with open(convert_path('icdiff')) as source_file:
-    exec(source_file.read(), package_data)
+execfile('icdiff', package_data)
 
 setuptools.setup(
     name="icdiff",
