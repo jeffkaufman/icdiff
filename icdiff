@@ -218,34 +218,24 @@ class ConsoleDiff(object):
         fromlist, tolist, flaglist = [], [], []
         # pull from/to data and flags from mdiff style iterator
         for fromdata, todata, flag in diffs:
-            try:
-                # store HTML markup of the lines into the lists
-                fromlist.append(self._format_line(0, flag, *fromdata))
-                tolist.append(self._format_line(1, flag, *todata))
-            except TypeError:
-                # exceptions occur for lines where context separators go
-                fromlist.append(None)
-                tolist.append(None)
-            flaglist.append(flag)
-        return fromlist, tolist, flaglist
+            if (fromdata, todata, flag) == (None, None, None):
+                yield None
+            else:
+                yield (self._format_line(*fromdata),
+                       self._format_line(*todata))
 
-    def _format_line(self, side, flag, linenum, text):
-        """Returns HTML markup of "from" / "to" text lines
+    def _format_line(self, linenum, text):
+        text = text.rstrip()
+        if not self.line_numbers:
+            return text
+        return self._add_line_numbers(linenum, text)
 
-        side -- 0 or 1 indicating "from" or "to" text
-        flag -- indicates if difference on line
-        linenum -- line number (used for line number column)
-        text -- line text to be marked up
-        """
+    def _add_line_numbers(self, linenum, text):
         try:
             lid = '%d' % linenum
         except TypeError:
             # handle blank lines where linenum is '>' or ''
             lid = ''
-
-        text = text.rstrip()
-
-        if not self.line_numbers:
             return text
         return '%s %s' % (self._rpad(lid, 8), text)
 
@@ -326,7 +316,7 @@ class ConsoleDiff(object):
 
     def make_table(self, fromlines, tolines, fromdesc='', todesc='', context=False,
                    numlines=5):
-        """Returns table of side by side comparison with change highlights
+        """Generates table of side by side comparison with change highlights
 
         Arguments:
         fromlines -- list of "from" lines
@@ -341,60 +331,43 @@ class ConsoleDiff(object):
             the "next" link anchors before the next change (so click of
             "next" link jumps to just before the change).
         """
-
-        # change tabs to spaces before it gets more difficult after we insert
-        # markkup
-        fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
-
-        # create diffs iterator which generates side by side from/to data
         if context:
             context_lines = numlines
         else:
             context_lines = None
+
+        # change tabs to spaces before it gets more difficult after we insert
+        # markup
+        fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
+
+        # create diffs iterator which generates side by side from/to data
         diffs = difflib._mdiff(fromlines, tolines, context_lines, linejunk=self._linejunk,
                                charjunk=self._charjunk)
-
 
         # set up iterator to wrap lines that exceed desired width
         if self._wrapcolumn:
             diffs = self._line_wrapper(diffs)
+        diffs = self._collect_lines(diffs)
 
-        # collect up from/to lines and flags into lists (also format the lines)
-        fromlist, tolist, flaglist = self._collect_lines(diffs)
+        for left, right in self._generate_table(fromdesc, todesc, diffs):
+            yield self.colorize(
+                "%s %s" % (self._lpad(left, self.cols // 2 - 1),
+                           self._lpad(right, self.cols // 2 - 1)))
 
-        # process change flags, generating middle column of next anchors/links
-        fromlist, tolist, flaglist, next_href, next_id = self._convert_flags(
-            fromlist, tolist, flaglist, context, numlines)
-
-        s = []
-
+    def _generate_table(self, fromdesc, todesc, diffs):
         if fromdesc or todesc:
-            s.append((simple_colorize(fromdesc, "blue"),
-                      simple_colorize(todesc, "blue")))
+            yield (simple_colorize(fromdesc, "blue"),
+                   simple_colorize(todesc, "blue"))
 
-        for i in range(len(flaglist)):
-            if flaglist[i] is None:
+        for i, line in enumerate(diffs):
+            if line is None:
                 # mdiff yields None on separator lines; skip the bogus ones
                 # generated for the first line
-
                 if i > 0:
-                    s.append((simple_colorize('---', "blue"),
-                              simple_colorize('---', "blue")))
+                    yield (simple_colorize('---', "blue"),
+                           simple_colorize('---', "blue"))
             else:
-                s.append((fromlist[i], tolist[i]))
-
-        table_lines = []
-        for sides in s:
-            line = []
-            for side in sides:
-                line.append(self._lpad(side, self.cols // 2 - 1))
-            table_lines.append(" ".join(line))
-
-        table_line_string = "\n".join(table_lines)
-
-        colorized_table_line_string = self.colorize(table_line_string)
-
-        return colorized_table_line_string
+                yield line
 
     def colorize(self, s):
         def background(color):
@@ -497,7 +470,7 @@ def start():
     (options, args) = parser.parse_args()
 
     if options.version:
-        print("icdiff version 1.2.1")
+        print("icdiff version 1.2.2")
         sys.exit()
 
     if len(args) != 2:
@@ -571,13 +544,17 @@ def diff_files(options, a, b):
         lines_a = lines_a[:head]
         lines_b = lines_b[:head]
 
-    print(ConsoleDiff(cols=int(options.cols),
-                      show_all_spaces=options.show_all_spaces,
-                      highlight=options.highlight,
-                      no_bold=options.no_bold,
-                      line_numbers=options.line_numbers).make_table(
-        lines_a, lines_b, headers[0], headers[1], context=(not options.whole_file), numlines=int(options.numlines)))
-    sys.stdout.flush()
+    cd = ConsoleDiff(cols=int(options.cols),
+                     show_all_spaces=options.show_all_spaces,
+                     highlight=options.highlight,
+                     no_bold=options.no_bold,
+                     line_numbers=options.line_numbers)
+    for line in cd.make_table(
+            lines_a, lines_b, headers[0], headers[1],
+            context=(not options.whole_file),
+            numlines=int(options.numlines)):
+        print(line)
+        sys.stdout.flush()
 
 if __name__ == "__main__":
     try:

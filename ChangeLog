@@ -1,3 +1,7 @@
+1.2.2
+	Start printing output as soon as its ready instead of waiting for
+	the whole file to complete.
+
 1.2.1
 	Space fullwidth characters properly when treating input as unicode.
 
