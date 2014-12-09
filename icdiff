@@ -18,7 +18,7 @@ import re
 import filecmp
 import unicodedata
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -143,8 +143,7 @@ class ConsoleDiff(object):
             return
 
         # if line text doesn't need wrapping, just add it to the output list
-        size = self._display_len(text)
-        if (size <= self._wrapcolumn) or ((size - (text.count('\0') * 3)) <= self._wrapcolumn):
+        if self._display_len(text) - (text.count('\0') * 3) <= self._wrapcolumn:
             data_list.append((line_num, text))
             return
 
@@ -153,7 +152,7 @@ class ConsoleDiff(object):
         i = 0
         n = 0
         mark = ''
-        while n < self._wrapcolumn and i < size:
+        while n < self._wrapcolumn and i < len(text):
             if text[i] == '\0':
                 i += 1
                 mark = text[i]
@@ -162,8 +161,8 @@ class ConsoleDiff(object):
                 i += 1
                 mark = ''
             else:
-                i += 1
                 n += self._display_len(text[i])
+                i += 1
 
         # wrap point is inside text, break it up into separate lines
         line1 = text[:i]

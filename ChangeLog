@@ -1,3 +1,6 @@
+1.3.2
+	Fix linewrapping with unicode.
+
 1.3.1
 	1.3.0 was completely borked.
 
@@ -20,6 +23,7 @@
 1.1.1
 	Don't print stack traces on Ctrl+C or when piping into something
 	that quits.
+
 1.1.0
 	Add --no-bold option useful with the solarized colorscheme and for
 	people who just don't like bold.
