@@ -39,7 +39,7 @@ Show differences between files in a two column view.
 ```
 
 
-## Using with GIT
+## Using with git
 
 To see what it looks like, try:
 
