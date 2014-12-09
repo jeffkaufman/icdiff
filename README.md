@@ -1,10 +1,21 @@
-Installation: Put 'icdiff' on your PATH.
+# Icdiff
 
-Usage: icdiff [options] left_file right_file
+Improved colored diff
+
+## Installation
+
+Put `icdiff` on your PATH.
+
+##Usage
+
+```sh
+icdiff [options] left_file right_file
+```
 
 Show differences between files in a two column view.
 
-Options:
+### Options
+```
   -h, --help           show this help message and exit
   --cols=COLS          specify the width of the screen. Autodetection is Linux
                        only
@@ -25,22 +36,25 @@ Options:
   --version            print version and exit
   --whole-file         show the whole file instead of just changed lines and
                        context
+```
 
-Using with git:
 
-  To see what it looks like, try:
+## Using with GIT
 
-    git difftool --extcmd icdiff
+To see what it looks like, try:
 
-  To install this as a tool you can use with git, copy
-  git-icdiff onto your path and run:
+```sh
+git difftool --extcmd icdiff
+```
 
-    git icdiff
+To install this as a tool you can use with git, copy
+`git-icdiff` onto your path and run:
 
-License:
+```sh
+git icdiff
+```
 
-  This file is derived from difflib.HtmlDiff which is under the license:
+## License
 
-    http://www.python.org/download/releases/2.6.2/license/
-
-  I release my changes here under the same license.  This is GPL compatible.
+This file is derived from `difflib.HtmlDiff` which is under the [license](http://www.python.org/download/releases/2.6.2/license/).
+I release my changes here under the same license.  This is GPL compatible.
