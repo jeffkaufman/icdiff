@@ -18,7 +18,7 @@ import re
 import filecmp
 import unicodedata
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -325,7 +325,7 @@ class ConsoleDiff(object):
 
     def colorize(self, s):
         def background(color):
-            return color.replace("\033[1;", "\033[7;")
+            return color.replace("\033[1;", "\033[7;").replace("\033[0;", "\033[7;")
 
         if self.no_bold:
             C_ADD = color_codes["green"]
