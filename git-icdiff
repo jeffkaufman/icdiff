@@ -1,2 +1,2 @@
 #!/bin/bash
-git difftool --no-prompt --extcmd icdiff "$@"
+git difftool --no-prompt --extcmd icdiff "$@" | less -R
