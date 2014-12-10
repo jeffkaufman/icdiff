@@ -499,8 +499,13 @@ def diff_recursively(options, a, b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
 
 def diff_files(options, a, b):
-    if options.labels and len(options.labels) == 2:
-        headers = options.labels
+    if options.labels:
+        if len(options.labels) == 2:
+            headers = options.labels
+        else:
+            sys.stderr.write(
+                simple_colorize("To use arbitrary file labels, specify -L just twice!\n\n", "magenta"))
+            headers = a, b
     else:
         headers = a, b
     if options.no_headers:
