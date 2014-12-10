@@ -2,7 +2,7 @@ from distutils.util import convert_path
 import setuptools
 
 package_data = {}
-execfile('icdiff', package_data)
+exec(open("icdiff").read(), package_data)
 
 setuptools.setup(
     name="icdiff",
@@ -11,6 +11,6 @@ setuptools.setup(
     author="Jeff Kaufman",
     author_email="jeff@jefftk.com",
     description="improved colored diff",
-    long_description=open('README').read(),
+    long_description=open('README.md').read(),
     scripts=['icdiff', 'git-icdiff'],
 )
