@@ -527,7 +527,7 @@ def diff_files(options, a, b):
     for line in cd.make_table(
             lines_a, lines_b, headers[0], headers[1],
             context=(not options.whole_file),
-            numlines=int(options.numlines)):
+            numlines=int(options.unified)):
         print(line)
         sys.stdout.flush()
 
