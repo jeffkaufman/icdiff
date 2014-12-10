@@ -30,7 +30,7 @@ Show differences between files in a two column view.
   --no-bold            use non-bold colors; recommended for with solarized
   --no-headers         don't label the left and right sides with their file
                        names
-  -U NUM, --unified=NUM
+  -U NUM, --unified=NUM, --numlines=NUM
                         how many lines of context to print; can't be combined
                         with --whole-file
   --recursive          recursively compare subdirectories
