@@ -425,7 +425,7 @@ def start():
     parser.add_option("--no-headers", default=False,
                       action="store_true",
                       help="don't label the left and right sides with their file names")
-    parser.add_option("-U", "--unified", default=5,
+    parser.add_option("-U", "--unified", "--numlines", default=5,
                       metavar="NUM",
                       help="how many lines of context to print; can't be combined with --whole-file")
     parser.add_option("--recursive", default=False,
