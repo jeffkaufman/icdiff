@@ -11,6 +11,6 @@ setuptools.setup(
     author="Jeff Kaufman",
     author_email="jeff@jefftk.com",
     description="improved colored diff",
-    long_description=open('README').read(),
+    long_description=open('README.md').read(),
     scripts=['icdiff', 'git-icdiff'],
 )
