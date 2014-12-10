@@ -17,7 +17,7 @@ Show differences between files in a two column view.
 ### Options
 ```
   -h, --help           show this help message and exit
-  --cols=COLS          specify the width of the screen. Autodetection is Linux
+  --cols=COLS          specify the width of the screen. Autodetection is Unix
                        only
   --head=HEAD          consider only the first N lines of each file
   --highlight          color by changing the background color instead of the
