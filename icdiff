@@ -391,6 +391,9 @@ def start():
     parser = optparse.OptionParser(usage="usage: %prog [options] left_file right_file",
                                    version="icdiff version %s" % __version__,
                                    description="Show differences between files in a two column view.")
+    parser.add_option("-u", "--patch", default=True,
+                      action="store_true",
+                      help="generate patch. This is always true, and only exists for compatibility")
     parser.add_option("--cols", default=None,
                       help="specify the width of the screen. Autodetection is Linux only")
     parser.add_option("--head", default=0,

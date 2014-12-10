@@ -18,6 +18,8 @@ Show differences between files in a two column view.
 ```
   --version             show program's version number and exit
   -h, --help           show this help message and exit
+  -u, --patch           generate patch. This is always true, and only exists
+                        for compatibility
   --cols=COLS          specify the width of the screen. Autodetection is Linux
                        only
   --head=HEAD          consider only the first N lines of each file
