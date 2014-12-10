@@ -39,6 +39,9 @@ Show differences between files in a two column view.
                        ugly, displays all changes
   --whole-file         show the whole file instead of just changed lines and
                        context
+  -L LABELS, --label=LABELS
+                        override file labels with arbitrary tags. Use twice,
+                        one for each file
 ```
 
 
@@ -56,6 +59,16 @@ To install this as a tool you can use with git, copy
 ```sh
 git icdiff
 ```
+
+
+## Using with subversion
+
+To try it out, run:
+
+```sh
+svn diff --diff-cmd icdiff
+```
+
 
 ## License
 
