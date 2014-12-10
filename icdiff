@@ -389,6 +389,7 @@ def simple_colorize(s, chosen_color):
 def start():
     # If you change any of these, also update README.
     parser = optparse.OptionParser(usage="usage: %prog [options] left_file right_file",
+                                   version="icdiff version %s" % __version__,
                                    description="Show differences between files in a two column view.")
     parser.add_option("--cols", default=None,
                       help="specify the width of the screen. Autodetection is Linux only")
@@ -414,18 +415,11 @@ def start():
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
                       help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
-    parser.add_option("--version", default=False,
-                      action="store_true",
-                      help="print version and exit")
     parser.add_option("--whole-file", default=False,
                       action="store_true",
                       help="show the whole file instead of just changed lines and context")
 
     (options, args) = parser.parse_args()
-
-    if options.version:
-        print("icdiff version %s" % __version__)
-        sys.exit()
 
     if len(args) != 2:
         parser.print_help()

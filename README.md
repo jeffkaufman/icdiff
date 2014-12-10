@@ -16,6 +16,7 @@ Show differences between files in a two column view.
 
 ### Options
 ```
+  --version             show program's version number and exit
   -h, --help           show this help message and exit
   --cols=COLS          specify the width of the screen. Autodetection is Linux
                        only
@@ -33,7 +34,6 @@ Show differences between files in a two column view.
   --show-all-spaces    color all non-matching whitespace including that which
                        is not needed for drawing the eye to changes.  Slow,
                        ugly, displays all changes
-  --version            print version and exit
   --whole-file         show the whole file instead of just changed lines and
                        context
 ```
