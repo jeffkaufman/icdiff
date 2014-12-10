@@ -1,2 +1,2 @@
 #!/bin/sh
-git difftool --no-prompt --extcmd "icdiff $@" | less -R
+git difftool --no-prompt --extcmd icdiff $@ | `git config --get core.pager`
