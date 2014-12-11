@@ -13,7 +13,7 @@ import os
 import sys
 import errno
 import difflib
-import optparse
+from optparse import Option, OptionParser
 import re
 import filecmp
 import unicodedata
@@ -386,10 +386,29 @@ class ConsoleDiff(object):
 def simple_colorize(s, chosen_color):
     return "%s%s%s" % (color_codes[chosen_color], s, color_codes["none"])
 
+
+class MultipleOption(Option):
+    ACTIONS = Option.ACTIONS + ("extend",)
+    STORE_ACTIONS = Option.STORE_ACTIONS + ("extend",)
+    TYPED_ACTIONS = Option.TYPED_ACTIONS + ("extend",)
+    ALWAYS_TYPED_ACTIONS = Option.ALWAYS_TYPED_ACTIONS + ("extend",)
+
+    def take_action(self, action, dest, opt, value, values, parser):
+        if action == "extend":
+            values.ensure_value(dest, []).append(value)
+        else:
+            Option.take_action(self, action, dest, opt, value, values, parser)
+
+
 def start():
     # If you change any of these, also update README.
-    parser = optparse.OptionParser(usage="usage: %prog [options] left_file right_file",
-                                   description="Show differences between files in a two column view.")
+    parser = OptionParser(usage="usage: %prog [options] left_file right_file",
+                          version="icdiff version %s" % __version__,
+                          description="Show differences between files in a two column view.",
+                          option_class=MultipleOption)
+    parser.add_option("-u", "--patch", default=True,
+                      action="store_true",
+                      help="generate patch. This is always true, and only exists for compatibility")
     parser.add_option("--cols", default=None,
                       help="specify the width of the screen. Autodetection is Linux only")
     parser.add_option("--head", default=0,
@@ -406,7 +425,8 @@ def start():
     parser.add_option("--no-headers", default=False,
                       action="store_true",
                       help="don't label the left and right sides with their file names")
-    parser.add_option("--numlines", default=5,
+    parser.add_option("-U", "--unified", "--numlines", default=5,
+                      metavar="NUM",
                       help="how many lines of context to print; can't be combined with --whole-file")
     parser.add_option("--recursive", default=False,
                       action="store_true",
@@ -414,18 +434,16 @@ def start():
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
                       help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
-    parser.add_option("--version", default=False,
-                      action="store_true",
-                      help="print version and exit")
     parser.add_option("--whole-file", default=False,
                       action="store_true",
                       help="show the whole file instead of just changed lines and context")
+    parser.add_option("-L", "--label",
+                      action="extend",
+                      type="string",
+                      dest='labels',
+                      help="override file labels with arbitrary tags. Use twice, one for each file")
 
     (options, args) = parser.parse_args()
-
-    if options.version:
-        print("icdiff version %s" % __version__)
-        sys.exit()
 
     if len(args) != 2:
         parser.print_help()
@@ -481,7 +499,15 @@ def diff_recursively(options, a, b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
 
 def diff_files(options, a, b):
-    headers = a, b
+    if options.labels:
+        if len(options.labels) == 2:
+            headers = options.labels
+        else:
+            sys.stderr.write(
+                simple_colorize("To use arbitrary file labels, specify -L just twice!\n\n", "magenta"))
+            headers = a, b
+    else:
+        headers = a, b
     if options.no_headers:
         headers = None, None
 
@@ -506,7 +532,7 @@ def diff_files(options, a, b):
     for line in cd.make_table(
             lines_a, lines_b, headers[0], headers[1],
             context=(not options.whole_file),
-            numlines=int(options.numlines)):
+            numlines=int(options.unified)):
         print(line)
         sys.stdout.flush()
 
