@@ -16,26 +16,32 @@ Show differences between files in a two column view.
 
 ### Options
 ```
-  -h, --help           show this help message and exit
-  --cols=COLS          specify the width of the screen. Autodetection is Unix
-                       only
-  --head=HEAD          consider only the first N lines of each file
-  --highlight          color by changing the background color instead of the
-                       foreground color.  Very fast, ugly, displays all
-                       changes
-  --line-numbers       generate output with line numbers
-  --no-bold            use non-bold colors; recommended for with solarized
-  --no-headers         don't label the left and right sides with their file
-                       names
-  --numlines=NUMLINES  how many lines of context to print; can't be combined
-                       with --whole-file
-  --recursive          recursively compare subdirectories
-  --show-all-spaces    color all non-matching whitespace including that which
-                       is not needed for drawing the eye to changes.  Slow,
-                       ugly, displays all changes
-  --version            print version and exit
-  --whole-file         show the whole file instead of just changed lines and
-                       context
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -u, --patch           generate patch. This is always true, and only exists
+                        for compatibility
+  --cols=COLS           specify the width of the screen. Autodetection is
+                        Unix only
+  --head=HEAD           consider only the first N lines of each file
+  --highlight           color by changing the background color instead of the
+                        foreground color.  Very fast, ugly, displays all
+                        changes
+  --line-numbers        generate output with line numbers
+  --no-bold             use non-bold colors; recommended for with solarized
+  --no-headers          don't label the left and right sides with their file
+                        names
+  -U NUM, --unified=NUM, --numlines=NUM
+                        how many lines of context to print; can't be combined
+                        with --whole-file
+  --recursive           recursively compare subdirectories
+  --show-all-spaces     color all non-matching whitespace including that which
+                        is not needed for drawing the eye to changes.  Slow,
+                        ugly, displays all changes
+  --whole-file          show the whole file instead of just changed lines and
+                        context
+  -L LABELS, --label=LABELS
+                        override file labels with arbitrary tags. Use twice,
+                        one for each file
 ```
 
 
@@ -53,6 +59,16 @@ To install this as a tool you can use with git, copy
 ```sh
 git icdiff
 ```
+
+
+## Using with subversion
+
+To try it out, run:
+
+```sh
+svn diff --diff-cmd icdiff
+```
+
 
 ## License
 
