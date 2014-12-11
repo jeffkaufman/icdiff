@@ -9,6 +9,10 @@ if [ -z "$GITPAGER" ]; then
   GITPAGER="less -R"
 fi
 
+if [ "$GITPAGER" = "more" -o "$GITPAGER" = "less" ]; then
+  GITPAGER="$GITPAGER -R"
+fi
+
 CMD="git difftool --no-prompt --extcmd icdiff $@ | $GITPAGER"
 eval $CMD
 
