@@ -1,4 +1,14 @@
 #!/bin/sh
-CMD="git difftool --no-prompt --extcmd icdiff $@ | $(git config --get core.pager)"
+GITPAGER=$(git config --get core.pager)
+
+if [ -z "$GITPAGER" ]; then
+  GITPAGER="$PAGER"
+fi
+
+if [ -z "$GITPAGER" ]; then
+  GITPAGER="less -R"
+fi
+
+CMD="git difftool --no-prompt --extcmd icdiff $@ | $GITPAGER"
 eval $CMD
 
