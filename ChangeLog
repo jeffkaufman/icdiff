@@ -1,3 +1,6 @@
+1.5.2
+	Various pager improvements in git-icdiff.
+
 1.5.1
 	Make --highlight and --no-bold play nice.
 

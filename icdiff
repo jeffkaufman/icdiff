@@ -18,7 +18,7 @@ import re
 import filecmp
 import unicodedata
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 color_codes = {
     "red":     '\033[0;31m',
