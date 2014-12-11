@@ -1,3 +1,7 @@
+1.6.0
+	Add support for setting the encoding, and handle fullwidth chars
+	in python2
+
 1.5.3
 	Support use as an svn difftool.
 	Support -U and -L, and allow but ignore -u.

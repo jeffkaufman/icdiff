@@ -17,8 +17,9 @@ from optparse import Option, OptionParser
 import re
 import filecmp
 import unicodedata
+import codecs
 
-__version__ = "1.5.3"
+__version__ = "1.6.0"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -411,6 +412,8 @@ def start():
                       help="generate patch. This is always true, and only exists for compatibility")
     parser.add_option("--cols", default=None,
                       help="specify the width of the screen. Autodetection is Unix only")
+    parser.add_option("--encoding", default="utf-8",
+                      help="specify the file encoding; defaults to utf8")
     parser.add_option("--head", default=0,
                       help="consider only the first N lines of each file")
     parser.add_option("--highlight", default=False,
@@ -466,17 +469,17 @@ def start():
             options.cols = 80
 
     if options.recursive:
-        diff_recursively(options, a, b)
+        diff_recursively(options, a, b, options.encoding)
     else:
-        diff_files(options, a, b)
+        diff_files(options, a, b, options.encoding)
 
-def diff_recursively(options, a, b):
+def diff_recursively(options, a, b, encoding):
     def print_meta(s):
         print(simple_colorize(s, "magenta"))
 
     if os.path.isfile(a) and os.path.isfile(b):
         if not filecmp.cmp(a, b):
-            diff_files(options, a, b)
+            diff_files(options, a, b, encoding)
 
     elif os.path.isdir(a) and os.path.isdir(b):
         a_contents = set(os.listdir(a))
@@ -498,7 +501,17 @@ def diff_recursively(options, a, b):
     elif os.path.isfile(a) and os.path.isdir(b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
 
-def diff_files(options, a, b):
+def read_file(fname, encoding):
+    try:
+        with codecs.open(fname, encoding=encoding, mode="rb") as inf:
+            return inf.readlines()
+    except UnicodeDecodeError as e:
+        sys.stderr.write(
+            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s.\n" % (
+                fname, encoding, e.reason, e.start, e.end))
+        sys.exit(1)
+
+def diff_files(options, a, b, encoding):
     if options.labels:
         if len(options.labels) == 2:
             headers = options.labels
@@ -516,8 +529,8 @@ def diff_files(options, a, b):
         if os.path.isdir(x):
             sys.stderr.write("error: %s is a directory; did you mean to pass --recursive?\n" % x)
             sys.exit(1)
-    lines_a = open(a, "U").readlines()
-    lines_b = open(b, "U").readlines()
+    lines_a = read_file(a, encoding)
+    lines_b = read_file(b, encoding)
 
     if head != 0:
         lines_a = lines_a[:head]
