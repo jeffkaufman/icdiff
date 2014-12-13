@@ -1,4 +1,3 @@
-from distutils.util import convert_path
 import setuptools
 
 package_data = {}
