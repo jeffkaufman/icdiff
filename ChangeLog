@@ -1,3 +1,6 @@
+1.6.1
+	Unbreak --recursive
+
 1.6.0
 	Add support for setting the encoding, and handle fullwidth chars
 	in python2
