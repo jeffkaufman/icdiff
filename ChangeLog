@@ -1,3 +1,6 @@
+1.6.2
+	Add support for setting the output encoding and default to utf8
+
 1.6.1
 	Unbreak --recursive
 

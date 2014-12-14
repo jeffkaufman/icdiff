@@ -19,7 +19,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.6.1"
+__version__ = "1.6.2"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -407,9 +407,6 @@ def start():
                           version="icdiff version %s" % __version__,
                           description="Show differences between files in a two column view.",
                           option_class=MultipleOption)
-    parser.add_option("-u", "--patch", default=True,
-                      action="store_true",
-                      help="generate patch. This is always true, and only exists for compatibility")
     parser.add_option("--cols", default=None,
                       help="specify the width of the screen. Autodetection is Unix only")
     parser.add_option("--encoding", default="utf-8",
@@ -419,6 +416,11 @@ def start():
     parser.add_option("--highlight", default=False,
                       action="store_true",
                       help="color by changing the background color instead of the foreground color.  Very fast, ugly, displays all changes")
+    parser.add_option("-L", "--label",
+                      action="extend",
+                      type="string",
+                      dest='labels',
+                      help="override file labels with arbitrary tags. Use twice, one for each file")
     parser.add_option("--line-numbers", default=False,
                       action="store_true",
                       help="generate output with line numbers")
@@ -428,23 +430,23 @@ def start():
     parser.add_option("--no-headers", default=False,
                       action="store_true",
                       help="don't label the left and right sides with their file names")
-    parser.add_option("-U", "--unified", "--numlines", default=5,
-                      metavar="NUM",
-                      help="how many lines of context to print; can't be combined with --whole-file")
+    parser.add_option("--output-encoding", default="utf-8",
+                      help="specify the output encoding; defaults to utf8")
     parser.add_option("--recursive", default=False,
                       action="store_true",
                       help="recursively compare subdirectories")
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
                       help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
+    parser.add_option("-u", "--patch", default=True,
+                      action="store_true",
+                      help="generate patch. This is always true, and only exists for compatibility")
+    parser.add_option("-U", "--unified", "--numlines", default=5,
+                      metavar="NUM",
+                      help="how many lines of context to print; can't be combined with --whole-file")
     parser.add_option("--whole-file", default=False,
                       action="store_true",
                       help="show the whole file instead of just changed lines and context")
-    parser.add_option("-L", "--label",
-                      action="extend",
-                      type="string",
-                      dest='labels',
-                      help="override file labels with arbitrary tags. Use twice, one for each file")
 
     (options, args) = parser.parse_args()
 
@@ -473,9 +475,16 @@ def start():
     else:
         diff_files(options, a, b, options.encoding)
 
+def codec_print(s, options):
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout.buffer.write(s.encode(options.output_encoding))
+    else:
+        sys.stdout.write(s.encode(options.output_encoding))
+    sys.stdout.write("\n")
+
 def diff_recursively(options, a, b):
     def print_meta(s):
-        print(simple_colorize(s, "magenta"))
+        codec_print(simple_colorize(s, "magenta"), options)
 
     if os.path.isfile(a) and os.path.isfile(b):
         if not filecmp.cmp(a, b):
@@ -544,7 +553,7 @@ def diff_files(options, a, b, encoding):
             lines_a, lines_b, headers[0], headers[1],
             context=(not options.whole_file),
             numlines=int(options.unified)):
-        print(line)
+        codec_print(line, options)
         sys.stdout.flush()
 
 if __name__ == "__main__":
