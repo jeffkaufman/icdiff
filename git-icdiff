@@ -13,7 +13,6 @@ if [ "$GITPAGER" = "more" -o "$GITPAGER" = "less" ]; then
   GITPAGER="$GITPAGER -R"
 fi
 
-export LESS_IS_MORE=1   # If it fits on the screen, don't page.
 CMD="git difftool --no-prompt --extcmd icdiff $@ | $GITPAGER"
 eval $CMD
 
