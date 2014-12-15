@@ -476,11 +476,11 @@ def start():
         diff_files(options, a, b, options.encoding)
 
 def codec_print(s, options):
+    s = "%s\n" % s
     if hasattr(sys.stdout, "buffer"):
         sys.stdout.buffer.write(s.encode(options.output_encoding))
     else:
         sys.stdout.write(s.encode(options.output_encoding))
-    sys.stdout.write("\n")
 
 def diff_recursively(options, a, b):
     def print_meta(s):
