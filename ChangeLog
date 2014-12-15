@@ -1,3 +1,6 @@
+1.6.4
+	Unbreak --recursive again
+
 1.6.3
 	Stop setting LESS_IS_MORE with git-icdiff, fixing #33.
 
