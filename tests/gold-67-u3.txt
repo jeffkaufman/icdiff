@@ -1,0 +1,9 @@
+[0;34mtests/input-6.txt[m                       [0;34mtests/input-7.txt[m                      
+j                                       j                                      
+k                                       k                                      
+l                                       l                                      
+                                        [1;32mm[m                                      
+                                        [1;32mm[m                                      
+m                                       m                                      
+n                                       n                                      
+o                                       o                                      

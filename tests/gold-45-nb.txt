@@ -1,0 +1,10 @@
+[0;34mtests/input-4.txt[m                       [0;34mtests/input-5.txt[m                      
+#input, #button {                       #input, #button {                      
+  width: [0;33m35[m0px;                           width: [0;33m40[m0px;                        
+  height: 40px;                           height: 40px;                        
+                                        [0;32m  font-size: 30px;[m                     
+  margin: 0[0;31mpx[m;                            margin: 0;                           
+  padding: 0[0;31mpx[m;                           padding: 0;                          
+[0;31m  margin-bottom: 15px;[m                                                         
+  text-align: center;                     text-align: center;                  
+}                                       }                                      

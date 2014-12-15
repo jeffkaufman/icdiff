@@ -1,0 +1,1 @@
+error: to use arbitrary file labels, specify -L twice.

@@ -1,0 +1,13 @@
+[0;34mtests/input-6.txt[m                       [0;34mtests/input-7.txt[m                      
+       8 h                                     8 h                             
+       9 i                                     9 i                             
+      10 j                                    10 j                             
+      11 k                                    11 k                             
+      12 l                                    12 l                             
+                                              13 [1;32mm[m                             
+                                              14 [1;32mm[m                             
+      13 m                                    15 m                             
+      14 n                                    16 n                             
+      15 o                                    17 o                             
+      16 p                                    18 p                             
+      17 q                                    19 q                             
