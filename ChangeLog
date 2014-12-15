@@ -1,3 +1,6 @@
+1.7.1
+	Don't treat files with identical (mode, size, mtime) as equal.
+
 1.7.0
 	Add tests
 
