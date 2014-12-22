@@ -19,7 +19,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.7.0"
+__version__ = "1.7.1"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -524,7 +524,7 @@ def diff_recursively(options, a, b):
         codec_print(simple_colorize(s, "magenta"), options)
 
     if os.path.isfile(a) and os.path.isfile(b):
-        if not filecmp.cmp(a, b):
+        if not filecmp.cmp(a, b, shallow=False):
             diff_files(options, a, b, options.encoding)
 
     elif os.path.isdir(a) and os.path.isdir(b):
