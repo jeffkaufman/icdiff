@@ -429,12 +429,15 @@ def start():
                       help="consider only the first N lines of each file")
     parser.add_option("--highlight", default=False,
                       action="store_true",
-                      help="color by changing the background color instead of the foreground color.  Very fast, ugly, displays all changes")
+                      help="color by changing the background color instead of"
+                      " the foreground color.  Very fast, ugly, "
+                      "displays all changes")
     parser.add_option("-L", "--label",
                       action="extend",
                       type="string",
                       dest='labels',
-                      help="override file labels with arbitrary tags. Use twice, one for each file")
+                      help="override file labels with arbitrary tags. "
+                      "Use twice, one for each file")
     parser.add_option("--line-numbers", default=False,
                       action="store_true",
                       help="generate output with line numbers")
@@ -444,7 +447,8 @@ def start():
                       "solarized")
     parser.add_option("--no-headers", default=False,
                       action="store_true",
-                      help="don't label the left and right sides with their file names")
+                      help="don't label the left and right sides "
+                      "with their file names")
     parser.add_option("--output-encoding", default="utf-8",
                       help="specify the output encoding; defaults to utf8")
     parser.add_option("--recursive", default=False,
@@ -452,16 +456,21 @@ def start():
                       help="recursively compare subdirectories")
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
-                      help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
+                      help="color all non-matching whitespace including "
+                      "that which is not needed for drawing the eye to "
+                      "changes.  Slow, ugly, displays all changes")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
-                      help="generate patch. This is always true, and only exists for compatibility")
+                      help="generate patch. This is always true, "
+                      "and only exists for compatibility")
     parser.add_option("-U", "--unified", "--numlines", default=5,
                       metavar="NUM",
-                      help="how many lines of context to print; can't be combined with --whole-file")
+                      help="how many lines of context to print; "
+                      "can't be combined with --whole-file")
     parser.add_option("--whole-file", default=False,
                       action="store_true",
-                      help="show the whole file instead of just changed lines and context")
+                      help="show the whole file instead of just changed "
+                      "lines and context")
 
     (options, args) = parser.parse_args()
 
