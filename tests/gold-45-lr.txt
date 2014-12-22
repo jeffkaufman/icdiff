@@ -1,0 +1,10 @@
+[0;34mleft[m                                    [0;34mright[m                                  
+#input, #button {                       #input, #button {                      
+  width: [1;33m35[m0px;                           width: [1;33m40[m0px;                        
+  height: 40px;                           height: 40px;                        
+                                        [1;32m  font-size: 30px;[m                     
+  margin: 0[1;31mpx[m;                            margin: 0;                           
+  padding: 0[1;31mpx[m;                           padding: 0;                          
+[1;31m  margin-bottom: 15px;[m                                                         
+  text-align: center;                     text-align: center;                  
+}                                       }                                      

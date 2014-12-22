@@ -1,0 +1,1 @@
+error: file 'tests/input-3.txt' not valid with encoding 'utf-8': <invalid start byte> at 4440-4441.

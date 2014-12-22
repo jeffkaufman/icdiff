@@ -1,0 +1,7 @@
+[0;34mtests/a/c/f[m                             [0;34mtests/b/c/f[m                            
+[1;31m2[m                                       [1;32m3[m                                      
+[0;35mOnly in tests/b/c: g[m
+[0;35mOnly in tests/b/c: h[m
+[0;35mOnly in tests/b: d[m
+[0;35mOnly in tests/b: i[m
+[0;35mOnly in tests/a: j[m

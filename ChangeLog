@@ -1,3 +1,18 @@
+1.7.1
+	Don't treat files with identical (mode, size, mtime) as equal.
+
+1.7.0
+	Add tests
+
+1.6.4
+	Unbreak --recursive again
+
+1.6.3
+	Stop setting LESS_IS_MORE with git-icdiff, fixing #33.
+
+1.6.2
+	Add support for setting the output encoding and default to utf8
+
 1.6.1
 	Unbreak --recursive
 
