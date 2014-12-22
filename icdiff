@@ -247,8 +247,8 @@ class ConsoleDiff(object):
         l = 0
         in_esc = False
         prev = ' '
-        for c in (s.replace('\0+', "").replace('\0-', "").replace('\0^', "").
-                  replace('\1', "").replace('\t', ' ')):
+        for c in replace_all({'\0+': "", '\0-': "", '\0^': "",
+                              '\1': "", '\t': ' '}, s):
             if in_esc:
                 if c == "m":
                     in_esc = False
@@ -329,8 +329,8 @@ class ConsoleDiff(object):
 
     def colorize(self, s):
         def background(color):
-            return (color.replace("\033[1;", "\033[7;").
-                    replace("\033[0;", "\033[7;"))
+            return replace_all({"\033[1;": "\033[7;",
+                                "\033[0;": "\033[7;"}, s)
 
         if self.no_bold:
             C_ADD = color_codes["green"]
@@ -349,8 +349,8 @@ class ConsoleDiff(object):
         C_NONE = color_codes["none"]
         colors = (C_ADD, C_SUB, C_CHG, C_NONE)
 
-        s = (s.replace('\0+', C_ADD).replace('\0-', C_SUB).
-             replace('\0^', C_CHG).replace('\1', C_NONE).replace('\t', ' '))
+        s = replace_all({'\0+': C_ADD, '\0-': C_SUB,
+                         '\0^': C_CHG, '\1': C_NONE, '\t': ' '}, s)
 
         if self.highlight:
             return s
@@ -398,6 +398,12 @@ class ConsoleDiff(object):
 
 def simple_colorize(s, chosen_color):
     return "%s%s%s" % (color_codes[chosen_color], s, color_codes["none"])
+
+
+def replace_all(string, replacements):
+    for search, replace in replacements:
+        string.replace(search, replace)
+    return string
 
 
 class MultipleOption(Option):
