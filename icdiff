@@ -37,6 +37,7 @@ color_codes = {
     "cyan_bold":    '\033[1;36m',
 }
 
+
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
 
@@ -96,7 +97,6 @@ class ConsoleDiff(object):
         self._linejunk = linejunk
         self._charjunk = charjunk
 
-
     def _tab_newline_replace(self, fromlines, tolines):
         """Returns from/to line lists with tabs expanded and newlines removed.
 
@@ -123,7 +123,8 @@ class ConsoleDiff(object):
     def _display_len(self, s):
         # Handle wide characters like chinese.
         def width(c):
-            if type(c) == type(u"") and unicodedata.east_asian_width(c) == 'W':
+            if ((isinstance(c, type(u"")) and
+                 unicodedata.east_asian_width(c) == 'W')):
                 return 2
             return 1
 
@@ -144,7 +145,8 @@ class ConsoleDiff(object):
             return
 
         # if line text doesn't need wrapping, just add it to the output list
-        if self._display_len(text) - (text.count('\0') * 3) <= self._wrapcolumn:
+        if ((self._display_len(text) - (text.count('\0') * 3) <=
+             self._wrapcolumn)):
             data_list.append((line_num, text))
             return
 
@@ -245,20 +247,23 @@ class ConsoleDiff(object):
         l = 0
         in_esc = False
         prev = ' '
-        for c in s.replace('\0+', "").replace('\0-', "").replace('\0^', "").replace('\1', "").replace('\t', ' '):
+        for c in replace_all({'\0+': "",
+                              '\0-': "",
+                              '\0^': "",
+                              '\1': "",
+                              '\t': ' '}, s):
             if in_esc:
                 if c == "m":
                     in_esc = False
             else:
                 if c == "[" and prev == "\033":
                     in_esc = True
-                    l -= 1 # we counted prev when we shouldn't have
+                    l -= 1  # we counted prev when we shouldn't have
                 else:
                     l += self._display_len(c)
             prev = c
 
         return l
-
 
     def _rpad(self, s, field_width):
         return self._pad(s, field_width) + s
@@ -269,8 +274,8 @@ class ConsoleDiff(object):
     def _lpad(self, s, field_width):
         return s + self._pad(s, field_width)
 
-    def make_table(self, fromlines, tolines, fromdesc='', todesc='', context=False,
-                   numlines=5):
+    def make_table(self, fromlines, tolines, fromdesc='', todesc='',
+                   context=False, numlines=5):
         """Generates table of side by side comparison with change highlights
 
         Arguments:
@@ -296,7 +301,8 @@ class ConsoleDiff(object):
         fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
 
         # create diffs iterator which generates side by side from/to data
-        diffs = difflib._mdiff(fromlines, tolines, context_lines, linejunk=self._linejunk,
+        diffs = difflib._mdiff(fromlines, tolines, context_lines,
+                               linejunk=self._linejunk,
                                charjunk=self._charjunk)
 
         # set up iterator to wrap lines that exceed desired width
@@ -326,7 +332,8 @@ class ConsoleDiff(object):
 
     def colorize(self, s):
         def background(color):
-            return color.replace("\033[1;", "\033[7;").replace("\033[0;", "\033[7;")
+            return replace_all({"\033[1;": "\033[7;",
+                                "\033[0;": "\033[7;"}, color)
 
         if self.no_bold:
             C_ADD = color_codes["green"]
@@ -338,19 +345,27 @@ class ConsoleDiff(object):
             C_CHG = color_codes["yellow_bold"]
 
         if self.highlight:
-            C_ADD, C_SUB, C_CHG = background(C_ADD), background(C_SUB), background(C_CHG)
+            C_ADD, C_SUB, C_CHG = (background(C_ADD),
+                                   background(C_SUB),
+                                   background(C_CHG))
 
         C_NONE = color_codes["none"]
         colors = (C_ADD, C_SUB, C_CHG, C_NONE)
 
-        s = s.replace('\0+', C_ADD).replace('\0-', C_SUB).replace('\0^', C_CHG).replace('\1', C_NONE).replace('\t', ' ')
+        s = replace_all({'\0+': C_ADD,
+                         '\0-': C_SUB,
+                         '\0^': C_CHG,
+                         '\1': C_NONE,
+                         '\t': ' '}, s)
 
         if self.highlight:
             return s
 
         if not self.show_all_spaces:
-            # If there's a change consisting entirely of whitespace, don't color it.
-            return re.sub("\033\\[[01];3([123])m(\\s+)(\033\\[)", "\033[7;3\\1m\\2\\3", s)
+            # If there's a change consisting entirely of whitespace,
+            # don't color it.
+            return re.sub("\033\\[[01];3([123])m(\\s+)(\033\\[)",
+                          "\033[7;3\\1m\\2\\3", s)
 
         def will_see_coloredspace(i, s):
             while i < len(s) and s[i].isspace():
@@ -373,7 +388,9 @@ class ConsoleDiff(object):
                 if ns_end.endswith(C_NONE):
                     in_color = False
 
-            if c.isspace() and in_color and (self.show_all_spaces or not (seen_coloredspace or will_see_coloredspace(i, s))):
+            if ((c.isspace() and in_color and
+                 (self.show_all_spaces or not (seen_coloredspace or
+                                               will_see_coloredspace(i, s))))):
                 n_s.extend([C_NONE, background(in_color), c, C_NONE, in_color])
             else:
                 if in_color:
@@ -384,9 +401,14 @@ class ConsoleDiff(object):
 
         return joined
 
+
 def simple_colorize(s, chosen_color):
     return "%s%s%s" % (color_codes[chosen_color], s, color_codes["none"])
 
+def replace_all(replacements, string):
+    for search, replace in replacements.items():
+        string = string.replace(search, replace)
+    return string
 
 class MultipleOption(Option):
     ACTIONS = Option.ACTIONS + ("extend",)
@@ -405,22 +427,27 @@ def start():
     # If you change any of these, also update README.
     parser = OptionParser(usage="usage: %prog [options] left_file right_file",
                           version="icdiff version %s" % __version__,
-                          description="Show differences between files in a two column view.",
+                          description="Show differences between files in a "
+                          "two column view.",
                           option_class=MultipleOption)
     parser.add_option("--cols", default=None,
-                      help="specify the width of the screen. Autodetection is Unix only")
+                      help="specify the width of the screen. Autodetection is "
+                      "Unix only")
     parser.add_option("--encoding", default="utf-8",
                       help="specify the file encoding; defaults to utf8")
     parser.add_option("--head", default=0,
                       help="consider only the first N lines of each file")
     parser.add_option("--highlight", default=False,
                       action="store_true",
-                      help="color by changing the background color instead of the foreground color.  Very fast, ugly, displays all changes")
+                      help="color by changing the background color instead of "
+                      "the foreground color.  Very fast, ugly, displays all "
+                      "changes")
     parser.add_option("-L", "--label",
                       action="extend",
                       type="string",
                       dest='labels',
-                      help="override file labels with arbitrary tags. Use twice, one for each file")
+                      help="override file labels with arbitrary tags. "
+                      "Use twice, one for each file")
     parser.add_option("--line-numbers", default=False,
                       action="store_true",
                       help="generate output with line numbers")
@@ -429,7 +456,8 @@ def start():
                       help="use non-bold colors; recommended for with solarized")
     parser.add_option("--no-headers", default=False,
                       action="store_true",
-                      help="don't label the left and right sides with their file names")
+                      help="don't label the left and right sides "
+                      "with their file names")
     parser.add_option("--output-encoding", default="utf-8",
                       help="specify the output encoding; defaults to utf8")
     parser.add_option("--recursive", default=False,
@@ -437,16 +465,21 @@ def start():
                       help="recursively compare subdirectories")
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
-                      help="color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes")
+                      help="color all non-matching whitespace including "
+                      "that which is not needed for drawing the eye to "
+                      "changes.  Slow, ugly, displays all changes")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
-                      help="generate patch. This is always true, and only exists for compatibility")
+                      help="generate patch. This is always true, "
+                      "and only exists for compatibility")
     parser.add_option("-U", "--unified", "--numlines", default=5,
                       metavar="NUM",
-                      help="how many lines of context to print; can't be combined with --whole-file")
+                      help="how many lines of context to print; "
+                      "can't be combined with --whole-file")
     parser.add_option("--whole-file", default=False,
                       action="store_true",
-                      help="show the whole file instead of just changed lines and context")
+                      help="show the whole file instead of just changed "
+                      "lines and context")
 
     (options, args) = parser.parse_args()
 
@@ -459,8 +492,11 @@ def start():
     if not options.cols:
         def ioctl_GWINSZ(fd):
             try:
-                import fcntl, termios, struct
-                cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
+                import fcntl
+                import termios
+                import struct
+                cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ,
+                                                     '1234'))
             except Exception:
                 return None
             return cr
@@ -481,6 +517,7 @@ def codec_print(s, options):
         sys.stdout.buffer.write(s.encode(options.output_encoding))
     else:
         sys.stdout.write(s.encode(options.output_encoding))
+
 
 def diff_recursively(options, a, b):
     def print_meta(s):
@@ -509,22 +546,25 @@ def diff_recursively(options, a, b):
     elif os.path.isfile(a) and os.path.isdir(b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
 
+
 def read_file(fname, encoding):
     try:
         with codecs.open(fname, encoding=encoding, mode="rb") as inf:
             return inf.readlines()
     except UnicodeDecodeError as e:
         sys.stderr.write(
-            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s.\n" % (
-                fname, encoding, e.reason, e.start, e.end))
+            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s.\n" %
+            (fname, encoding, e.reason, e.start, e.end))
         sys.exit(1)
+
 
 def diff_files(options, a, b, encoding):
     if options.labels:
         if len(options.labels) == 2:
             headers = options.labels
         else:
-            sys.stderr.write("error: to use arbitrary file labels, specify -L twice.\n")
+            sys.stderr.write("error: to use arbitrary file labels, "
+                             "specify -L twice.\n")
             sys.exit(1)
     else:
         headers = a, b
@@ -535,7 +575,8 @@ def diff_files(options, a, b, encoding):
 
     for x in [a, b]:
         if os.path.isdir(x):
-            sys.stderr.write("error: %s is a directory; did you mean to pass --recursive?\n" % x)
+            sys.stderr.write("error: %s is a directory; did you mean to "
+                             "pass --recursive?\n" % x)
             sys.exit(1)
     lines_a = read_file(a, encoding)
     lines_b = read_file(b, encoding)
