@@ -50,14 +50,18 @@ function check_gold() {
   "$PYTHON" "$ICDIFF" "$@" &> $tmp
 
   if $REGOLD; then
-    cat $tmp
-    read -p "Is this correct? y/n > " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-      mv $tmp $gold
-      echo "Regolded $gold."
+    if diff $tmp $gold > /dev/null; then
+      echo "Did not need to regold $gold"
     else
-      echo "Did not regold $gold."
+      cat $tmp
+      read -p "Is this correct? y/n > " -n 1 -r
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        mv $tmp $gold
+        echo "Regolded $gold."
+      else
+        echo "Did not regold $gold."
+      fi
     fi
     return
   fi

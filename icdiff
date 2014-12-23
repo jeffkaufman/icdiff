@@ -19,7 +19,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.7.1"
+__version__ = "1.7.2"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -36,7 +36,6 @@ color_codes = {
     "magenta_bold": '\033[1;35m',
     "cyan_bold":    '\033[1;36m',
 }
-
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -509,7 +508,7 @@ def start():
     if options.recursive:
         diff_recursively(options, a, b)
     else:
-        diff_files(options, a, b, options.encoding)
+        diff_files(options, a, b)
 
 def codec_print(s, options):
     s = "%s\n" % s
@@ -525,7 +524,7 @@ def diff_recursively(options, a, b):
 
     if os.path.isfile(a) and os.path.isfile(b):
         if not filecmp.cmp(a, b, shallow=False):
-            diff_files(options, a, b, options.encoding)
+            diff_files(options, a, b)
 
     elif os.path.isdir(a) and os.path.isdir(b):
         a_contents = set(os.listdir(a))
@@ -546,26 +545,25 @@ def diff_recursively(options, a, b):
     elif os.path.isfile(a) and os.path.isdir(b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
 
-
-def read_file(fname, encoding):
+def read_file(fname, options):
     try:
-        with codecs.open(fname, encoding=encoding, mode="rb") as inf:
+        with codecs.open(fname, encoding=options.encoding, mode="rb") as inf:
             return inf.readlines()
     except UnicodeDecodeError as e:
-        sys.stderr.write(
-            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s.\n" %
-            (fname, encoding, e.reason, e.start, e.end))
-        sys.exit(1)
+        codec_print(
+            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s." %
+            (fname, options.encoding, e.reason, e.start, e.end), options)
+        raise
 
 
-def diff_files(options, a, b, encoding):
+def diff_files(options, a, b):
     if options.labels:
         if len(options.labels) == 2:
             headers = options.labels
         else:
-            sys.stderr.write("error: to use arbitrary file labels, "
-                             "specify -L twice.\n")
-            sys.exit(1)
+            codec_print("error: to use arbitrary file labels, "
+                        "specify -L twice.", options)
+            return
     else:
         headers = a, b
     if options.no_headers:
@@ -575,11 +573,14 @@ def diff_files(options, a, b, encoding):
 
     for x in [a, b]:
         if os.path.isdir(x):
-            sys.stderr.write("error: %s is a directory; did you mean to "
-                             "pass --recursive?\n" % x)
-            sys.exit(1)
-    lines_a = read_file(a, encoding)
-    lines_b = read_file(b, encoding)
+            codec_print("error: %s is a directory; did you mean to "
+                        "pass --recursive?" % x, optoins)
+            return
+    try:
+        lines_a = read_file(a, options)
+        lines_b = read_file(b, options)
+    except UnicodeDecodeError:
+        return
 
     if head != 0:
         lines_a = lines_a[:head]

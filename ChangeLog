@@ -1,3 +1,6 @@
+1.7.2
+	Don't stop diffing recursively when encountering a binary file.
+
 1.7.1
 	Don't treat files with identical (mode, size, mtime) as equal.
 
