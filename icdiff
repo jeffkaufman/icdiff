@@ -506,9 +506,9 @@ def start():
             options.cols = 80
 
     if options.recursive:
-        diff_recursively(options, a, b)
+        diff(options, a, b, 1)
     else:
-        diff_files(options, a, b)
+        diff(options, a, b, 0)
 
 def codec_print(s, options):
     s = "%s\n" % s
@@ -517,8 +517,7 @@ def codec_print(s, options):
     else:
         sys.stdout.write(s.encode(options.output_encoding))
 
-
-def diff_recursively(options, a, b):
+def diff(options, a, b, is_recursive):
     def print_meta(s):
         codec_print(simple_colorize(s, "magenta"), options)
 
@@ -535,10 +534,11 @@ def diff_recursively(options, a, b):
                 print_meta("Only in %s: %s" % (a, child))
             elif child not in a_contents:
                 print_meta("Only in %s: %s" % (b, child))
-            else:
-                diff_recursively(options,
-                                 os.path.join(a, child),
-                                 os.path.join(b, child))
+            elif is_recursive:
+                diff(options,
+                     os.path.join(a, child),
+                     os.path.join(b, child),
+                     is_recursive)
     elif os.path.isdir(a) and os.path.isfile(b):
         print_meta("File %s is a directory while %s is a file" % (a, b))
 
@@ -574,7 +574,7 @@ def diff_files(options, a, b):
     for x in [a, b]:
         if os.path.isdir(x):
             codec_print("error: %s is a directory; did you mean to "
-                        "pass --recursive?" % x, optoins)
+                        "pass --recursive?" % x, options)
             return
     try:
         lines_a = read_file(a, options)
