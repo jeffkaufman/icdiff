@@ -95,6 +95,17 @@ opts.icdiff=--recursive --line-numbers
 
 Or check more [in-depth setup instructions](http://ianobermiller.com/blog/2016/07/14/side-by-side-diffs-for-mercurial-hg-icdiff-revisited/).
 
+## Setting up a dev environment
+
+Create a virtualenv and install the dev dependencies.
+This is not needed for normal usage.
+
+```sh
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements-dev.txt
+```
+
 ## Running tests
 
 ```sh

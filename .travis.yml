@@ -3,4 +3,6 @@ python:
   - "2.7"
   - "3.5"
   - "nightly"
-script: ./test.sh python
+script:
+  - pip install -r requirements-dev.txt
+  - ./test.sh python

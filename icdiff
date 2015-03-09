@@ -7,10 +7,11 @@ Author: Jeff Kaufman, derived from difflib.HtmlDiff
 License: This code is usable under the same open terms as the rest of
          python.  See: http://www.python.org/psf/license/
 
-Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights Reserved
+Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation;
+All Rights Reserved
 
-Based on Python's difflib.HtmlDiff, with changes to provide console output instead of
-html output.  """
+Based on Python's difflib.HtmlDiff,
+with changes to provide console output instead of html output.  """
 
 import os
 import sys
@@ -39,6 +40,7 @@ color_codes = {
     "magenta_bold": '\033[1;35m',
     "cyan_bold":    '\033[1;36m',
 }
+
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -221,7 +223,6 @@ class ConsoleDiff(object):
         into a single line of text with console markup.
         """
 
-        fromlist, tolist, flaglist = [], [], []
         # pull from/to data and flags from mdiff style iterator
         for fromdata, todata, flag in diffs:
             if (fromdata, todata, flag) == (None, None, None):
@@ -407,10 +408,12 @@ class ConsoleDiff(object):
 def simple_colorize(s, chosen_color):
     return "%s%s%s" % (color_codes[chosen_color], s, color_codes["none"])
 
+
 def replace_all(replacements, string):
     for search, replace in replacements.items():
         string = string.replace(search, replace)
     return string
+
 
 class MultipleOption(Option):
     ACTIONS = Option.ACTIONS + ("extend",)
@@ -455,7 +458,7 @@ def create_option_parser():
                       help="generate output with line numbers")
     parser.add_option("--no-bold", default=False,
                       action="store_true",
-                      help="use non-bold colors; recommended for with solarized")
+                      help="use non-bold colors; recommended for solarized")
     parser.add_option("--no-headers", default=False,
                       action="store_true",
                       help="don't label the left and right sides "
@@ -471,7 +474,7 @@ def create_option_parser():
                       "that which is not needed for drawing the eye to "
                       "changes.  Slow, ugly, displays all changes")
     parser.add_option("--tabsize", default=8,
-                       help="tab stop spacing")
+                      help="tab stop spacing")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
                       help="generate patch. This is always true, "
@@ -485,6 +488,7 @@ def create_option_parser():
                       help="show the whole file instead of just changed "
                       "lines and context")
     return parser
+
 
 def set_cols_option(options):
     if not options.cols:
@@ -505,10 +509,12 @@ def set_cols_option(options):
             options.cols = 80
     return options
 
+
 def validate_has_two_arguments(parser, args):
     if len(args) != 2:
         parser.print_help()
         sys.exit()
+
 
 def start():
     parser = create_option_parser()
@@ -516,6 +522,7 @@ def start():
     validate_has_two_arguments(parser, args)
     options = set_cols_option(options)
     diff(options, *args)
+
 
 def codec_print(s, options):
     s = "%s\n" % s
@@ -562,6 +569,7 @@ def diff(options, a, b):
 
     elif is_a_file and not is_b_file:
         print_meta("File %s is a file while %s is a directory" % (a, b))
+
 
 def read_file(fname, options):
     try:
