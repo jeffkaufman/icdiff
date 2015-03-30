@@ -1,3 +1,6 @@
+1.7.3
+	Fix git-icdiff to handle filenames with spaces as arguments.
+
 1.7.2
 	Don't stop diffing recursively when encountering a binary file.
 
