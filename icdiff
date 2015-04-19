@@ -574,7 +574,7 @@ def diff_files(options, a, b):
     for x in [a, b]:
         if os.path.isdir(x):
             codec_print("error: %s is a directory; did you mean to "
-                        "pass --recursive?" % x, optoins)
+                        "pass --recursive?" % x, options)
             return
     try:
         lines_a = read_file(a, options)
