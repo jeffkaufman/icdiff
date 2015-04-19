@@ -1,0 +1,1 @@
+error: tests/a is a directory; did you mean to pass --recursive?
