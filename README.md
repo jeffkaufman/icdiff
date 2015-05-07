@@ -38,6 +38,7 @@ Show differences between files in a two column view.
   --show-all-spaces     color all non-matching whitespace including that which
                         is not needed for drawing the eye to changes.  Slow,
                         ugly, displays all changes
+  --tabsize=TABSIZE     tab stop spacing
   -u, --patch           generate patch. This is always true, and only exists
                         for compatibility
   -U NUM, --unified=NUM, --numlines=NUM
