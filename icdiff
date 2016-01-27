@@ -546,6 +546,10 @@ def diff_recursively(options, a, b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
 
 def read_file(fname, options):
+    if not (os.path.isfile(fname) and os.access(fname, os.R_OK)):
+        codec_print(
+            "error: file '%s' is either missing or not readable." % (fname), options)
+        sys.exit(1)
     try:
         with codecs.open(fname, encoding=options.encoding, mode="rb") as inf:
             return inf.readlines()
