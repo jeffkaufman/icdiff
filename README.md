@@ -4,7 +4,12 @@ Improved colored diff
 
 ## Installation
 
-Put `icdiff` on your PATH.
+Download the [latest](releases/latest) `icdiff` binary and put it on your PATH.
+
+Alternatively, install with pip:
+```
+  pip install git+https://github.com/jeffkaufman/icdiff.git
+```
 
 ##Usage
 
