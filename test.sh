@@ -30,7 +30,7 @@ if [ "$#" != 1 ]; then
 fi
 
 PYTHON="$1"
-ICDIFF="./icdiff"
+ICDIFF="icdiff"
 
 function fail() {
   echo "FAIL"
@@ -47,7 +47,11 @@ function check_gold() {
 
   echo "    check_gold $gold matches $@"
   local tmp=/tmp/icdiff.output
-  "$PYTHON" "$ICDIFF" "$@" &> $tmp
+  if [ ! -z "$INSTALLED" ]; then
+    "$ICDIFF" "$@" &> $tmp
+  else
+    "$PYTHON" "$ICDIFF" "$@" &> $tmp
+  fi
 
   if $REGOLD; then
     if diff $tmp $gold > /dev/null; then
@@ -97,7 +101,13 @@ check_gold gold-67-wf.txt           tests/input-{6,7}.txt --cols=80 --whole-file
 check_gold gold-67-ln.txt           tests/input-{6,7}.txt --cols=80 --line-numbers
 check_gold gold-67-u3.txt           tests/input-{6,7}.txt --cols=80 -U 3
 
-if [ $(./icdiff --version | awk '{print $NF}') != $(head -n 1 ChangeLog) ]; then
+
+if [ ! -z "$INSTALLED" ]; then
+  VERSION=$(icdiff --version | awk '{print $NF}')
+else
+  VERSION=$(./icdiff --version | awk '{print $NF}')
+fi
+if [ "$VERSION" != $(head -n 1 ChangeLog) ]; then
   echo "Version mismatch between ChangeLog and icdiff source."
   fail
 fi
