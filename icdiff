@@ -470,6 +470,8 @@ def start():
                       help="color all non-matching whitespace including "
                       "that which is not needed for drawing the eye to "
                       "changes.  Slow, ugly, displays all changes")
+    parser.add_option("--tabsize", default=8,
+                       help="tab stop spacing")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
                       help="generate patch. This is always true, "
@@ -588,7 +590,8 @@ def diff_files(options, a, b):
                      show_all_spaces=options.show_all_spaces,
                      highlight=options.highlight,
                      no_bold=options.no_bold,
-                     line_numbers=options.line_numbers)
+                     line_numbers=options.line_numbers,
+                     tabsize=int(options.tabsize))
     for line in cd.make_table(
             lines_a, lines_b, headers[0], headers[1],
             context=(not options.whole_file),
