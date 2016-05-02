@@ -1,16 +1,20 @@
 from distutils.util import convert_path
-import setuptools
+from setuptools import setup, find_packages
+from icdiff import __version__
 
-package_data = {}
-exec(open("icdiff").read(), package_data)
-
-setuptools.setup(
+setup(
     name="icdiff",
-    version=package_data.get('__version__'),
+    version=__version__,
     url="http://www.jefftk.com/icdiff",
     author="Jeff Kaufman",
     author_email="jeff@jefftk.com",
     description="improved colored diff",
     long_description=open('README.md').read(),
-    scripts=['icdiff', 'git-icdiff'],
+    scripts=['git-icdiff'],
+    py_modules=['icdiff'],
+    entry_points={
+        'console_scripts': [
+            'icdiff=icdiff:start',
+        ],
+    },
 )
