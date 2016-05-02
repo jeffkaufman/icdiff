@@ -1,3 +1,6 @@
+1.7.6
+	Fixed copyright.
+
 1.7.3
 	Fix git-icdiff to handle filenames with spaces as arguments.
 

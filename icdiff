@@ -7,7 +7,10 @@ Author: Jeff Kaufman, derived from difflib.HtmlDiff
 License: This code is usable under the same open terms as the rest of
          python.  See: http://www.python.org/psf/license/
 
-"""
+Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights Reserved
+
+Based on Python's difflib.HtmlDiff, with changes to provide console output instead of
+html output.  """
 
 import os
 import sys
@@ -19,7 +22,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.7.3"
+__version__ = "1.7.6"
 
 color_codes = {
     "red":     '\033[0;31m',
