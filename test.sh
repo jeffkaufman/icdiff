@@ -76,7 +76,7 @@ function check_gold() {
 }
 
 check_gold gold-recursive.txt       --recursive tests/{a,b} --cols=80
-check_gold gold-recursive-msg.txt   tests/{a,b} --cols=80
+check_gold gold-dir.txt             tests/{a,b} --cols=80
 check_gold gold-12.txt              tests/input-{1,2}.txt --cols=80
 check_gold gold-3.txt               tests/input-{3,3}.txt
 check_gold gold-45.txt              tests/input-{4,5}.txt --cols=80
