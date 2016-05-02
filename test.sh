@@ -96,6 +96,8 @@ check_gold gold-67.txt              tests/input-{6,7}.txt --cols=80
 check_gold gold-67-wf.txt           tests/input-{6,7}.txt --cols=80 --whole-file
 check_gold gold-67-ln.txt           tests/input-{6,7}.txt --cols=80 --line-numbers
 check_gold gold-67-u3.txt           tests/input-{6,7}.txt --cols=80 -U 3
+check_gold gold-tabs-default.txt    tests/input-{8,9}.txt --cols=80
+check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
 
 if [ $(./icdiff --version | awk '{print $NF}') != $(head -n 1 ChangeLog) ]; then
   echo "Version mismatch between ChangeLog and icdiff source."
