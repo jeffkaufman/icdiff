@@ -22,7 +22,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.8.3"
+__version__ = "1.8.4"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -39,7 +39,6 @@ color_codes = {
     "magenta_bold": '\033[1;35m',
     "cyan_bold":    '\033[1;36m',
 }
-
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -502,13 +501,13 @@ def get_options():
             options.cols = cr[1]
         else:
             options.cols = 80
-    if __name__=='__main__' and len(args) != 2:
-        parser.print_help()
-        sys.exit()
-    return (options, args)
+    return options, args, parser
 
 def start():
-    (options, args) = get_options()
+    options, args, parser = get_options()
+    if len(args) != 2:
+        parser.print_help()
+        sys.exit()
     a, b = args
 
     diff(a, b, options=options)
