@@ -1,3 +1,18 @@
+1.8.1
+	Updated remaining copy of unicode test file (b/1)
+
+1.8.0
+	Updated unicode test file (input-3)
+	Allow testing installed version
+	Allow importing as a module
+	Minor deduplication tweak to git-icdiff
+	Add pip instructions to readme
+	Allow using --tabsize
+	Allow non-recursive directory diffing
+
+1.7.6
+	Fixed copyright.
+
 1.7.3
 	Fix git-icdiff to handle filenames with spaces as arguments.
 

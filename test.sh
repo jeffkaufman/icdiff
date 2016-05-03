@@ -30,7 +30,7 @@ if [ "$#" != 1 ]; then
 fi
 
 PYTHON="$1"
-ICDIFF="./icdiff"
+ICDIFF="icdiff"
 
 function fail() {
   echo "FAIL"
@@ -47,7 +47,11 @@ function check_gold() {
 
   echo "    check_gold $gold matches $@"
   local tmp=/tmp/icdiff.output
-  "$PYTHON" "$ICDIFF" "$@" &> $tmp
+  if [ ! -z "$INSTALLED" ]; then
+    "$ICDIFF" "$@" &> $tmp
+  else
+    "$PYTHON" "$ICDIFF" "$@" &> $tmp
+  fi
 
   if $REGOLD; then
     if diff $tmp $gold > /dev/null; then
@@ -76,7 +80,7 @@ function check_gold() {
 }
 
 check_gold gold-recursive.txt       --recursive tests/{a,b} --cols=80
-check_gold gold-recursive-msg.txt   tests/{a,b} --cols=80
+check_gold gold-dir.txt             tests/{a,b} --cols=80
 check_gold gold-12.txt              tests/input-{1,2}.txt --cols=80
 check_gold gold-3.txt               tests/input-{3,3}.txt
 check_gold gold-45.txt              tests/input-{4,5}.txt --cols=80
@@ -96,8 +100,16 @@ check_gold gold-67.txt              tests/input-{6,7}.txt --cols=80
 check_gold gold-67-wf.txt           tests/input-{6,7}.txt --cols=80 --whole-file
 check_gold gold-67-ln.txt           tests/input-{6,7}.txt --cols=80 --line-numbers
 check_gold gold-67-u3.txt           tests/input-{6,7}.txt --cols=80 -U 3
+check_gold gold-tabs-default.txt    tests/input-{8,9}.txt --cols=80
+check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
 
-if [ $(./icdiff --version | awk '{print $NF}') != $(head -n 1 ChangeLog) ]; then
+
+if [ ! -z "$INSTALLED" ]; then
+  VERSION=$(icdiff --version | awk '{print $NF}')
+else
+  VERSION=$(./icdiff --version | awk '{print $NF}')
+fi
+if [ "$VERSION" != $(head -n 1 ChangeLog) ]; then
   echo "Version mismatch between ChangeLog and icdiff source."
   fail
 fi

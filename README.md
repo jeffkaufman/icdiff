@@ -4,7 +4,12 @@ Improved colored diff
 
 ## Installation
 
-Put `icdiff` on your PATH.
+Download the [latest](releases/latest) `icdiff` binary and put it on your PATH.
+
+Alternatively, install with pip:
+```
+  pip install git+https://github.com/jeffkaufman/icdiff.git
+```
 
 ##Usage
 
@@ -38,6 +43,7 @@ Show differences between files in a two column view.
   --show-all-spaces     color all non-matching whitespace including that which
                         is not needed for drawing the eye to changes.  Slow,
                         ugly, displays all changes
+  --tabsize=TABSIZE     tab stop spacing
   -u, --patch           generate patch. This is always true, and only exists
                         for compatibility
   -U NUM, --unified=NUM, --numlines=NUM

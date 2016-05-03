@@ -6,7 +6,7 @@ if [ -z "$GITPAGER" ]; then
 fi
 
 if [ -z "$GITPAGER" ]; then
-  GITPAGER="less -R"
+  GITPAGER="less"
 fi
 
 if [ "$GITPAGER" = "more" -o "$GITPAGER" = "less" ]; then

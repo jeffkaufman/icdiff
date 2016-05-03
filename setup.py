@@ -1,5 +1,5 @@
 from distutils.util import convert_path
-from setuptools import setup, find_packages
+from setuptools import setup
 
 from icdiff import __version__
 
@@ -14,8 +14,8 @@ setup(
     scripts=['git-icdiff'],
     py_modules=['icdiff'],
     entry_points={
-          'console_scripts': [
-              'icdiff=icdiff:start',
-          ],
-      },
+        'console_scripts': [
+            'icdiff=icdiff:start',
+        ],
+    },
 )

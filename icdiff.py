@@ -7,7 +7,10 @@ Author: Jeff Kaufman, derived from difflib.HtmlDiff
 License: This code is usable under the same open terms as the rest of
          python.  See: http://www.python.org/psf/license/
 
-"""
+Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights Reserved
+
+Based on Python's difflib.HtmlDiff, with changes to provide console output instead of
+html output.  """
 
 import os
 import sys
@@ -19,7 +22,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.7.5"
+__version__ = "1.8.2"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -36,6 +39,7 @@ color_codes = {
     "magenta_bold": '\033[1;35m',
     "cyan_bold":    '\033[1;36m',
 }
+
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -421,8 +425,7 @@ class MultipleOption(Option):
         else:
             Option.take_action(self, action, dest, opt, value, values, parser)
 
-
-def start():
+def get_options():
     # If you change any of these, also update README.
     parser = OptionParser(usage="usage: %prog [options] left_file right_file",
                           version="icdiff version %s" % __version__,
@@ -467,6 +470,8 @@ def start():
                       help="color all non-matching whitespace including "
                       "that which is not needed for drawing the eye to "
                       "changes.  Slow, ugly, displays all changes")
+    parser.add_option("--tabsize", default=8,
+                       help="tab stop spacing")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
                       help="generate patch. This is always true, "
@@ -481,13 +486,6 @@ def start():
                       "lines and context")
 
     (options, args) = parser.parse_args()
-
-    if len(args) != 2:
-        parser.print_help()
-        sys.exit()
-
-    a, b = args
-
     if not options.cols:
         def ioctl_GWINSZ(fd):
             try:
@@ -504,11 +502,17 @@ def start():
             options.cols = cr[1]
         else:
             options.cols = 80
+    return (options, args)
 
-    if options.recursive:
-        diff_recursively(options, a, b)
-    else:
-        diff_files(options, a, b)
+def start():
+    (options, args) = get_options()
+    if len(args) != 2:
+        parser.print_help()
+        sys.exit()
+
+    a, b = args
+
+    diff(a, b, options=options)
 
 def codec_print(s, options):
     s = "%s\n" % s
@@ -518,7 +522,9 @@ def codec_print(s, options):
         sys.stdout.write(s.encode(options.output_encoding))
 
 
-def diff_recursively(options, a, b):
+def diff(a, b, options=None):
+    if options is None:
+        options = get_options()[0]
     def print_meta(s):
         codec_print(simple_colorize(s, "magenta"), options)
 
@@ -535,10 +541,10 @@ def diff_recursively(options, a, b):
                 print_meta("Only in %s: %s" % (a, child))
             elif child not in a_contents:
                 print_meta("Only in %s: %s" % (b, child))
-            else:
-                diff_recursively(options,
-                                 os.path.join(a, child),
-                                 os.path.join(b, child))
+            elif options.recursive:
+                diff(options,
+                     os.path.join(a, child),
+                     os.path.join(b, child))
     elif os.path.isdir(a) and os.path.isfile(b):
         print_meta("File %s is a directory while %s is a file" % (a, b))
 
@@ -571,11 +577,9 @@ def diff_files(options, a, b):
 
     head = int(options.head)
 
-    for x in [a, b]:
-        if os.path.isdir(x):
-            codec_print("error: %s is a directory; did you mean to "
-                        "pass --recursive?" % x, options)
-            return
+    assert not os.path.isdir(a)
+    assert not os.path.isdir(b)
+
     try:
         lines_a = read_file(a, options)
         lines_b = read_file(b, options)
@@ -590,7 +594,8 @@ def diff_files(options, a, b):
                      show_all_spaces=options.show_all_spaces,
                      highlight=options.highlight,
                      no_bold=options.no_bold,
-                     line_numbers=options.line_numbers)
+                     line_numbers=options.line_numbers,
+                     tabsize=int(options.tabsize))
     for line in cd.make_table(
             lines_a, lines_b, headers[0], headers[1],
             context=(not options.whole_file),

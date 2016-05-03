@@ -1,0 +1,2 @@
+[0;34mtests/input-8.txt[m                       [0;34mtests/input-9.txt[m                      
+        a[1;33mb[mc     d[1;33me[mf                             a[1;33mQ[mc     d[1;33mQ[mf                    
