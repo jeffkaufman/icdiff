@@ -16,13 +16,13 @@ import os
 import sys
 import errno
 import difflib
-from optparse import Option, OptionParser
+from optparse import Option, OptionParser, BadOptionError
 import re
 import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.8.4"
+__version__ = "1.8.5"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -424,9 +424,24 @@ class MultipleOption(Option):
         else:
             Option.take_action(self, action, dest, opt, value, values, parser)
 
+
+class PassThroughOptionParser(OptionParser):
+
+    def _process_long_opt(self, rargs, values):
+        try:
+            OptionParser._process_long_opt(self, rargs, values)
+        except BadOptionError, err:
+            self.largs.append(err.opt_str)
+
+    def _process_short_opts(self, rargs, values):
+        try:
+            OptionParser._process_short_opts(self, rargs, values)
+        except BadOptionError, err:
+            self.largs.append(err.opt_str)
+
 def get_options():
     # If you change any of these, also update README.
-    parser = OptionParser(usage="usage: %prog [options] left_file right_file",
+    parser = PassThroughOptionParser(usage="usage: %prog [options] left_file right_file",
                           version="icdiff version %s" % __version__,
                           description="Show differences between files in a "
                           "two column view.",
