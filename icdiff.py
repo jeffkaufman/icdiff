@@ -22,7 +22,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.8.2"
+__version__ = "1.8.3"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -502,14 +502,13 @@ def get_options():
             options.cols = cr[1]
         else:
             options.cols = 80
+    if __name__=='__main__' and len(args) != 2:
+        parser.print_help()
+        sys.exit()
     return (options, args)
 
 def start():
     (options, args) = get_options()
-    if len(args) != 2:
-        parser.print_help()
-        sys.exit()
-
     a, b = args
 
     diff(a, b, options=options)
