@@ -30,7 +30,7 @@ if [ "$#" != 1 ]; then
 fi
 
 PYTHON="$1"
-ICDIFF="icdiff"
+ICDIFF="scripts/icdiff"
 
 function fail() {
   echo "FAIL"
@@ -107,7 +107,7 @@ check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
 if [ ! -z "$INSTALLED" ]; then
   VERSION=$(icdiff --version | awk '{print $NF}')
 else
-  VERSION=$(./icdiff --version | awk '{print $NF}')
+  VERSION=$(scripts/icdiff --version | awk '{print $NF}')
 fi
 if [ "$VERSION" != $(head -n 1 ChangeLog) ]; then
   echo "Version mismatch between ChangeLog and icdiff source."

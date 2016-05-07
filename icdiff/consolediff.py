@@ -12,33 +12,16 @@ Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All
 Based on Python's difflib.HtmlDiff, with changes to provide console output instead of
 html output.  """
 
-import os
-import sys
-import errno
 import difflib
-from optparse import Option, OptionParser
 import re
 import filecmp
 import unicodedata
-import codecs
+from icdiff.colorize import simple_colorize, color_codes
 
-__version__ = "1.8.1"
-
-color_codes = {
-    "red":     '\033[0;31m',
-    "green":   '\033[0;32m',
-    "yellow":  '\033[0;33m',
-    "blue":    '\033[0;34m',
-    "magenta": '\033[0;35m',
-    "cyan":    '\033[0;36m',
-    "none":    '\033[m',
-    "red_bold":     '\033[1;31m',
-    "green_bold":   '\033[1;32m',
-    "yellow_bold":  '\033[1;33m',
-    "blue_bold":    '\033[1;34m',
-    "magenta_bold": '\033[1;35m',
-    "cyan_bold":    '\033[1;36m',
-}
+def replace_all(replacements, string):
+    for search, replace in replacements.items():
+        string = string.replace(search, replace)
+    return string
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -46,24 +29,13 @@ class ConsoleDiff(object):
     Based on difflib.HtmlDiff
 
     This class can be used to create a text-mode table showing a side
-
     by side, line by line comparison of text with inter-line and
     intra-line change highlights in ansi color escape sequences as
     intra-line change highlights in ansi color escape sequences as
     read by xterm.  The table can be generated in either full or
     contextual difference mode.
 
-    To generate the table, call make_table.
-
-    Usage is the almost the same as HtmlDiff except only make_table is
-    implemented and the file can be invoked on the command line.
-    Run::
-
-      python icdiff.py --help
-
-    for command line usage information.
-
-    """
+    To generate the table, call make_table. """
 
     def __init__(self, tabsize=8, wrapcolumn=None, linejunk=None,
                  charjunk=difflib.IS_CHARACTER_JUNK, cols=80,
@@ -403,209 +375,3 @@ class ConsoleDiff(object):
 
         return joined
 
-
-def simple_colorize(s, chosen_color):
-    return "%s%s%s" % (color_codes[chosen_color], s, color_codes["none"])
-
-def replace_all(replacements, string):
-    for search, replace in replacements.items():
-        string = string.replace(search, replace)
-    return string
-
-class MultipleOption(Option):
-    ACTIONS = Option.ACTIONS + ("extend",)
-    STORE_ACTIONS = Option.STORE_ACTIONS + ("extend",)
-    TYPED_ACTIONS = Option.TYPED_ACTIONS + ("extend",)
-    ALWAYS_TYPED_ACTIONS = Option.ALWAYS_TYPED_ACTIONS + ("extend",)
-
-    def take_action(self, action, dest, opt, value, values, parser):
-        if action == "extend":
-            values.ensure_value(dest, []).append(value)
-        else:
-            Option.take_action(self, action, dest, opt, value, values, parser)
-
-
-def start():
-    # If you change any of these, also update README.
-    parser = OptionParser(usage="usage: %prog [options] left_file right_file",
-                          version="icdiff version %s" % __version__,
-                          description="Show differences between files in a "
-                          "two column view.",
-                          option_class=MultipleOption)
-    parser.add_option("--cols", default=None,
-                      help="specify the width of the screen. Autodetection is "
-                      "Unix only")
-    parser.add_option("--encoding", default="utf-8",
-                      help="specify the file encoding; defaults to utf8")
-    parser.add_option("--head", default=0,
-                      help="consider only the first N lines of each file")
-    parser.add_option("--highlight", default=False,
-                      action="store_true",
-                      help="color by changing the background color instead of "
-                      "the foreground color.  Very fast, ugly, displays all "
-                      "changes")
-    parser.add_option("-L", "--label",
-                      action="extend",
-                      type="string",
-                      dest='labels',
-                      help="override file labels with arbitrary tags. "
-                      "Use twice, one for each file")
-    parser.add_option("--line-numbers", default=False,
-                      action="store_true",
-                      help="generate output with line numbers")
-    parser.add_option("--no-bold", default=False,
-                      action="store_true",
-                      help="use non-bold colors; recommended for with solarized")
-    parser.add_option("--no-headers", default=False,
-                      action="store_true",
-                      help="don't label the left and right sides "
-                      "with their file names")
-    parser.add_option("--output-encoding", default="utf-8",
-                      help="specify the output encoding; defaults to utf8")
-    parser.add_option("--recursive", default=False,
-                      action="store_true",
-                      help="recursively compare subdirectories")
-    parser.add_option("--show-all-spaces", default=False,
-                      action="store_true",
-                      help="color all non-matching whitespace including "
-                      "that which is not needed for drawing the eye to "
-                      "changes.  Slow, ugly, displays all changes")
-    parser.add_option("--tabsize", default=8,
-                       help="tab stop spacing")
-    parser.add_option("-u", "--patch", default=True,
-                      action="store_true",
-                      help="generate patch. This is always true, "
-                      "and only exists for compatibility")
-    parser.add_option("-U", "--unified", "--numlines", default=5,
-                      metavar="NUM",
-                      help="how many lines of context to print; "
-                      "can't be combined with --whole-file")
-    parser.add_option("--whole-file", default=False,
-                      action="store_true",
-                      help="show the whole file instead of just changed "
-                      "lines and context")
-
-    (options, args) = parser.parse_args()
-
-    if len(args) != 2:
-        parser.print_help()
-        sys.exit()
-
-    a, b = args
-
-    if not options.cols:
-        def ioctl_GWINSZ(fd):
-            try:
-                import fcntl
-                import termios
-                import struct
-                cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ,
-                                                     '1234'))
-            except Exception:
-                return None
-            return cr
-        cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-        if cr:
-            options.cols = cr[1]
-        else:
-            options.cols = 80
-
-    diff(options, a, b)
-
-def codec_print(s, options):
-    s = "%s\n" % s
-    if hasattr(sys.stdout, "buffer"):
-        sys.stdout.buffer.write(s.encode(options.output_encoding))
-    else:
-        sys.stdout.write(s.encode(options.output_encoding))
-
-
-def diff(options, a, b):
-    def print_meta(s):
-        codec_print(simple_colorize(s, "magenta"), options)
-
-    if os.path.isfile(a) and os.path.isfile(b):
-        if not filecmp.cmp(a, b, shallow=False):
-            diff_files(options, a, b)
-
-    elif os.path.isdir(a) and os.path.isdir(b):
-        a_contents = set(os.listdir(a))
-        b_contents = set(os.listdir(b))
-
-        for child in sorted(a_contents.union(b_contents)):
-            if child not in b_contents:
-                print_meta("Only in %s: %s" % (a, child))
-            elif child not in a_contents:
-                print_meta("Only in %s: %s" % (b, child))
-            elif options.recursive:
-                diff(options,
-                     os.path.join(a, child),
-                     os.path.join(b, child))
-    elif os.path.isdir(a) and os.path.isfile(b):
-        print_meta("File %s is a directory while %s is a file" % (a, b))
-
-    elif os.path.isfile(a) and os.path.isdir(b):
-        print_meta("File %s is a file while %s is a directory" % (a, b))
-
-def read_file(fname, options):
-    try:
-        with codecs.open(fname, encoding=options.encoding, mode="rb") as inf:
-            return inf.readlines()
-    except UnicodeDecodeError as e:
-        codec_print(
-            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s." %
-            (fname, options.encoding, e.reason, e.start, e.end), options)
-        raise
-
-
-def diff_files(options, a, b):
-    if options.labels:
-        if len(options.labels) == 2:
-            headers = options.labels
-        else:
-            codec_print("error: to use arbitrary file labels, "
-                        "specify -L twice.", options)
-            return
-    else:
-        headers = a, b
-    if options.no_headers:
-        headers = None, None
-
-    head = int(options.head)
-
-    assert not os.path.isdir(a)
-    assert not os.path.isdir(b)
-
-    try:
-        lines_a = read_file(a, options)
-        lines_b = read_file(b, options)
-    except UnicodeDecodeError:
-        return
-
-    if head != 0:
-        lines_a = lines_a[:head]
-        lines_b = lines_b[:head]
-
-    cd = ConsoleDiff(cols=int(options.cols),
-                     show_all_spaces=options.show_all_spaces,
-                     highlight=options.highlight,
-                     no_bold=options.no_bold,
-                     line_numbers=options.line_numbers,
-                     tabsize=int(options.tabsize))
-    for line in cd.make_table(
-            lines_a, lines_b, headers[0], headers[1],
-            context=(not options.whole_file),
-            numlines=int(options.unified)):
-        codec_print(line, options)
-        sys.stdout.flush()
-
-if __name__ == "__main__":
-    try:
-        start()
-    except KeyboardInterrupt:
-        pass
-    except IOError as e:
-        if e.errno == errno.EPIPE:
-            pass
-        else:
-            raise
