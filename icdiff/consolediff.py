@@ -18,10 +18,12 @@ import filecmp
 import unicodedata
 from icdiff.colorize import simple_colorize, color_codes
 
+
 def replace_all(replacements, string):
     for search, replace in replacements.items():
         string = string.replace(search, replace)
     return string
+
 
 class ConsoleDiff(object):
     """Console colored side by side comparison with change highlights.
@@ -374,4 +376,3 @@ class ConsoleDiff(object):
         joined = "".join(n_s)
 
         return joined
-

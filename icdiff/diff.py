@@ -20,6 +20,7 @@ import codecs
 from icdiff.consolediff import ConsoleDiff
 from icdiff.colorize import simple_colorize
 
+
 def codec_print(s, options):
     s = "%s\n" % s
     if hasattr(sys.stdout, "buffer"):
@@ -54,6 +55,7 @@ def diff(options, a, b):
 
     elif os.path.isfile(a) and os.path.isdir(b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
+
 
 def read_file(fname, options):
     try:

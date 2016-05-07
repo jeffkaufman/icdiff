@@ -16,6 +16,7 @@ import errno
 from optparse import Option, OptionParser
 from icdiff import diff, __version__
 
+
 class MultipleOption(Option):
     ACTIONS = Option.ACTIONS + ("extend",)
     STORE_ACTIONS = Option.STORE_ACTIONS + ("extend",)
@@ -75,7 +76,7 @@ def start():
                       "that which is not needed for drawing the eye to "
                       "changes.  Slow, ugly, displays all changes")
     parser.add_option("--tabsize", default=8,
-                       help="tab stop spacing")
+                      help="tab stop spacing")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
                       help="generate patch. This is always true, "
