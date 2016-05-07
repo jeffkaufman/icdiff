@@ -1,4 +1,4 @@
-from distutils.util import convert_path
+import glob
 from setuptools import setup, find_packages
 from icdiff import __version__
 
@@ -10,11 +10,8 @@ setup(
     author_email="jeff@jefftk.com",
     description="improved colored diff",
     long_description=open('README.md').read(),
-    scripts=['git-icdiff'],
+    scripts=glob.glob('scripts/*'),
     py_modules=['icdiff'],
-    entry_points={
-        'console_scripts': [
-            'icdiff=icdiff:start',
-        ],
-    },
+    license='Python',
+    packages = find_packages(),
 )
