@@ -108,14 +108,3 @@ def diff_files(options, a, b):
             numlines=int(options.unified)):
         codec_print(line, options)
         sys.stdout.flush()
-
-if __name__ == "__main__":
-    try:
-        start()
-    except KeyboardInterrupt:
-        pass
-    except IOError as e:
-        if e.errno == errno.EPIPE:
-            pass
-        else:
-            raise
