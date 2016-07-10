@@ -21,6 +21,7 @@ import re
 import filecmp
 import unicodedata
 import codecs
+import stat
 
 __version__ = "1.8.1"
 
@@ -524,7 +525,8 @@ def diff(options, a, b):
     def print_meta(s):
         codec_print(simple_colorize(s, "magenta"), options)
 
-    if os.path.isfile(a) and os.path.isfile(b):
+    if (os.path.isfile(a) or stat.S_ISFIFO(os.stat(a).st_mode)) and \
+       (os.path.isfile(b) or stat.S_ISFIFO(os.stat(b).st_mode)):
         if not filecmp.cmp(a, b, shallow=False):
             diff_files(options, a, b)
 
