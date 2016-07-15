@@ -78,6 +78,21 @@ To try it out, run:
 svn diff --diff-cmd icdiff
 ```
 
+## Using with Mercurial
+
+Add the following to your `~/.hgrc`:
+
+```sh
+[extensions]
+extdiff=
+
+[extdiff]
+cmd.icdiff=icdiff
+opts.icdiff=--recursive --line-numbers
+```
+
+Or check more [in-depth setup instructions](http://ianobermiller.com/blog/2016/07/14/side-by-side-diffs-for-mercurial-hg-icdiff-revisited/).
+
 ## Running tests
 
 ```sh
