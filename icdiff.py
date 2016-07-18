@@ -540,7 +540,7 @@ def diff(a, b, options=None):
         options = get_options()[0]
     def print_meta(s):
         codec_print(simple_colorize(s, "magenta"), options)
-
+    
     if os.path.isfile(a) and os.path.isfile(b):
         if not filecmp.cmp(a, b, shallow=False):
             diff_files(options, a, b)
@@ -555,9 +555,8 @@ def diff(a, b, options=None):
             elif child not in a_contents:
                 print_meta("Only in %s: %s" % (b, child))
             elif options.recursive:
-                diff(options,
-                     os.path.join(a, child),
-                     os.path.join(b, child))
+                diff(os.path.join(a, child),
+                     os.path.join(b, child), options)
     elif os.path.isdir(a) and os.path.isfile(b):
         print_meta("File %s is a directory while %s is a file" % (a, b))
 
