@@ -16,13 +16,13 @@ import os
 import sys
 import errno
 import difflib
-from optparse import Option, OptionParser
+from optparse import Option, OptionParser, BadOptionError
 import re
 import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.8.1"
+__version__ = "1.8.5"
 
 color_codes = {
     "red":     '\033[0;31m',
@@ -425,9 +425,23 @@ class MultipleOption(Option):
             Option.take_action(self, action, dest, opt, value, values, parser)
 
 
-def start():
+class PassThroughOptionParser(OptionParser):
+
+    def _process_long_opt(self, rargs, values):
+        try:
+            OptionParser._process_long_opt(self, rargs, values)
+        except BadOptionError, err:
+            self.largs.append(err.opt_str)
+
+    def _process_short_opts(self, rargs, values):
+        try:
+            OptionParser._process_short_opts(self, rargs, values)
+        except BadOptionError, err:
+            self.largs.append(err.opt_str)
+
+def get_options():
     # If you change any of these, also update README.
-    parser = OptionParser(usage="usage: %prog [options] left_file right_file",
+    parser = PassThroughOptionParser(usage="usage: %prog [options] left_file right_file",
                           version="icdiff version %s" % __version__,
                           description="Show differences between files in a "
                           "two column view.",
@@ -486,13 +500,6 @@ def start():
                       "lines and context")
 
     (options, args) = parser.parse_args()
-
-    if len(args) != 2:
-        parser.print_help()
-        sys.exit()
-
-    a, b = args
-
     if not options.cols:
         def ioctl_GWINSZ(fd):
             try:
@@ -509,8 +516,16 @@ def start():
             options.cols = cr[1]
         else:
             options.cols = 80
+    return options, args, parser
 
-    diff(options, a, b)
+def start():
+    options, args, parser = get_options()
+    if len(args) != 2:
+        parser.print_help()
+        sys.exit()
+    a, b = args
+
+    diff(a, b, options=options)
 
 def codec_print(s, options):
     s = "%s\n" % s
@@ -520,10 +535,12 @@ def codec_print(s, options):
         sys.stdout.write(s.encode(options.output_encoding))
 
 
-def diff(options, a, b):
+def diff(a, b, options=None):
+    if options is None:
+        options = get_options()[0]
     def print_meta(s):
         codec_print(simple_colorize(s, "magenta"), options)
-
+    
     if os.path.isfile(a) and os.path.isfile(b):
         if not filecmp.cmp(a, b, shallow=False):
             diff_files(options, a, b)
@@ -538,9 +555,8 @@ def diff(options, a, b):
             elif child not in a_contents:
                 print_meta("Only in %s: %s" % (b, child))
             elif options.recursive:
-                diff(options,
-                     os.path.join(a, child),
-                     os.path.join(b, child))
+                diff(os.path.join(a, child),
+                     os.path.join(b, child), options)
     elif os.path.isdir(a) and os.path.isfile(b):
         print_meta("File %s is a directory while %s is a file" % (a, b))
 
