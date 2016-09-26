@@ -22,7 +22,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "1.8.1"
+__version__ = "1.8.2"
 
 color_codes = {
     "red":     '\033[0;31m',
