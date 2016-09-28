@@ -27,13 +27,13 @@ Show differences between files in a two column view.
                         only
   --encoding=ENCODING   specify the file encoding; defaults to utf8
   --head=HEAD           consider only the first N lines of each file
-  --highlight           color by changing the background color instead of the
+  -H, --highlight       color by changing the background color instead of the
                         foreground color.  Very fast, ugly, displays all
                         changes
   -L LABELS, --label=LABELS
                         override file labels with arbitrary tags. Use twice,
                         one for each file
-  --line-numbers        generate output with line numbers
+  -N, --line-numbers    generate output with line numbers
   --no-bold             use non-bold colors; recommended for with solarized
   --no-headers          don't label the left and right sides with their file
                         names
@@ -49,7 +49,7 @@ Show differences between files in a two column view.
   -U NUM, --unified=NUM, --numlines=NUM
                         how many lines of context to print; can't be combined
                         with --whole-file
-  --whole-file          show the whole file instead of just changed lines and
+  -W, --whole-file      show the whole file instead of just changed lines and
                         context
 ```
 
