@@ -103,6 +103,9 @@ check_gold gold-67-u3.txt           tests/input-{6,7}.txt --cols=80 -U 3
 check_gold gold-tabs-default.txt    tests/input-{8,9}.txt --cols=80
 check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
 
+check_gold gold-45-file-pipe.txt    tests/input-4.txt <(cat tests/input-5.txt) --cols=80 --no-headers
+check_gold gold-45-pipe-file.txt    <(cat tests/input-4.txt) tests/input-5.txt --cols=80 --no-headers
+check_gold gold-45-pipe-pipe.txt    <(cat tests/input-4.txt) <(cat tests/input-5.txt) --cols=80 --no-headers
 
 if [ ! -z "$INSTALLED" ]; then
   VERSION=$(icdiff --version | awk '{print $NF}')
