@@ -1,0 +1,6 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "nightly"
+script: ./test.sh python
