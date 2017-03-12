@@ -1,0 +1,9 @@
+[0;34mleft[m                                    [0;34mright[m                                  
+[1;31m#input, #button {[m                                                              
+[1;31m  width: 350px;[m                                                                
+[1;31m  height: 40px;[m                                                                
+[1;31m  margin: 0px;[m                                                                 
+[1;31m  padding: 0px;[m                                                                
+[1;31m  margin-bottom: 15px;[m                                                         
+[1;31m  text-align: center;[m                                                          
+[1;31m}[m                                                                              

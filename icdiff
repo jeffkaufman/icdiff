@@ -21,6 +21,7 @@ import re
 import filecmp
 import unicodedata
 import codecs
+import tempfile
 
 __version__ = "1.8.2"
 
@@ -484,6 +485,9 @@ def start():
                       action="store_true",
                       help="show the whole file instead of just changed "
                       "lines and context")
+    parser.add_option("--show-add-rm", default=False,
+                      action="store_true",
+                      help="show added/removed files")
 
     (options, args) = parser.parse_args()
 
@@ -524,6 +528,11 @@ def diff(options, a, b):
     def print_meta(s):
         codec_print(simple_colorize(s, "magenta"), options)
 
+    dev_nulls = {fn: tempfile.NamedTemporaryFile()
+                 for fn in (a, b)
+                 if fn == os.path.devnull and options.show_add_rm}
+    a, b = [getattr(dev_nulls.get(fn), 'name', fn) for fn in (a, b)]
+
     if os.path.isfile(a) and os.path.isfile(b):
         if not filecmp.cmp(a, b, shallow=False):
             diff_files(options, a, b)
@@ -546,6 +555,9 @@ def diff(options, a, b):
 
     elif os.path.isfile(a) and os.path.isdir(b):
         print_meta("File %s is a file while %s is a directory" % (a, b))
+
+    for fd in dev_nulls.values():
+        fd.close()
 
 def read_file(fname, options):
     try:
