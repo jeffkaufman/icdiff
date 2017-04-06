@@ -11,7 +11,7 @@ Alternatively, install with pip:
   pip install git+https://github.com/jeffkaufman/icdiff.git
 ```
 
-##Usage
+## Usage
 
 ```sh
 icdiff [options] left_file right_file
