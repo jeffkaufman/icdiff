@@ -1,3 +1,6 @@
+1.9.0
+	Fix setup.py by symlinking icdiff to icdiff.py
+
 1.8.2
 	Add short flags for --highlight (-H), --line-numbers (-N), and --whole-file (-W).
 	Fix use with bash process substitution and other special files
