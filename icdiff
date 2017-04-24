@@ -425,7 +425,7 @@ class MultipleOption(Option):
             Option.take_action(self, action, dest, opt, value, values, parser)
 
 
-def start():
+def create_option_parser():
     # If you change any of these, also update README.
     parser = OptionParser(usage="usage: %prog [options] left_file right_file",
                           version="icdiff version %s" % __version__,
@@ -484,15 +484,9 @@ def start():
                       action="store_true",
                       help="show the whole file instead of just changed "
                       "lines and context")
+    return parser
 
-    (options, args) = parser.parse_args()
-
-    if len(args) != 2:
-        parser.print_help()
-        sys.exit()
-
-    a, b = args
-
+def set_cols_option(options):
     if not options.cols:
         def ioctl_GWINSZ(fd):
             try:
@@ -509,8 +503,19 @@ def start():
             options.cols = cr[1]
         else:
             options.cols = 80
+    return options
 
-    diff(options, a, b)
+def validate_has_two_arguments(args):
+    if len(args) != 2:
+        parser.print_help()
+        sys.exit()
+
+def start():
+    parser = create_option_parser()
+    options, args = parser.parse_args()
+    validate_has_two_arguments(args)
+    options = set_cols_option(options)
+    diff(options, *args)
 
 def codec_print(s, options):
     s = "%s\n" % s
