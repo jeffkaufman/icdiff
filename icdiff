@@ -505,7 +505,7 @@ def set_cols_option(options):
             options.cols = 80
     return options
 
-def validate_has_two_arguments(args):
+def validate_has_two_arguments(parser, args):
     if len(args) != 2:
         parser.print_help()
         sys.exit()
@@ -513,7 +513,7 @@ def validate_has_two_arguments(args):
 def start():
     parser = create_option_parser()
     options, args = parser.parse_args()
-    validate_has_two_arguments(args)
+    validate_has_two_arguments(parser, args)
     options = set_cols_option(options)
     diff(options, *args)
 
