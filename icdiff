@@ -535,8 +535,14 @@ def diff(options, a, b):
     is_b_file = not os.path.isdir(b)
 
     if is_a_file and is_b_file:
-        if not filecmp.cmp(a, b, shallow=False):
-            diff_files(options, a, b)
+        try:
+            if not filecmp.cmp(a, b, shallow=False):
+                diff_files(options, a, b)
+        except OSError as e:
+            if e.errno == errno.ENOENT:
+                print_meta("error: file '%s' was not found" % e.filename)
+            else:
+                raise(e)
 
     elif not is_a_file and not is_b_file:
         a_contents = set(os.listdir(a))
