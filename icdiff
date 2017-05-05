@@ -484,6 +484,10 @@ def create_option_parser():
                       action="store_true",
                       help="show the whole file instead of just changed "
                       "lines and context")
+    parser.add_option("-i", "--input", default=False,
+                      action="store_true",
+                      help="diff two strings. Enter the strings instead "
+                      "of left_file and right_file")
     return parser
 
 def set_cols_option(options):
@@ -515,7 +519,10 @@ def start():
     options, args = parser.parse_args()
     validate_has_two_arguments(parser, args)
     options = set_cols_option(options)
-    diff(options, *args)
+    if options.input:
+        diff_input(options, *args)
+    else:
+        diff(options, *args)
 
 def codec_print(s, options):
     s = "%s\n" % s
@@ -524,6 +531,11 @@ def codec_print(s, options):
     else:
         sys.stdout.write(s.encode(options.output_encoding))
 
+def diff_input(options, a, b):
+    headers = None, None
+    lines_a = a.splitlines(True)
+    lines_b = b.splitlines(True)
+    print_diff(options, headers, lines_a, lines_b)
 
 def diff(options, a, b):
     def print_meta(s):
@@ -596,6 +608,10 @@ def diff_files(options, a, b):
         lines_a = lines_a[:head]
         lines_b = lines_b[:head]
 
+    print_diff(options, headers, lines_a, lines_b)
+
+
+def print_diff(options, headers, lines_a, lines_b):
     cd = ConsoleDiff(cols=int(options.cols),
                      show_all_spaces=options.show_all_spaces,
                      highlight=options.highlight,
@@ -608,6 +624,7 @@ def diff_files(options, a, b):
             numlines=int(options.unified)):
         codec_print(line, options)
         sys.stdout.flush()
+
 
 if __name__ == "__main__":
     try:
