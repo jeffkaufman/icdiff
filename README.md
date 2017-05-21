@@ -2,6 +2,8 @@
 
 Improved colored diff
 
+![screenshot](http://www.jefftk.com/icdiff-css-demo.png)
+
 ## Installation
 
 Download the [latest](https://github.com/jeffkaufman/icdiff/releases) `icdiff` binary and put it on your PATH.
