@@ -21,6 +21,7 @@ import re
 import filecmp
 import unicodedata
 import codecs
+import mimetypes
 
 __version__ = "1.9.0"
 
@@ -591,6 +592,13 @@ def diff_files(options, a, b):
 
     assert not os.path.isdir(a)
     assert not os.path.isdir(b)
+
+    mime_a = mimetypes.guess_type(a)
+    mime_b = mimetypes.guess_type(b)
+    if mime_a[0] == 'application/octet-stream' or \
+            mime_b[0] == 'application/octet-stream':
+        codec_print("Binary files %s and %s differ" % (a, b), options)
+        return
 
     try:
         lines_a = read_file(a, options)
