@@ -1,6 +1,4 @@
-from distutils.util import convert_path
 from setuptools import setup
-
 from icdiff import __version__
 
 setup(

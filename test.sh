@@ -96,12 +96,16 @@ check_gold gold-45-nh.txt           tests/input-{4,5}.txt --cols=80 --no-headers
 check_gold gold-45-h3.txt           tests/input-{4,5}.txt --cols=80 --head=3
 check_gold gold-45-l.txt            tests/input-{4,5}.txt --cols=80 -L left
 check_gold gold-45-lr.txt           tests/input-{4,5}.txt --cols=80 -L left -L right
+check_gold gold-45-pipe.txt         tests/input-4.txt <(cat tests/input-5.txt) --cols=80 --no-headers
+check_gold gold-4dn.txt             tests/input-4.txt /dev/null --cols=80 -L left -L right
+check_gold gold-dn5.txt             /dev/null tests/input-5.txt --cols=80 -L left -L right
 check_gold gold-67.txt              tests/input-{6,7}.txt --cols=80
 check_gold gold-67-wf.txt           tests/input-{6,7}.txt --cols=80 --whole-file
 check_gold gold-67-ln.txt           tests/input-{6,7}.txt --cols=80 --line-numbers
 check_gold gold-67-u3.txt           tests/input-{6,7}.txt --cols=80 -U 3
 check_gold gold-tabs-default.txt    tests/input-{8,9}.txt --cols=80
 check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
+check_gold gold-file-not-found.txt  tests/input-4.txt nonexistent_file
 
 
 if [ ! -z "$INSTALLED" ]; then

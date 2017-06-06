@@ -1,0 +1,1 @@
+[0;35merror: file 'nonexistent_file' was not found[m
