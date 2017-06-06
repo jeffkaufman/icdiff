@@ -541,7 +541,7 @@ def codec_print(s, options):
     if hasattr(sys.stdout, "buffer"):
         sys.stdout.buffer.write(s.encode(options.output_encoding))
     else:
-        sys.stdout.write(bytes.decode((s.encode(options.output_encoding))))
+        sys.stdout.write(s.encode(options.output_encoding))
 
 
 def diff(a, b, options=None):

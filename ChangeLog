@@ -1,3 +1,10 @@
+1.9.1
+	Works as python API. For example
+	>>> from icdiff import diff
+	>>> diff(pre, post)
+	python 3.x bug fixes
+
+
 1.9.0
 	Fix setup.py by symlinking icdiff to icdiff.py
 

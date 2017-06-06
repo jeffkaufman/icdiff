@@ -1,0 +1,8 @@
+language: python
+sudo: false
+
+python:
+  - "2.7"
+
+script:
+  - ./test.sh python2
