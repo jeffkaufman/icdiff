@@ -4,7 +4,6 @@
 	>>> diff(pre, post)
 	python 3.x bug fixes
 
-
 1.9.0
 	Fix setup.py by symlinking icdiff to icdiff.py
 
