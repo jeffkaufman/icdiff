@@ -465,7 +465,7 @@ def create_option_parser():
                       "with their file names")
     parser.add_option("--output-encoding", default="utf-8",
                       help="specify the output encoding; defaults to utf8")
-    parser.add_option("--recursive", default=False,
+    parser.add_option("-r", "--recursive", default=False,
                       action="store_true",
                       help="recursively compare subdirectories")
     parser.add_option("--show-all-spaces", default=False,
