@@ -53,6 +53,8 @@ Show differences between files in a two column view.
                         with --whole-file
   -W, --whole-file      show the whole file instead of just changed lines and
                         context
+  --strip-trailing-cr   strip any trailing carriage return at the end of an 
+                        input line
 ```
 
 

@@ -72,7 +72,8 @@ class ConsoleDiff(object):
                  line_numbers=False,
                  show_all_spaces=False,
                  highlight=False,
-                 no_bold=False):
+                 no_bold=False,
+                 strip_trailing_cr=False):
         """ConsoleDiff instance initializer
 
         Arguments:
@@ -90,6 +91,7 @@ class ConsoleDiff(object):
         self.show_all_spaces = show_all_spaces
         self.highlight = highlight
         self.no_bold = no_bold
+        self.strip_trailing_cr = strip_trailing_cr
 
         if wrapcolumn is None:
             if not line_numbers:
@@ -122,6 +124,13 @@ class ConsoleDiff(object):
             return line.replace('\0', ' ').rstrip('\n')
         fromlines = [expand_tabs(line) for line in fromlines]
         tolines = [expand_tabs(line) for line in tolines]
+        return fromlines, tolines
+
+    def _strip_trailing_cr(self, fromlines, tolines):
+        """ Remove windows return carriage
+        """
+        fromlines = [line.replace('\r', '') for line in fromlines]
+        tolines = [line.replace('\r', '') for line in tolines]
         return fromlines, tolines
 
     def _display_len(self, s):
@@ -302,6 +311,9 @@ class ConsoleDiff(object):
         # change tabs to spaces before it gets more difficult after we insert
         # markup
         fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
+
+        if self.strip_trailing_cr:
+            fromlines, tolines = self._strip_trailing_cr(fromlines, tolines)
 
         # create diffs iterator which generates side by side from/to data
         diffs = difflib._mdiff(fromlines, tolines, context_lines,
@@ -487,6 +499,9 @@ def create_option_parser():
                       action="store_true",
                       help="show the whole file instead of just changed "
                       "lines and context")
+    parser.add_option("--strip-trailing-cr", default=False,
+                      action="store_true",
+                      help="ignore windows newline carriage return")
     return parser
 
 
@@ -615,13 +630,15 @@ def diff_files(options, a, b):
                      highlight=options.highlight,
                      no_bold=options.no_bold,
                      line_numbers=options.line_numbers,
-                     tabsize=int(options.tabsize))
+                     tabsize=int(options.tabsize),
+                     strip_trailing_cr=options.strip_trailing_cr)
     for line in cd.make_table(
             lines_a, lines_b, headers[0], headers[1],
             context=(not options.whole_file),
             numlines=int(options.unified)):
         codec_print(line, options)
         sys.stdout.flush()
+
 
 if __name__ == "__main__":
     try:
