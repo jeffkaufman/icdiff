@@ -126,12 +126,11 @@ class ConsoleDiff(object):
         tolines = [expand_tabs(line) for line in tolines]
         return fromlines, tolines
 
-    def _strip_trailing_cr(self, fromlines, tolines):
+    def _strip_trailing_cr(self, lines):
         """ Remove windows return carriage
         """
-        fromlines = [line.replace('\r', '') for line in fromlines]
-        tolines = [line.replace('\r', '') for line in tolines]
-        return fromlines, tolines
+        lines = [line.rstrip('\r\n') for line in lines]
+        return lines
 
     def _display_len(self, s):
         # Handle wide characters like Chinese.
@@ -313,7 +312,8 @@ class ConsoleDiff(object):
         fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
 
         if self.strip_trailing_cr:
-            fromlines, tolines = self._strip_trailing_cr(fromlines, tolines)
+            fromlines = self._strip_trailing_cr(fromlines)
+            tolines = self._strip_trailing_cr(tolines)
 
         # create diffs iterator which generates side by side from/to data
         diffs = difflib._mdiff(fromlines, tolines, context_lines,
@@ -501,7 +501,8 @@ def create_option_parser():
                       "lines and context")
     parser.add_option("--strip-trailing-cr", default=False,
                       action="store_true",
-                      help="ignore windows newline carriage return")
+                      help="strip any trailing carriage return at the end of "
+                      "an input line")
     return parser
 
 
