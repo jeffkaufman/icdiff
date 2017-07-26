@@ -371,7 +371,8 @@ class ConsoleDiff(object):
                          '\0-': C_SUB,
                          '\0^': C_CHG,
                          '\1': C_NONE,
-                         '\t': ' '}, s)
+                         '\t': ' ',
+                         '\r': '\\r'}, s)
 
         if self.highlight:
             return s

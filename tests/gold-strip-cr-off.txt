@@ -1,0 +1,9 @@
+[0;34mtests/input-4.txt[m                       [0;34mtests/input-4-cr.txt[m                   
+#input, #button {                       #input, #button {[1;32m\r[m                     
+  width: 350px;                           width: 350px;[1;32m\r[m                       
+  height: 40px;                           height: 40px;[1;32m\r[m                       
+  margin: 0px;                            margin: 0px;[1;32m\r[m                        
+  padding: 0px;                           padding: 0px;[1;32m\r[m                       
+  margin-bottom: 15px;                    margin-bottom: 15px;[1;32m\r[m                
+  text-align: center;                     text-align: center;[1;32m\r[m                 
+[1;31m}[m                                       [1;32m}\r[m                                     
