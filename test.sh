@@ -108,7 +108,7 @@ check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
 check_gold gold-file-not-found.txt  tests/input-4.txt nonexistent_file
 check_gold gold-strip-cr-off.txt    tests/input-4.txt tests/input-4-cr.txt --cols=80
 check_gold gold-strip-cr-on.txt     tests/input-4.txt tests/input-4-cr.txt --cols=80 --strip-trailing-cr
-
+check_gold gold-no-cr-indent        tests/input-4-cr.txt tests/input-4-partial-cr.txt --cols=80 
 
 if [ ! -z "$INSTALLED" ]; then
   VERSION=$(icdiff --version | awk '{print $NF}')

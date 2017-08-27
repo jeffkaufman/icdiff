@@ -138,6 +138,8 @@ class ConsoleDiff(object):
             if ((isinstance(c, type(u"")) and
                  unicodedata.east_asian_width(c) == 'W')):
                 return 2
+            elif c == '\r':
+                return 2
             return 1
 
         return sum(width(c) for c in s)
