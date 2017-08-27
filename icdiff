@@ -129,8 +129,13 @@ class ConsoleDiff(object):
     def _strip_trailing_cr(self, lines):
         """ Remove windows return carriage
         """
-        lines = [line.rstrip('\r\n') for line in lines]
+        lines = [line.rstrip('\r') for line in lines]
         return lines
+
+    def _all_cr_nl(self, lines):
+        """ Whether a file is entirely \r\n line endings
+        """
+        return all(line.endswith('\r') for line in lines)
 
     def _display_len(self, s):
         # Handle wide characters like Chinese.
@@ -313,7 +318,8 @@ class ConsoleDiff(object):
         # markup
         fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
 
-        if self.strip_trailing_cr:
+        if self.strip_trailing_cr or (
+                self._all_cr_nl(fromlines) and self._all_cr_nl(tolines)):
             fromlines = self._strip_trailing_cr(fromlines)
             tolines = self._strip_trailing_cr(tolines)
 

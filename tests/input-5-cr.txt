@@ -1,0 +1,8 @@
+#input, #button {
+  width: 400px;
+  height: 40px;
+  font-size: 30px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
