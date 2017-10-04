@@ -528,7 +528,7 @@ def set_cols_option(options):
                 return None
             return cr
         cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-        if cr:
+        if cr and cr[1] > 0:
             options.cols = cr[1]
         else:
             options.cols = 80
