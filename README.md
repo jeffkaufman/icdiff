@@ -77,6 +77,12 @@ To install this as a tool you can use with git, copy
 git icdiff
 ```
 
+If you have installed `git-icdiff`, you can configure their options adding to your `~/.gitconfig`:
+
+```
+[icdiff]
+    options = --highlight --line-numbers
+``` 
 
 ## Using with subversion
 
