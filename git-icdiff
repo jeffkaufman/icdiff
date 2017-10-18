@@ -13,4 +13,4 @@ if [ "$GITPAGER" = "more" -o "$GITPAGER" = "less" ]; then
   GITPAGER="$GITPAGER -R"
 fi
 
-git difftool --no-prompt --extcmd icdiff "$@" | $GITPAGER
+git difftool --no-prompt --extcmd icdiff "$@" | eval $GITPAGER
