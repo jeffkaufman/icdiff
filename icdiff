@@ -520,6 +520,13 @@ def create_option_parser():
                       action="store_true",
                       help="strip any trailing carriage return at the end of "
                       "an input line")
+    parser.add_option("--color-map", default=None,
+                      help="choose which colors are used for which items. "
+                      "Default is --color-map='" +
+                      ",".join("%s:%s" % x
+                               for x in sorted(color_mapping.items())) + "'"
+                      ".  You don't have to override all of them: "
+                      "'--color-map=separator:white,description:cyan")
     return parser
 
 
@@ -646,6 +653,25 @@ def diff_files(options, a, b):
     if options.no_bold:
         for key in color_mapping:
             color_mapping[key] = color_mapping[key].replace("_bold", "")
+
+    if options.color_map:
+        command_for_errors = '--color-map="%s"' % (options.color_map)
+        for mapping in options.color_map.split(","):
+            category, color = mapping.split(":", 1)
+
+            if category not in color_mapping:
+                raise Exception(
+                    "Invalid category '%s' in '%s'.  Valid categories are: %s."
+                    % (category, command_for_errors,
+                       ", ".join(sorted(color_mapping.keys()))))
+
+            if color not in color_codes:
+                raise Exception(
+                    "Invalid color '%s' in '%s'.  Valid colors are: %s."
+                    % (color, command_for_errors,
+                       ", ".join(sorted(color_codes.keys()))))
+
+            color_mapping[category] = color
 
     cd = ConsoleDiff(cols=int(options.cols),
                      show_all_spaces=options.show_all_spaces,

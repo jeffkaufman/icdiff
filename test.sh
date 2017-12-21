@@ -54,7 +54,7 @@ function check_gold() {
   fi
 
   if $REGOLD; then
-    if diff $tmp $gold > /dev/null; then
+    if [ -e $gold ] && diff $tmp $gold > /dev/null; then
       echo "Did not need to regold $gold"
     else
       cat $tmp
@@ -108,8 +108,13 @@ check_gold gold-tabs-4.txt          tests/input-{8,9}.txt --cols=80 --tabsize=4
 check_gold gold-file-not-found.txt  tests/input-4.txt nonexistent_file
 check_gold gold-strip-cr-off.txt    tests/input-4.txt tests/input-4-cr.txt --cols=80
 check_gold gold-strip-cr-on.txt     tests/input-4.txt tests/input-4-cr.txt --cols=80 --strip-trailing-cr
-check_gold gold-no-cr-indent        tests/input-4-cr.txt tests/input-4-partial-cr.txt --cols=80 
+check_gold gold-no-cr-indent        tests/input-4-cr.txt tests/input-4-partial-cr.txt --cols=80
 check_gold gold-hide-cr-if-dos      tests/input-4-cr.txt tests/input-5-cr.txt --cols=80
+check_gold gold-12-subcolors.txt    tests/input-{1,2}.txt --cols=80 --color-map='change:magenta,description:cyan_bold'
+check_gold gold-subcolors-bad-color tests/input-{1,2}.txt --cols=80 --color-map='change:mageta,description:cyan_bold'
+check_gold gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map='chnge:magenta,description:cyan_bold'
+check_gold gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
+
 
 if [ ! -z "$INSTALLED" ]; then
   VERSION=$(icdiff --version | awk '{print $NF}')

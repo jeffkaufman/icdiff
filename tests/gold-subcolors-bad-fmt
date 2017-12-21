@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "icdiff", line 692, in <module>
+    start()
+  File "icdiff", line 564, in start
+    diff(options, *args)
+  File "icdiff", line 587, in diff
+    diff_files(options, a, b)
+  File "icdiff", line 672, in diff_files
+    ", ".join(sorted(color_codes.keys()))))
+Exception: Invalid color 'magenta:gold' in '--color-map="change:magenta:gold,description:cyan_bold"'.  Valid colors are: black, black_bold, blue, blue_bold, cyan, cyan_bold, green, green_bold, magenta, magenta_bold, none, red, red_bold, white, white_bold, yellow, yellow_bold.

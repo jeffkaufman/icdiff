@@ -40,12 +40,12 @@ Show differences between files in a two column view.
                         override file labels with arbitrary tags. Use twice,
                         one for each file
   -N, --line-numbers    generate output with line numbers
-  --no-bold             use non-bold colors; recommended for with solarized
+  --no-bold             use non-bold colors; recommended for solarized
   --no-headers          don't label the left and right sides with their file
                         names
   --output-encoding=OUTPUT_ENCODING
                         specify the output encoding; defaults to utf8
-  --recursive           recursively compare subdirectories
+  -r, --recursive       recursively compare subdirectories
   --show-all-spaces     color all non-matching whitespace including that which
                         is not needed for drawing the eye to changes.  Slow,
                         ugly, displays all changes
@@ -59,6 +59,12 @@ Show differences between files in a two column view.
                         context
   --strip-trailing-cr   strip any trailing carriage return at the end of an
                         input line
+  --color-map=COLOR_MAP
+                        choose which colors are used for which items. Default
+                        is --color-map='add:green_bold,change:yellow_bold,desc
+                        ription:blue,meta:magenta,separator:blue,subtract:red_
+                        bold'.  You don't have to override all of them:
+                        '--color-map=separator:white,description:cyan
 ```
 
 
@@ -82,7 +88,7 @@ If you have installed `git-icdiff`, you can configure their options adding to yo
 ```
 [icdiff]
     options = --highlight --line-numbers
-``` 
+```
 
 ## Using with subversion
 
