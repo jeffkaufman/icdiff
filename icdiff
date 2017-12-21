@@ -22,6 +22,7 @@ import re
 import filecmp
 import unicodedata
 import codecs
+import platform
 
 __version__ = "1.9.1"
 
@@ -631,7 +632,11 @@ def diff_files(options, a, b):
                         "specify -L twice.", options)
             return
     else:
-        headers = a, b
+        if platform.system() == 'Windows':
+            headers = a.decode('gb18030'), b.decode('gb18030')
+        else:
+            headers = a.decode('utf-8'), b.decode('utf-8')
+
     if options.no_headers:
         headers = None, None
 
