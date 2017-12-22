@@ -369,7 +369,7 @@ class ConsoleDiff(object):
 
     def colorize(self, s):
         def background(color):
-            return replace_all({"\033[1;": "\033[7;",
+            return replace_all({"\033[1;": "\033[7;1;",
                                 "\033[0;": "\033[7;"}, color)
 
         C_ADD = color_codes[color_mapping["add"]]
