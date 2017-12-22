@@ -10,8 +10,8 @@ if [ -z "$GITPAGER" ]; then
   GITPAGER="less"
 fi
 
-if [ "$GITPAGER" = "more" -o "$GITPAGER" = "less" ]; then
+if [ "$GITPAGER" = "more" ] || [ "$GITPAGER" = "less" ]; then
   GITPAGER="$GITPAGER -R"
 fi
 
-git difftool --no-prompt --extcmd="icdiff $ICDIFF_OPTIONS $@" | $GITPAGER
+git difftool --no-prompt --extcmd="icdiff $ICDIFF_OPTIONS $*" | $GITPAGER
