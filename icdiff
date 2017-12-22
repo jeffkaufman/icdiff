@@ -435,9 +435,12 @@ class ConsoleDiff(object):
         return joined
 
 
-def simple_colorize(s, chosen_color):
-    return "%s%s%s" % (color_codes[color_mapping[chosen_color]], s,
-                       color_codes["none"])
+def raw_colorize(s, color):
+    return "%s%s%s" % (color_codes[color], s, color_codes["none"])
+
+
+def simple_colorize(s, category):
+    return raw_colorize(s, color_mapping[category])
 
 
 def replace_all(replacements, string):
@@ -662,16 +665,18 @@ def diff_files(options, a, b):
             category, color = mapping.split(":", 1)
 
             if category not in color_mapping:
-                raise Exception(
+                print(
                     "Invalid category '%s' in '%s'.  Valid categories are: %s."
                     % (category, command_for_errors,
                        ", ".join(sorted(color_mapping.keys()))))
+                sys.exit()
 
             if color not in color_codes:
-                raise Exception(
-                    "Invalid color '%s' in '%s'.  Valid colors are: %s."
-                    % (color, command_for_errors,
-                       ", ".join(sorted(color_codes.keys()))))
+                print("Invalid color '%s' in '%s'.  Valid colors are: %s."
+                      % (color, command_for_errors,
+                         ", ".join([raw_colorize(x, x)
+                                    for x in sorted(color_codes.keys())])))
+                sys.exit()
 
             color_mapping[category] = color
 
