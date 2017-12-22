@@ -52,7 +52,8 @@ color_mapping = {
     "change": "yellow_bold",
     "separator": "blue",
     "description": "blue",
-    "meta": "magenta"
+    "meta": "magenta",
+    "line-numbers": "white",
 }
 
 
@@ -271,7 +272,8 @@ class ConsoleDiff(object):
             # handle blank lines where linenum is '>' or ''
             lid = ''
             return text
-        return '%s %s' % (self._rpad(lid, 8), text)
+        return '%s %s' % (
+            self._rpad(simple_colorize(str(lid), "line-numbers"), 8), text)
 
     def _real_len(self, s):
         l = 0

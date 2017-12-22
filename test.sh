@@ -92,6 +92,7 @@ check_gold gold-45-sas-h.txt        tests/input-{4,5}.txt --cols=80 --show-all-s
 check_gold gold-45-sas-h-nb.txt     tests/input-{4,5}.txt --cols=80 --show-all-spaces --highlight --no-bold
 check_gold gold-45-h-nb.txt         tests/input-{4,5}.txt --cols=80 --highlight --no-bold
 check_gold gold-45-ln.txt           tests/input-{4,5}.txt --cols=80 --line-numbers
+check_gold gold-45-ln-color.txt     tests/input-{4,5}.txt --cols=80 --line-numbers --color-map='line-numbers:cyan'
 check_gold gold-45-nh.txt           tests/input-{4,5}.txt --cols=80 --no-headers
 check_gold gold-45-h3.txt           tests/input-{4,5}.txt --cols=80 --head=3
 check_gold gold-45-l.txt            tests/input-{4,5}.txt --cols=80 -L left

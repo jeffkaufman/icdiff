@@ -1,10 +1,10 @@
 Traceback (most recent call last):
-  File "icdiff", line 692, in <module>
+  File "icdiff", line 694, in <module>
     start()
-  File "icdiff", line 564, in start
+  File "icdiff", line 566, in start
     diff(options, *args)
-  File "icdiff", line 587, in diff
+  File "icdiff", line 589, in diff
     diff_files(options, a, b)
-  File "icdiff", line 666, in diff_files
+  File "icdiff", line 668, in diff_files
     ", ".join(sorted(color_mapping.keys()))))
-Exception: Invalid category 'chnge' in '--color-map="chnge:magenta,description:cyan_bold"'.  Valid categories are: add, change, description, meta, separator, subtract.
+Exception: Invalid category 'chnge' in '--color-map="chnge:magenta,description:cyan_bold"'.  Valid categories are: add, change, description, line-numbers, meta, separator, subtract.
