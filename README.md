@@ -14,9 +14,11 @@ Alternatively, install with pip:
 ```
 
 It can be also installed using [Nix](https://nixos.org/nix/)
+
 ```
   nix-env -i icdiff
 ```
+
 ## Usage
 
 ```sh
@@ -67,8 +69,7 @@ Show differences between files in a two column view.
                         '--color-map=separator:white,description:cyan
 ```
 
-
-## Using with git
+## Using with Git
 
 To see what it looks like, try:
 
@@ -76,18 +77,17 @@ To see what it looks like, try:
 git difftool --extcmd icdiff
 ```
 
-To install this as a tool you can use with git, copy
-`git-icdiff` onto your path and run:
+To install this as a tool you can use with Git, copy
+`git-icdiff` into your PATH and run:
 
 ```sh
 git icdiff
 ```
 
-If you have installed `git-icdiff`, you can configure their options adding to your `~/.gitconfig`:
+You can configure `git-icdiff` in Git's config:
 
 ```
-[icdiff]
-    options = --highlight --line-numbers
+git config --global icdiff.options '--highlight --line-numbers'
 ```
 
 ## Using with subversion
