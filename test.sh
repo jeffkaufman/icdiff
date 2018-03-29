@@ -80,6 +80,7 @@ function check_gold() {
 }
 
 check_gold gold-recursive.txt       --recursive tests/{a,b} --cols=80
+check_gold gold-exclude.txt         --exclude-lines '^#|  pad' tests/input-4-cr.txt tests/input-4-partial-cr.txt --cols=80
 check_gold gold-dir.txt             tests/{a,b} --cols=80
 check_gold gold-12.txt              tests/input-{1,2}.txt --cols=80
 check_gold gold-3.txt               tests/input-{3,3}.txt

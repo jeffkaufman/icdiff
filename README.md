@@ -34,6 +34,9 @@ Show differences between files in a two column view.
   --cols=COLS           specify the width of the screen. Autodetection is Unix
                         only
   --encoding=ENCODING   specify the file encoding; defaults to utf8
+  -E MATCHER, --exclude-lines=MATCHER
+                        Do not diff lines that match this regex. Not
+                        compatible with the 'line-numbers' option
   --head=HEAD           consider only the first N lines of each file
   -H, --highlight       color by changing the background color instead of the
                         foreground color.  Very fast, ugly, displays all
@@ -41,7 +44,8 @@ Show differences between files in a two column view.
   -L LABELS, --label=LABELS
                         override file labels with arbitrary tags. Use twice,
                         one for each file
-  -N, --line-numbers    generate output with line numbers
+  -N, --line-numbers    generate output with line numbers. Not compatible with
+                        the 'exclude-lines' option.
   --no-bold             use non-bold colors; recommended for solarized
   --no-headers          don't label the left and right sides with their file
                         names

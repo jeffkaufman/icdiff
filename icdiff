@@ -474,6 +474,12 @@ def create_option_parser():
                       "Unix only")
     parser.add_option("--encoding", default="utf-8",
                       help="specify the file encoding; defaults to utf8")
+    parser.add_option("-E", "--exclude-lines",
+                      action="store",
+                      type="string",
+                      dest='matcher',
+                      help="Do not diff lines that match this regex. Not "
+                      "compatible with the 'line-numbers' option")
     parser.add_option("--head", default=0,
                       help="consider only the first N lines of each file")
     parser.add_option("-H", "--highlight", default=False,
@@ -489,7 +495,8 @@ def create_option_parser():
                       "Use twice, one for each file")
     parser.add_option("-N", "--line-numbers", default=False,
                       action="store_true",
-                      help="generate output with line numbers")
+                      help="generate output with line numbers. Not compatible "
+                      "with the 'exclude-lines' option.")
     parser.add_option("--no-bold", default=False,
                       action="store_true",
                       help="use non-bold colors; recommended for solarized")
@@ -654,6 +661,12 @@ def diff_files(options, a, b):
     if head != 0:
         lines_a = lines_a[:head]
         lines_b = lines_b[:head]
+
+    if options.matcher:
+        lines_a = [line_a for line_a in lines_a if
+                   not re.search(options.matcher, line_a)]
+        lines_b = [line_b for line_b in lines_b if
+                   not re.search(options.matcher, line_b)]
 
     if options.no_bold:
         for key in color_mapping:
