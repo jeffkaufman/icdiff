@@ -1,0 +1,7 @@
+[0;34mtests/input-4-cr.txt[m                    [0;34mtests/input-4-partial-cr.txt[m           
+  width: 350px;                           width: 350px;                        
+  height: 40px;                           height: 40px;                        
+  margin: 0px;                            margin: 0px;                         
+  margin-bottom: 15px;                    margin-bottom: 15px;                 
+  text-align: center;[1;31m\r[m                   text-align: center;                  
+}                                       }                                      
