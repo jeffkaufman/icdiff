@@ -1,4 +1,6 @@
 .TH ICDIFF 1 2018-05-07 "Jeff Kaufmann's Github" 
+.
+.do mso www.tmac
 .SH NAME
 icdiff \- shows differences between two files and highlights them in color
 .SH SYNOPSIS
@@ -77,9 +79,12 @@ Strip any trailing carriage return at the end of an input line
 .TP
 .BR \-\-color\-map=\fICOLOR_MAP\fR
 Choose which colors are used for which items.
-Default is \-\-color\-map='add:green_bold,change:yellow_bold,desc ription:blue,meta:magenta,separator:blue,subtract:red_ bold'. 
+Default is \-\-color\-map='add:green_bold,change:yellow_bold,desc ription:blue,meta:magenta,separator:blue,subtract:red_ bold'.
 You don't have to override all of them: '--color-map=separator:white,description:cyan
+.SH BUGS
+Bugs should be reported at the projects 
+.URL https://github.com/jeffkaufman/icdiff/issues "Github repository" .
 .SH AUTHOR
 \fBicdiff\fR was written by Jeff Kaufmann
-.SH SEE ALSO
-diff(1)
+.SH "SEE ALSO"
+.BR diff(1)
