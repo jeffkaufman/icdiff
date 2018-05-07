@@ -1,0 +1,85 @@
+.TH ICDIFF 1 2018-05-07 "Jeff Kaufmann's Github" 
+.SH NAME
+icdiff \- shows differences between two files and highlights them in color
+.SH SYNOPSIS
+.B icdiff
+[\fIoptions\fR] \fIleft_file\fR \fIright_file\fR 
+.SH DESCRIPTION
+Your terminal can display color, but most diff tools don't make good use of it. 
+By highlighting changes, \fBicdiff\fR can show you the differences between similar files without getting in the way. 
+This is especially helpful for identifying and understanding small changes within existing lines.
+.PP
+Instead of trying to be a \fBdiff(1)\fR replacement for all circumstances, the goal of \fBicdiff\fR is to be a tool you can reach for to get a better picture of what changed when it's not immediately obvious from diff.
+.SH OPTIONS
+.TP
+.BR \-\-version
+Show program's version number and exit
+.TP
+.BR \-h ", "\-\-help
+Show help message and exit
+.TP
+.BR \-\-cols=\fICOLS\fR
+Specify the width of the screen. 
+Autodetection is Unix only
+.TP
+.BR \-\-encoding=\fIENCODING\fR
+Specify the file encoding; defaults to UTF-8
+.TP
+.BR \-E " "\fIMATCHER\fR ", "\-\-exclude\-lines=\fIMATCHER\fR
+Do not diff lines that match this regex. 
+Not compatible with the 'line-numbers' option
+.TP
+.BR \-\-head=\fIN\fR
+Consider only the first N lines of each file
+.TP
+.BR \-H ", " \-\-highlight
+Color by changing the background color instead of the foreground color. 
+Very fast, ugly, displays all changes
+.TP
+.BR \-L " "\fILABELS\fR ", "\-\-label=\fILABELS\fR
+Override file labels with arbitrary tags. Use twice, one for each file
+.TP
+.BR \-N ", "\-\-line-numbers
+Generate output with line numbers. 
+Not compatible with the 'exclude-lines' option.
+.TP
+.BR \-\-no\-bold
+Use non-bold colors; recommended for solarized
+.TP
+.BR \-\-no\-headers
+Don't label the left and right sides with their file names
+.TP
+.BR \-\-output\-encoding=\fIOUTPUT_ENCODING\fR
+Specify the output encoding; defaults to utf8
+.TP
+.BR \-r ", " \-\-recursive
+Recursively compare subdirectories
+.TP
+.BR \-\-show\-all\-spaces
+Color all non-matching whitespace including that which is not needed for drawing the eye to changes. 
+Slow, ugly, displays all changes
+.TP
+.BR \-\-tabsize=\fITABSIZE\fR
+Specify tab stop spacing
+.TP
+.BR \-u ", " \-\-patch
+Generate patch. 
+This is always true, and only exists for compatibility
+.TP
+.BR \-U " "\fINUM\fR ", " \-\-unified=\fINUM\fR ", " \-\-numlines=\fINUM\fR
+How many lines of context to print; can't be combined with \-\-whole\-file
+.TP
+.BR \-W ", " \-\-whole\-file
+Show the whole file instead of just changed lines and context
+.TP
+.BR \-\-strip\-trailing\-cr
+Strip any trailing carriage return at the end of an input line
+.TP
+.BR \-\-color\-map=\fICOLOR_MAP\fR
+Choose which colors are used for which items.
+Default is \-\-color\-map='add:green_bold,change:yellow_bold,desc ription:blue,meta:magenta,separator:blue,subtract:red_ bold'. 
+You don't have to override all of them: '--color-map=separator:white,description:cyan
+.SH AUTHOR
+\fBicdiff\fR was written by Jeff Kaufmann
+.SH SEE ALSO
+diff(1)
