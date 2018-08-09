@@ -137,5 +137,5 @@ pip install -r requirements-dev.txt
 
 ## License
 
-This file is derived from `difflib.HtmlDiff` which is under the [license](http://www.python.org/download/releases/2.6.2/license/).
+This file is derived from `difflib.HtmlDiff` which is under [license](http://www.python.org/download/releases/2.6.2/license/).
 I release my changes here under the same license.  This is GPL compatible.
