@@ -1,3 +1,13 @@
+1.9.2
+	Add --exclude-lines (-E) which can exclude comments
+	Add --color-map so you can choose which colors to use for what #121 #117
+	Allow highlighted characters to be bold #122
+	Support configuring git-icdiff with gitconfig
+	Don't choke on bad terminal sizes #113
+	Print proper error messages instead of raising exceptions
+	Allow the line numbers to be colorized
+	Add a LICENSE file
+
 1.9.1
 	Handle files with CR characters better and add --strip-trailing-cr
 
