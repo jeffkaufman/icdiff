@@ -135,6 +135,13 @@ pip install -r requirements-dev.txt
 ./test.sh python3
 ```
 
+## Making a release
+
+* Update ChangeLog with all the changes since the last release
+* Update `__version__` in `icdiff`
+* `git tag release-${version}`
+* `git push origin release-${version}`
+
 ## License
 
 This file is derived from `difflib.HtmlDiff` which is under [license](http://www.python.org/download/releases/2.6.2/license/).
