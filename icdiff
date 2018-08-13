@@ -276,7 +276,7 @@ class ConsoleDiff(object):
             self._rpad(simple_colorize(str(lid), "line-numbers"), 8), text)
 
     def _real_len(self, s):
-        l = 0
+        s_len = 0
         in_esc = False
         prev = ' '
         for c in replace_all({'\0+': "",
@@ -290,12 +290,12 @@ class ConsoleDiff(object):
             else:
                 if c == "[" and prev == "\033":
                     in_esc = True
-                    l -= 1  # we counted prev when we shouldn't have
+                    s_len -= 1  # we counted prev when we shouldn't have
                 else:
-                    l += self._display_len(c)
+                    s_len += self._display_len(c)
             prev = c
 
-        return l
+        return s_len
 
     def _rpad(self, s, field_width):
         return self._pad(s, field_width) + s
