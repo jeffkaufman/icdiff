@@ -276,7 +276,7 @@ class ConsoleDiff(object):
             self._rpad(simple_colorize(str(lid), "line-numbers"), 8), text)
 
     def _real_len(self, s):
-        l = 0
+        s_len = 0
         in_esc = False
         prev = ' '
         for c in replace_all({'\0+': "",
@@ -290,12 +290,12 @@ class ConsoleDiff(object):
             else:
                 if c == "[" and prev == "\033":
                     in_esc = True
-                    l -= 1  # we counted prev when we shouldn't have
+                    s_len -= 1  # we counted prev when we shouldn't have
                 else:
-                    l += self._display_len(c)
+                    s_len += self._display_len(c)
             prev = c
 
-        return l
+        return s_len
 
     def _rpad(self, s, field_width):
         return self._pad(s, field_width) + s
@@ -492,7 +492,8 @@ def create_option_parser():
                       type="string",
                       dest='labels',
                       help="override file labels with arbitrary tags. "
-                      "Use twice, one for each file")
+                      "Use twice, one for each file. You may include the "
+                      "formatting strings '{path}' and '{basename}'")
     parser.add_option("-N", "--line-numbers", default=False,
                       action="store_true",
                       help="generate output with line numbers. Not compatible "
@@ -634,10 +635,23 @@ def read_file(fname, options):
         raise
 
 
+def format_label(path, label="{path}"):
+    """Format a label using a file's path and basename.
+
+    Example:
+      For file `/foo/bar.py` and label "Yours: {basename}" -
+      The ouptut is "Yours: bar.py"
+    """
+    return label.format(path=path, basename=os.path.basename(path))
+
+
 def diff_files(options, a, b):
     if options.labels:
         if len(options.labels) == 2:
-            headers = options.labels
+            headers = [
+                format_label(a, options.labels[0]),
+                format_label(b, options.labels[1]),
+            ]
         else:
             codec_print("error: to use arbitrary file labels, "
                         "specify -L twice.", options)
