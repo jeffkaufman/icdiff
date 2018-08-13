@@ -492,7 +492,8 @@ def create_option_parser():
                       type="string",
                       dest='labels',
                       help="override file labels with arbitrary tags. "
-                      "Use twice, one for each file")
+                      "Use twice, one for each file. You may include the "
+                      "formatting strings '{path}' and '{basename}'")
     parser.add_option("-N", "--line-numbers", default=False,
                       action="store_true",
                       help="generate output with line numbers. Not compatible "
@@ -634,10 +635,23 @@ def read_file(fname, options):
         raise
 
 
+def format_label(path, label="{path}"):
+    """Format a label using a file's path and basename.
+
+    Example:
+      For file `/foo/bar.py` and label "Yours: {basename}" -
+      The ouptut is "Yours: bar.py"
+    """
+    return label.format(path=path, basename=os.path.basename(path))
+
+
 def diff_files(options, a, b):
     if options.labels:
         if len(options.labels) == 2:
-            headers = options.labels
+            headers = [
+                format_label(a, options.labels[0]),
+                format_label(b, options.labels[1]),
+            ]
         else:
             codec_print("error: to use arbitrary file labels, "
                         "specify -L twice.", options)
