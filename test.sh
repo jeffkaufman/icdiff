@@ -98,6 +98,7 @@ check_gold gold-45-nh.txt           tests/input-{4,5}.txt --cols=80 --no-headers
 check_gold gold-45-h3.txt           tests/input-{4,5}.txt --cols=80 --head=3
 check_gold gold-45-l.txt            tests/input-{4,5}.txt --cols=80 -L left
 check_gold gold-45-lr.txt           tests/input-{4,5}.txt --cols=80 -L left -L right
+check_gold gold-45-lbrb.txt         tests/input-{4,5}.txt --cols=80 -L "L {basename}" -L "R {basename}"
 check_gold gold-45-pipe.txt         tests/input-4.txt <(cat tests/input-5.txt) --cols=80 --no-headers
 check_gold gold-4dn.txt             tests/input-4.txt /dev/null --cols=80 -L left -L right
 check_gold gold-dn5.txt             /dev/null tests/input-5.txt --cols=80 -L left -L right
