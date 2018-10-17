@@ -1,3 +1,7 @@
+1.9.4
+	Allow {path} and {basename} in --label #139
+	Properly implement git difftool protocol #140
+
 1.9.3
 	Properly set the version number
 
