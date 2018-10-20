@@ -45,7 +45,6 @@ color_codes = {
     "white_bold":   '\033[1;37m',
 }
 
-
 color_mapping = {
     "add": "green_bold",
     "subtract": "red_bold",
@@ -55,6 +54,16 @@ color_mapping = {
     "meta": "magenta",
     "line-numbers": "white",
 }
+
+
+def _split(s, sep):
+    return list(map(str.strip, s.split(sep)))
+
+
+color_str = os.getenv('ICDIFF_COLORS')
+if color_str:
+    env_map = dict(tuple(_split(s, ':')) for s in _split(color_str, ','))
+    color_mapping.update(env_map)
 
 
 class ConsoleDiff(object):

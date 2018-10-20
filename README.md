@@ -73,6 +73,8 @@ Show differences between files in a two column view.
                         '--color-map=separator:white,description:cyan
 ```
 
+Colors can be set via environment variable ICDIFF_COLORS too.
+
 ## Using with Git
 
 To see what it looks like, try:
