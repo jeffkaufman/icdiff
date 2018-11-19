@@ -633,6 +633,11 @@ def read_file(fname, options):
             "error: file '%s' not valid with encoding '%s': <%s> at %s-%s." %
             (fname, options.encoding, e.reason, e.start, e.end), options)
         raise
+    except LookupError as e:
+        codec_print(
+            "error: encoding '%s' was not found." %
+            (options.encoding), options)
+        sys.exit()
 
 
 def format_label(path, label="{path}"):
