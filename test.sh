@@ -79,28 +79,6 @@ function check_gold() {
   fi
 }
 
-function check_error() {
-  local msg="`echo -e "$1"`"
-  shift
-
-  if [ $TEST_NAME != "all" ]; then
-    return
-  fi
-
-  echo "    check_error output of $ICDIFF $@ matches $msg"
-  if [ ! -z "$INSTALLED" ]; then
-    tmp="`"$ICDIFF" "$@"`"
-  else
-    tmp="`"$PYTHON" "$ICDIFF" "$@"`"
-  fi
-
-  if [ "$tmp" != "$msg" ]; then
-    echo "Got: ($tmp)"
-    echo -e "Expected: ($msg)"
-    fail
-  fi
-}
-
 check_gold gold-recursive.txt       --recursive tests/{a,b} --cols=80
 check_gold gold-exclude.txt         --exclude-lines '^#|  pad' tests/input-4-cr.txt tests/input-4-partial-cr.txt --cols=80
 check_gold gold-dir.txt             tests/{a,b} --cols=80
@@ -140,9 +118,6 @@ check_gold gold-subcolors-bad-color tests/input-{1,2}.txt --cols=80 --color-map=
 check_gold gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map='chnge:magenta,description:cyan_bold'
 check_gold gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
 
-check_error "error: encoding 'ISO-8859' was not found." tests/input-{1,2}.txt --encoding=ISO-8859
-check_error "\033[0;35merror: file 'nonexistent_file' was not found\033[m" nonexistent_file nonexistent_file
-check_error "error: file 'tests/invalid-utf8.txt' not valid with encoding 'utf-8': <invalid start byte> at 0-1." tests/invalid-utf8.txt tests/input-1.txt
 
 if [ ! -z "$INSTALLED" ]; then
   VERSION=$(icdiff --version | awk '{print $NF}')
