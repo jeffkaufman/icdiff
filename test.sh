@@ -117,6 +117,7 @@ check_gold gold-12-subcolors.txt    tests/input-{1,2}.txt --cols=80 --color-map=
 check_gold gold-subcolors-bad-color tests/input-{1,2}.txt --cols=80 --color-map='change:mageta,description:cyan_bold'
 check_gold gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map='chnge:magenta,description:cyan_bold'
 check_gold gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
+check_gold gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
 
 
 if [ ! -z "$INSTALLED" ]; then
