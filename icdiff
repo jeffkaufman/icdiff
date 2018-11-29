@@ -480,6 +480,16 @@ def create_option_parser():
                       dest='matcher',
                       help="Do not diff lines that match this regex. Not "
                       "compatible with the 'line-numbers' option")
+    parser.add_option("-F", "--filepath-regex",
+                      action="store",
+                      default=None,
+                      type="string",
+                      dest='filepath_regex',
+                      help="Process files (full path) that match this regex pattern")
+    parser.add_option("-I", "--inverse-filepath-regex", default=False,
+                      action="store_true",
+                      help="Inverse regex used in --filepath-regex used to filter"
+                      "files/directories")
     parser.add_option("--head", default=0,
                       help="consider only the first N lines of each file")
     parser.add_option("-H", "--highlight", default=False,
@@ -605,8 +615,15 @@ def diff(options, a, b):
                 raise(e)
 
     elif not is_a_file and not is_b_file:
-        a_contents = set(os.listdir(a))
-        b_contents = set(os.listdir(b))
+
+        if options.filepath_regex:
+            inverse =  "?!" if options.inverse_filepath_regex else ""
+            pattern = re.compile(r"(%s%s)" % (inverse, options.filepath_regex))
+            a_contents = set([ fn for fn in os.listdir(a) if os.path.isdir(fn) or pattern.match(os.path.join(a, fn)) ])
+            b_contents = set([ fn for fn in os.listdir(b) if os.path.isdir(fn) or pattern.match(os.path.join(b, fn)) ])
+        else:
+            a_contents = set(os.listdir(a))
+            b_contents = set(os.listdir(b))
 
         for child in sorted(a_contents.union(b_contents)):
             if child not in b_contents:
