@@ -85,6 +85,7 @@ class ConsoleDiff(object):
     def __init__(self, tabsize=8, wrapcolumn=None, linejunk=None,
                  charjunk=difflib.IS_CHARACTER_JUNK, cols=80,
                  line_numbers=False,
+                 line_number_width=8,
                  show_all_spaces=False,
                  highlight=False,
                  strip_trailing_cr=False):
@@ -101,6 +102,7 @@ class ConsoleDiff(object):
 
         self._tabsize = tabsize
         self.line_numbers = line_numbers
+        self.line_number_width = line_number_width
         self.cols = cols
         self.show_all_spaces = show_all_spaces
         self.highlight = highlight
@@ -110,7 +112,7 @@ class ConsoleDiff(object):
             if not line_numbers:
                 wrapcolumn = self.cols // 2 - 2
             else:
-                wrapcolumn = self.cols // 2 - 10
+                wrapcolumn = self.cols // 2 - 2 - line_number_width
 
         self._wrapcolumn = wrapcolumn
         self._linejunk = linejunk
@@ -273,7 +275,7 @@ class ConsoleDiff(object):
             lid = ''
             return text
         return '%s %s' % (
-            self._rpad(simple_colorize(str(lid), "line-numbers"), 8), text)
+            self._rpad(simple_colorize(str(lid), "line-numbers"), self.line_number_width), text)
 
     def _real_len(self, s):
         s_len = 0
@@ -498,6 +500,8 @@ def create_option_parser():
                       action="store_true",
                       help="generate output with line numbers. Not compatible "
                       "with the 'exclude-lines' option.")
+    parser.add_option("--line-number-width", default=8,
+                      help="pad to this width when printing line numbers.")
     parser.add_option("--no-bold", default=False,
                       action="store_true",
                       help="use non-bold colors; recommended for solarized")
@@ -731,6 +735,7 @@ def diff_files(options, a, b):
                      show_all_spaces=options.show_all_spaces,
                      highlight=options.highlight,
                      line_numbers=options.line_numbers,
+                     line_number_width=int(options.line_number_width),
                      tabsize=int(options.tabsize),
                      strip_trailing_cr=options.strip_trailing_cr)
     for line in cd.make_table(
