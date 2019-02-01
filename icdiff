@@ -566,8 +566,8 @@ def set_cols_option(options):
                     import termios
                     import struct
                     cr = struct.unpack('hh', fcntl.ioctl(fd,
-                                                        termios.TIOCGWINSZ,
-                                                        '1234'))
+                                                         termios.TIOCGWINSZ,
+                                                         '1234'))
                 except Exception:
                     return None
                 return cr
