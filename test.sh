@@ -121,6 +121,12 @@ check_gold gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map='c
 check_gold gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
 check_gold gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
 
+# Testing pipe behavior doesn't fit well with the check_gold system
+$INVOCATION tests/input-{4,5}.txt 2>/tmp/icdiff-pipe-error-output | head -n 1
+if [ -s /tmp/icdiff-pipe-error-output ]; then
+  echo 'emitting errors on early pipe closure'
+  fail
+fi
 
 VERSION=$($INVOCATION --version | awk '{print $NF}')
 if [ "$VERSION" != $(head -n 1 ChangeLog) ]; then

@@ -736,3 +736,8 @@ if __name__ == "__main__":
             pass
         else:
             raise
+    # Close stderr to prevent printing errors when icdiff is piped to
+    # something that closes before icdiff is done writing
+    #
+    # See: https://stackoverflow.com/questions/26692284/how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
+    sys.stderr.close()
