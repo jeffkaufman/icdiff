@@ -545,21 +545,37 @@ def create_option_parser():
 
 def set_cols_option(options):
     if not options.cols:
-        def ioctl_GWINSZ(fd):
+        if os.name == 'nt':
             try:
-                import fcntl
-                import termios
                 import struct
-                cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ,
-                                                     '1234'))
+                from ctypes import windll, create_string_buffer
+
+                fh = windll.kernel32.GetStdHandle(-12)  # stderr is -12
+                csbi = create_string_buffer(22)
+                windll.kernel32.GetConsoleScreenBufferInfo(fh, csbi)
+                res = struct.unpack("hhhhHhhhhhh", csbi.raw)
+                options.cols = res[7] - res[5] + 1  # right - left + 1
+
             except Exception:
                 return None
-            return cr
-        cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-        if cr and cr[1] > 0:
-            options.cols = cr[1]
+
         else:
-            options.cols = 80
+            def ioctl_GWINSZ(fd):
+                try:
+                    import fcntl
+                    import termios
+                    import struct
+                    cr = struct.unpack('hh', fcntl.ioctl(fd,
+                                                         termios.TIOCGWINSZ,
+                                                         '1234'))
+                except Exception:
+                    return None
+                return cr
+            cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+            if cr and cr[1] > 0:
+                options.cols = cr[1]
+            else:
+                options.cols = 80
     return options
 
 
