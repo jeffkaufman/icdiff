@@ -649,7 +649,7 @@ def read_file(fname, options):
             "error: file '%s' not valid with encoding '%s': <%s> at %s-%s." %
             (fname, options.encoding, e.reason, e.start, e.end), options)
         raise
-    except LookupError as e:
+    except LookupError:
         codec_print(
             "error: encoding '%s' was not found." %
             (options.encoding), options)
@@ -755,5 +755,6 @@ if __name__ == "__main__":
     # Close stderr to prevent printing errors when icdiff is piped to
     # something that closes before icdiff is done writing
     #
-    # See: https://stackoverflow.com/questions/26692284/how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
+    # See: https://stackoverflow.com/questions/26692284/
+    #              how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
     sys.stderr.close()
