@@ -542,7 +542,8 @@ def create_option_parser():
                       "'--color-map=separator:white,description:cyan")
     parser.add_option("--is-git-diff", default=False,
                       action="store_true",
-                      help="Show the real file name when displaying git-diff result")
+                      help="Show the real file name when displaying "
+                      "git-diff result")
     return parser
 
 
