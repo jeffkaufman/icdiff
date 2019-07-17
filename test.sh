@@ -93,7 +93,7 @@ function check_git_diff() {
     # Set default args when first time check git diff
     yes | git difftool --extcmd icdiff > /dev/null
     git config --global icdiff.options '--cols=80'
-    export PATH=$PATH:"$(pwd)/git-icdiff"
+    export PATH=$PATH:"$(pwd)"
   fi
   local tmp=/tmp/git-icdiff.output
   git icdiff $1 $2 &> $tmp
