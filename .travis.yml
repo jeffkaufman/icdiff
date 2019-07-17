@@ -12,3 +12,5 @@ python:
 script:
   - pip install -r requirements-dev.txt
   - ./test.sh python
+git:
+  depth: false
