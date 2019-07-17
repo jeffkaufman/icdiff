@@ -144,7 +144,7 @@ check_gold gold-subcolors-bad-color tests/input-{1,2}.txt --cols=80 --color-map=
 check_gold gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map='chnge:magenta,description:cyan_bold'
 check_gold gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
 check_gold gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
-check_git_diff gitdiff-only-newlines.txt 4e862056296aa810a46caaf2ac1b0feb82c5e330~1 4e862056296aa810a46caaf2ac1b0feb82c5e330
+check_git_diff gitdiff-only-newlines.txt 4e86205629~1 4e86205629
 
 # Testing pipe behavior doesn't fit well with the check_gold system
 $INVOCATION tests/input-{4,5}.txt 2>/tmp/icdiff-pipe-error-output | head -n 1
