@@ -1,5 +1,6 @@
 #!/bin/sh
 ICDIFF_OPTIONS=$(git config --get icdiff.options)
+ICDIFF_OPTIONS="${ICDIFF_OPTIONS} --is-git-diff"
 GITPAGER=$(git config --get icdiff.pager)
 
 if [ -z "$GITPAGER" ]; then

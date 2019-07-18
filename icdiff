@@ -540,6 +540,10 @@ def create_option_parser():
                                for x in sorted(color_mapping.items())) + "'"
                       ".  You don't have to override all of them: "
                       "'--color-map=separator:white,description:cyan")
+    parser.add_option("--is-git-diff", default=False,
+                      action="store_true",
+                      help="Show the real file name when displaying "
+                      "git-diff result")
     return parser
 
 
@@ -667,18 +671,26 @@ def format_label(path, label="{path}"):
 
 
 def diff_files(options, a, b):
-    if options.labels:
-        if len(options.labels) == 2:
-            headers = [
-                format_label(a, options.labels[0]),
-                format_label(b, options.labels[1]),
-            ]
-        else:
-            codec_print("error: to use arbitrary file labels, "
-                        "specify -L twice.", options)
-            return
+    if options.is_git_diff is True:
+        # Use $BASE as label when displaying git-diff result
+        base = os.getenv("BASE")
+        headers = [
+            format_label(a, base),
+            format_label(b, base)
+        ]
     else:
-        headers = a, b
+        if options.labels:
+            if len(options.labels) == 2:
+                headers = [
+                    format_label(a, options.labels[0]),
+                    format_label(b, options.labels[1]),
+                ]
+            else:
+                codec_print("error: to use arbitrary file labels, "
+                            "specify -L twice.", options)
+                return
+        else:
+            headers = a, b
     if options.no_headers:
         headers = None, None
 

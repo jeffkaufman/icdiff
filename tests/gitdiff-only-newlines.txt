@@ -1,0 +1,22 @@
+[0;34mREADME[m                                  [0;34mREADME[m                                 
+  --show-all-spaces    color all non-m    --show-all-spaces    color all non-m 
+atching whitespace including            atching whitespace including           
+                       that which is n                         that which is n 
+ot needed for drawing the eye to        ot needed for drawing the eye to       
+                       changes. Slow,                          changes. Slow,  
+ugly, displays all changes              ugly, displays all changes             
+  --print-headers      label the left     --print-headers      label the left  
+and right sides with their file         and right sides with their file        
+                       names                                   names           
+                                        [7;32m [m                                      
+                                        [1;32mLicense:[m                               
+                                        [7;32m [m                                      
+                                        [1;32m  This file is derived from difflib.Ht[m 
+                                        [1;32mmlDiff which is under the license:[m     
+                                        [7;32m [m                                      
+                                        [1;32m    http://www.python.org/download/rel[m 
+                                        [1;32meases/2.6.2/license/[m                   
+                                        [7;32m [m                                      
+                                        [1;32m  I release my changes here under the [m 
+                                        [1;32msame license.  This is GPL compatible.[m 
+                                        [7;32m  [m                                     
