@@ -81,7 +81,7 @@ function check_gold() {
   fi
 }
 
-FIRST_TIME_CHECK_GIT_DIFF = true
+FIRST_TIME_CHECK_GIT_DIFF=true
 function check_git_diff() {
   local gitdiff=tests/$1
   shift
