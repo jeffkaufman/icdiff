@@ -548,39 +548,38 @@ def create_option_parser():
 
 
 def set_cols_option(options):
-    if not options.cols:
-        if os.name == 'nt':
+    if os.name == 'nt':
+        try:
+            import struct
+            from ctypes import windll, create_string_buffer
+
+            fh = windll.kernel32.GetStdHandle(-12)  # stderr is -12
+            csbi = create_string_buffer(22)
+            windll.kernel32.GetConsoleScreenBufferInfo(fh, csbi)
+            res = struct.unpack("hhhhHhhhhhh", csbi.raw)
+            options.cols = res[7] - res[5] + 1  # right - left + 1
+            return;
+
+        except Exception:
+            pass
+
+    else:
+        def ioctl_GWINSZ(fd):
             try:
+                import fcntl
+                import termios
                 import struct
-                from ctypes import windll, create_string_buffer
-
-                fh = windll.kernel32.GetStdHandle(-12)  # stderr is -12
-                csbi = create_string_buffer(22)
-                windll.kernel32.GetConsoleScreenBufferInfo(fh, csbi)
-                res = struct.unpack("hhhhHhhhhhh", csbi.raw)
-                options.cols = res[7] - res[5] + 1  # right - left + 1
-
+                cr = struct.unpack('hh', fcntl.ioctl(fd,
+                                                     termios.TIOCGWINSZ,
+                                                     '1234'))
             except Exception:
                 return None
-
-        else:
-            def ioctl_GWINSZ(fd):
-                try:
-                    import fcntl
-                    import termios
-                    import struct
-                    cr = struct.unpack('hh', fcntl.ioctl(fd,
-                                                         termios.TIOCGWINSZ,
-                                                         '1234'))
-                except Exception:
-                    return None
-                return cr
-            cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-            if cr and cr[1] > 0:
-                options.cols = cr[1]
-            else:
-                options.cols = 80
-    return options
+            return cr
+        cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+        if cr and cr[1] > 0:
+            options.cols = cr[1]
+            return
+    options.cols = 80
 
 
 def validate_has_two_arguments(parser, args):
@@ -593,7 +592,8 @@ def start():
     parser = create_option_parser()
     options, args = parser.parse_args()
     validate_has_two_arguments(parser, args)
-    options = set_cols_option(options)
+    if not options.cols:
+        set_cols_option(options)
     diff(options, *args)
 
 
