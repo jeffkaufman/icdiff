@@ -1,3 +1,10 @@
+1.9.5
+	Print clear errors on unknown character encodings #144
+	Don't print errors on pipe closure in python3 #156
+	Support icdiff.pager configuration setting with git-icdiff #157 #160
+	Filenames with spaces work properly in git-icdiff #158
+	Show the correct filename in git-icdiff #159
+	Add windows suport for detecting terminal width #155 #163
 1.9.4
 	Allow {path} and {basename} in --label #139
 	Properly implement git difftool protocol #140
