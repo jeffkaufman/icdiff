@@ -558,7 +558,7 @@ def set_cols_option(options):
             windll.kernel32.GetConsoleScreenBufferInfo(fh, csbi)
             res = struct.unpack("hhhhHhhhhhh", csbi.raw)
             options.cols = res[7] - res[5] + 1  # right - left + 1
-            return;
+            return
 
         except Exception:
             pass
@@ -594,7 +594,22 @@ def start():
     validate_has_two_arguments(parser, args)
     if not options.cols:
         set_cols_option(options)
-    diff(options, *args)
+    try:
+        diff(options, *args)
+    except KeyboardInterrupt:
+        pass
+    except IOError as e:
+        if e.errno == errno.EPIPE:
+            pass
+        else:
+            raise
+
+    # Close stderr to prevent printing errors when icdiff is piped to
+    # something that closes before icdiff is done writing
+    #
+    # See: https://stackoverflow.com/questions/26692284/...
+    #      ...how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
+    sys.stderr.close()
 
 
 def codec_print(s, options):
@@ -755,18 +770,4 @@ def diff_files(options, a, b):
 
 
 if __name__ == "__main__":
-    try:
-        start()
-    except KeyboardInterrupt:
-        pass
-    except IOError as e:
-        if e.errno == errno.EPIPE:
-            pass
-        else:
-            raise
-    # Close stderr to prevent printing errors when icdiff is piped to
-    # something that closes before icdiff is done writing
-    #
-    # See: https://stackoverflow.com/questions/26692284/
-    #              how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
-    sys.stderr.close()
+    start()
