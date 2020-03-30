@@ -52,6 +52,8 @@ Show differences between files in a two column view.
   --output-encoding=OUTPUT_ENCODING
                         specify the output encoding; defaults to utf8
   -r, --recursive       recursively compare subdirectories
+  -s, --report-identical-files
+                        report when two files are the same
   --show-all-spaces     color all non-matching whitespace including that which
                         is not needed for drawing the eye to changes.  Slow,
                         ugly, displays all changes

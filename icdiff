@@ -510,6 +510,9 @@ def create_option_parser():
     parser.add_option("-r", "--recursive", default=False,
                       action="store_true",
                       help="recursively compare subdirectories")
+    parser.add_option("-s", "--report-identical-files", default=False,
+                      action="store_true",
+                      help="report when two files are the same")
     parser.add_option("--show-all-spaces", default=False,
                       action="store_true",
                       help="color all non-matching whitespace including "
@@ -633,6 +636,8 @@ def diff(options, a, b):
         try:
             if not filecmp.cmp(a, b, shallow=False):
                 diff_files(options, a, b)
+            elif options.report_identical_files:
+                print("Files %s and %s are identical." % (a, b))
         except OSError as e:
             if e.errno == errno.ENOENT:
                 print_meta("error: file '%s' was not found" % e.filename)
