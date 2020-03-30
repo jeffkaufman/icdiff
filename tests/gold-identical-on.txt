@@ -1,0 +1,1 @@
+Files tests/input-1.txt and tests/input-1.txt are identical.
