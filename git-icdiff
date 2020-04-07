@@ -4,11 +4,11 @@ ICDIFF_OPTIONS="${ICDIFF_OPTIONS} --is-git-diff"
 GITPAGER=$(git config --get icdiff.pager)
 
 if [ -z "$GITPAGER" ]; then
-  if git config --get core.pager; then
-    GITPAGER=$(git config --get core.pager)
-  else
-    GITPAGER="${PAGER:-less}"
-  fi
+  GITPAGER=$(git config --get core.pager)
+fi
+
+if [ -z "$GITPAGER" ]; then
+  GITPAGER="${PAGER:-less}"
 fi
 
 if [ "$GITPAGER" = "more" ] || [ "$GITPAGER" = "less" ]; then
