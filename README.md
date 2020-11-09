@@ -13,6 +13,10 @@ Alternatively, install with pip:
   pip install git+https://github.com/jeffkaufman/icdiff.git
 ```
 
+It can be also installed using [AUR](https://aur.archlinux.org/packages/icdiff/)
+```
+  yay -S icdiff
+```
 It can be also installed using [Nix](https://nixos.org/nix/)
 
 ```
