@@ -11,7 +11,7 @@ if [ -z "$GITPAGER" ]; then
   GITPAGER="${PAGER:-less}"
 fi
 
-if [ "$GITPAGER" = "more" ] || [ "$GITPAGER" = "less" ]; then
+if [ "${GITPAGER%% *}" = "more" ] || [ "${GITPAGER%% *}" = "less" ]; then
   GITPAGER="$GITPAGER -R"
 fi
 
