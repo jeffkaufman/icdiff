@@ -171,50 +171,55 @@ class ConsoleDiff(object):
         text line list.  This function is used recursively to handle
         the second part of the split line to further split it.
         """
-        # if blank line or context separator, just add it to the output list
-        if not line_num:
-            data_list.append((line_num, text))
-            return
 
-        # if line text doesn't need wrapping, just add it to the output list
-        if ((self._display_len(text) - (text.count('\0') * 3) <=
-             self._wrapcolumn)):
-            data_list.append((line_num, text))
-            return
+        while True:
+            # if blank line or context separator, just add it to the output
+            # list
+            if not line_num:
+                data_list.append((line_num, text))
+                return
 
-        # scan text looking for the wrap point, keeping track if the wrap
-        # point is inside markers
-        i = 0
-        n = 0
-        mark = ''
-        while n < self._wrapcolumn and i < len(text):
-            if text[i] == '\0':
-                i += 1
-                mark = text[i]
-                i += 1
-            elif text[i] == '\1':
-                i += 1
-                mark = ''
-            else:
-                n += self._display_len(text[i])
-                i += 1
+            # if line text doesn't need wrapping, just add it to the output
+            # list
+            if ((self._display_len(text) - (text.count('\0') * 3) <=
+                 self._wrapcolumn)):
+                data_list.append((line_num, text))
+                return
 
-        # wrap point is inside text, break it up into separate lines
-        line1 = text[:i]
-        line2 = text[i:]
+            # scan text looking for the wrap point, keeping track if the wrap
+            # point is inside markers
+            i = 0
+            n = 0
+            mark = ''
+            while n < self._wrapcolumn and i < len(text):
+                if text[i] == '\0':
+                    i += 1
+                    mark = text[i]
+                    i += 1
+                elif text[i] == '\1':
+                    i += 1
+                    mark = ''
+                else:
+                    n += self._display_len(text[i])
+                    i += 1
 
-        # if wrap point is inside markers, place end marker at end of first
-        # line and start marker at beginning of second line because each
-        # line will have its own table tag markup around it.
-        if mark:
-            line1 = line1 + '\1'
-            line2 = '\0' + mark + line2
+            # wrap point is inside text, break it up into separate lines
+            line1 = text[:i]
+            line2 = text[i:]
 
-        # tack on first line onto the output list
-        data_list.append((line_num, line1))
+            # if wrap point is inside markers, place end marker at end of first
+            # line and start marker at beginning of second line because each
+            # line will have its own table tag markup around it.
+            if mark:
+                line1 = line1 + '\1'
+                line2 = '\0' + mark + line2
 
-        # use this routine again to wrap the remaining text
-        self._split_line(data_list, '>', line2)
+            # tack on first line onto the output list
+            data_list.append((line_num, line1))
+
+            # use this routine again to wrap the remaining text
+            line_num = '>'
+            text = line2
 
     def _line_wrapper(self, diffs):
         """Returns iterator that splits (wraps) mdiff text lines"""
