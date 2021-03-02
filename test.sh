@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./test.sh [--regold] [test-name] [python-version]
+# Usage: ./test.sh [--regold] [test-name] python[3]
 # Example:
 #   Run all tests:
 #     ./test.sh python3
