@@ -93,7 +93,7 @@ function check_git_diff() {
     # Set default args when first time check git diff
     yes | git difftool --extcmd icdiff > /dev/null
     git config --global icdiff.options '--cols=80'
-    export PATH=$PATH:"$(pwd)"
+    export PATH="$(pwd)":$PATH
   fi
   local tmp=/tmp/git-icdiff.output
   git icdiff $1 $2 &> $tmp
@@ -145,7 +145,13 @@ check_gold gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map='c
 check_gold gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
 check_gold gold-identical-on.txt tests/input-{1,1}.txt -s
 check_gold gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
-check_git_diff gitdiff-only-newlines.txt 4e86205629~1 4e86205629
+
+if git show 4e86205629 &> /dev/null; then
+  # We're in the repo, so test git.
+  check_git_diff gitdiff-only-newlines.txt 4e86205629~1 4e86205629
+else
+  echo "Not in icdiff repo; skipping git test"
+fi
 
 # Testing pipe behavior doesn't fit well with the check_gold system
 $INVOCATION tests/input-{4,5}.txt 2>/tmp/icdiff-pipe-error-output | head -n 1
