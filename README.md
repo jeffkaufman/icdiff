@@ -137,7 +137,6 @@ pip install -r requirements-dev.txt
 ## Running tests
 
 ```sh
-./test.sh python2
 ./test.sh python3
 ```
 

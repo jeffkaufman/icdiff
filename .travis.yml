@@ -1,13 +1,13 @@
 language: python
-language: python
 sudo: required
 dist: xenial
 python:
-  - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
+  - "3.9"
   - "nightly"
 script:
   - pip install -r requirements-dev.txt

@@ -25,7 +25,7 @@ if [ "$#" -gt 1 ]; then
 fi
 
 if [ "$#" != 1 ]; then
-  echo "Usage: '$0 [--regold] [test-name] python[23]'"
+  echo "Usage: '$0 [--regold] [test-name] python[3]'"
   exit 1
 fi
 
