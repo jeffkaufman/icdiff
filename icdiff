@@ -87,6 +87,7 @@ class ConsoleDiff(object):
                  line_numbers=False,
                  show_all_spaces=False,
                  highlight=False,
+                 truncate=False,
                  strip_trailing_cr=False):
         """ConsoleDiff instance initializer
 
@@ -105,6 +106,7 @@ class ConsoleDiff(object):
         self.show_all_spaces = show_all_spaces
         self.highlight = highlight
         self.strip_trailing_cr = strip_trailing_cr
+        self.truncate = truncate
 
         if wrapcolumn is None:
             if not line_numbers:
@@ -218,6 +220,8 @@ class ConsoleDiff(object):
             data_list.append((line_num, line1))
 
             # use this routine again to wrap the remaining text
+            # unless truncate is set
+            if self.truncate: return
             line_num = '>'
             text = line2
 
@@ -525,6 +529,9 @@ def create_option_parser():
                       "changes.  Slow, ugly, displays all changes")
     parser.add_option("--tabsize", default=8,
                       help="tab stop spacing")
+    parser.add_option("-t", "--truncate", default=False,
+                      action="store_true",
+                      help="truncate long lines instead of wrapping them")
     parser.add_option("-u", "--patch", default=True,
                       action="store_true",
                       help="generate patch. This is always true, "
@@ -770,6 +777,7 @@ def diff_files(options, a, b):
                      highlight=options.highlight,
                      line_numbers=options.line_numbers,
                      tabsize=int(options.tabsize),
+                     truncate=options.truncate,
                      strip_trailing_cr=options.strip_trailing_cr)
     for line in cd.make_table(
             lines_a, lines_b, headers[0], headers[1],
