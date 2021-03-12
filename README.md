@@ -62,6 +62,7 @@ Show differences between files in a two column view.
                         is not needed for drawing the eye to changes.  Slow,
                         ugly, displays all changes
   --tabsize=TABSIZE     tab stop spacing
+  -t, --truncate        truncate long lines instead of wrapping them
   -u, --patch           generate patch. This is always true, and only exists
                         for compatibility
   -U NUM, --unified=NUM, --numlines=NUM
