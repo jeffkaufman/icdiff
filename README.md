@@ -146,6 +146,8 @@ pip install -r requirements-dev.txt
 * Update ChangeLog with all the changes since the last release
 * Update `__version__` in `icdiff`
 * Run tests, make sure they pass
+* `git commit -a -m "release ${version}"`
+* `git push`
 * `git tag release-${version}`
 * `git push origin release-${version}`
 
