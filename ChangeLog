@@ -1,3 +1,6 @@
+2.0.1
+	Add  -t/--truncate option #184
+
 2.0.0
 	Drop support for Python 2
 	Clearer error on unknown encodings #145
@@ -6,6 +9,7 @@
 	Fix testcase that assumed a git repo #166
 	Implement --report-identical-files #168
 	Improved handling of very long lines #180
+
 1.9.4
 	Allow {path} and {basename} in --label #139
 	Properly implement git difftool protocol #140
