@@ -221,7 +221,8 @@ class ConsoleDiff(object):
 
             # use this routine again to wrap the remaining text
             # unless truncate is set
-            if self.truncate: return
+            if self.truncate:
+                return
             line_num = '>'
             text = line2
 
