@@ -1,3 +1,6 @@
+2.0.4
+	Include LICENSE in package
+
 2.0.3
 	Attempts to publisher 2.0.1 and 2.0.2 to pypi gave broken packages
 

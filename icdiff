@@ -23,7 +23,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "2.0.3"
+__version__ = "2.0.4"
 
 color_codes = {
     "black":   '\033[0;30m',
