@@ -80,6 +80,11 @@ Show differences between files in a two column view.
                         '--color-map=separator:white,description:cyan
 ```
 
+The environment variable `ICDIFF_DEFAULTS` can be set to a
+space delimited list of default flag values. For example:
+
+  `export ICDIFF_DEFAULTS='-N -U3 --color-map=description:magenta_bold,separator:magenta_bold'`
+
 ## Using with Git
 
 To see what it looks like, try:
