@@ -601,12 +601,18 @@ def set_cols_option(options):
 def validate_has_two_arguments(parser, args):
     if len(args) != 2:
         parser.print_help()
+        print("\nThe environment variable ICDIFF_DEFAULTS can be set to a\n"
+              "space delimited list of default flag values.")
         sys.exit()
 
 
 def start():
     parser = create_option_parser()
-    options, args = parser.parse_args()
+    arguments = sys.argv[1:]
+    defaults = os.getenv("ICDIFF_DEFAULTS")
+    if defaults != None:
+        arguments = defaults.split() + arguments
+    options, args = parser.parse_args(arguments)
     validate_has_two_arguments(parser, args)
     if not options.cols:
         set_cols_option(options)
