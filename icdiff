@@ -668,6 +668,7 @@ def diff(options, a, b):
         except OSError as e:
             if e.errno == errno.ENOENT:
                 print_meta("error: file '%s' was not found" % e.filename)
+                sys.exit(EXIT_CODE_ERROR)
             else:
                 raise(e)
 
@@ -716,7 +717,7 @@ def format_label(path, label="{path}"):
 
     Example:
       For file `/foo/bar.py` and label "Yours: {basename}" -
-      The ouptut is "Yours: bar.py"
+      The output is "Yours: bar.py"
     """
     return label.format(path=path, basename=os.path.basename(path))
 
@@ -740,7 +741,7 @@ def diff_files(options, a, b):
             else:
                 codec_print("error: to use arbitrary file labels, "
                             "specify -L twice.", options)
-                return diff_found
+                sys.exit(EXIT_CODE_ERROR)
         else:
             headers = a, b
     if options.no_headers:
