@@ -489,10 +489,6 @@ def create_option_parser():
                       "Unix only")
     parser.add_option("--encoding", default="utf-8",
                       help="specify the file encoding; defaults to utf8")
-    parser.add_option("-e", "--error-code", default=False,
-                      action="store_true",
-                      help="Set error code if differences have been detected "
-                      "in compared files")
     parser.add_option("-E", "--exclude-lines",
                       action="store",
                       type="string",
