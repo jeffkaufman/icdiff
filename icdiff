@@ -27,8 +27,8 @@ __version__ = "2.0.4"
 
 # Exit code constants
 EXIT_CODE_SUCCESS = 0
-EXIT_CODE_DIFF    = 1
-EXIT_CODE_ERROR   = 2
+EXIT_CODE_DIFF = 1
+EXIT_CODE_ERROR = 2
 
 color_codes = {
     "black":   '\033[0;30m',
@@ -694,6 +694,7 @@ def diff(options, a, b):
 
     return diffs_found
 
+
 def read_file(fname, options):
     try:
         with codecs.open(fname, encoding=options.encoding, mode="rb") as inf:
@@ -809,6 +810,7 @@ def diff_files(options, a, b):
         sys.stdout.flush()
 
     return diff_found
+
 
 if __name__ == "__main__":
     start()
