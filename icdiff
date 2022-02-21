@@ -739,7 +739,7 @@ def diff_files(options, a, b):
             else:
                 codec_print("error: to use arbitrary file labels, "
                             "specify -L twice.", options)
-                return
+                return diff_found
         else:
             headers = a, b
     if options.no_headers:
@@ -754,7 +754,7 @@ def diff_files(options, a, b):
         lines_a = read_file(a, options)
         lines_b = read_file(b, options)
     except UnicodeDecodeError:
-        return
+        return diff_found
 
     if head != 0:
         lines_a = lines_a[:head]
