@@ -25,6 +25,11 @@ import codecs
 
 __version__ = "2.0.4"
 
+# Exit code constants
+EXIT_CODE_SUCCESS = 0
+EXIT_CODE_DIFF    = 1
+EXIT_CODE_ERROR   = 2
+
 color_codes = {
     "black":   '\033[0;30m',
     "red":     '\033[0;31m',
@@ -484,6 +489,10 @@ def create_option_parser():
                       "Unix only")
     parser.add_option("--encoding", default="utf-8",
                       help="specify the file encoding; defaults to utf8")
+    parser.add_option("-e", "--error-code", default=False,
+                      action="store_true",
+                      help="Set error code if differences have been detected "
+                      "in compared files")
     parser.add_option("-E", "--exclude-lines",
                       action="store",
                       type="string",
@@ -601,7 +610,7 @@ def set_cols_option(options):
 def validate_has_two_arguments(parser, args):
     if len(args) != 2:
         parser.print_help()
-        sys.exit(2)
+        sys.exit(EXIT_CODE_DIFF)
 
 
 def start():
@@ -627,7 +636,7 @@ def start():
     # See: https://stackoverflow.com/questions/26692284/...
     #      ...how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
     sys.stderr.close()
-    sys.exit(1 if diffs_found else 0)
+    sys.exit(EXIT_CODE_DIFF if diffs_found else EXIT_CODE_SUCCESS)
 
 
 def codec_print(s, options):
@@ -698,7 +707,7 @@ def read_file(fname, options):
         codec_print(
             "error: encoding '%s' was not found." %
             (options.encoding), options)
-        sys.exit(1)
+        sys.exit(EXIT_CODE_ERROR)
 
 
 def format_label(path, label="{path}"):
@@ -774,14 +783,14 @@ def diff_files(options, a, b):
                     "Invalid category '%s' in '%s'.  Valid categories are: %s."
                     % (category, command_for_errors,
                        ", ".join(sorted(color_mapping.keys()))))
-                sys.exit(1)
+                sys.exit(EXIT_CODE_ERROR)
 
             if color not in color_codes:
                 print("Invalid color '%s' in '%s'.  Valid colors are: %s."
                       % (color, command_for_errors,
                          ", ".join([raw_colorize(x, x)
                                     for x in sorted(color_codes.keys())])))
-                sys.exit(1)
+                sys.exit(EXIT_CODE_ERROR)
 
             color_mapping[category] = color
 
