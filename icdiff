@@ -25,6 +25,11 @@ import codecs
 
 __version__ = "2.0.4"
 
+# Exit code constants
+EXIT_CODE_SUCCESS = 0
+EXIT_CODE_DIFF = 1
+EXIT_CODE_ERROR = 2
+
 color_codes = {
     "black":   '\033[0;30m',
     "red":     '\033[0;31m',
@@ -601,17 +606,18 @@ def set_cols_option(options):
 def validate_has_two_arguments(parser, args):
     if len(args) != 2:
         parser.print_help()
-        sys.exit()
+        sys.exit(EXIT_CODE_DIFF)
 
 
 def start():
+    diffs_found = False
     parser = create_option_parser()
     options, args = parser.parse_args()
     validate_has_two_arguments(parser, args)
     if not options.cols:
         set_cols_option(options)
     try:
-        diff(options, *args)
+        diffs_found = diff(options, *args)
     except KeyboardInterrupt:
         pass
     except IOError as e:
@@ -626,6 +632,7 @@ def start():
     # See: https://stackoverflow.com/questions/26692284/...
     #      ...how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
     sys.stderr.close()
+    sys.exit(EXIT_CODE_DIFF if diffs_found else EXIT_CODE_SUCCESS)
 
 
 def codec_print(s, options):
@@ -640,6 +647,9 @@ def diff(options, a, b):
     def print_meta(s):
         codec_print(simple_colorize(s, "meta"), options)
 
+    # We start out and assume that no diffs have been found (so far)
+    diffs_found = False
+
     # Don't use os.path.isfile; it returns False for file-like entities like
     # bash's process substitution (/dev/fd/N).
     is_a_file = not os.path.isdir(a)
@@ -648,12 +658,13 @@ def diff(options, a, b):
     if is_a_file and is_b_file:
         try:
             if not filecmp.cmp(a, b, shallow=False):
-                diff_files(options, a, b)
+                diffs_found = diffs_found | diff_files(options, a, b)
             elif options.report_identical_files:
                 print("Files %s and %s are identical." % (a, b))
         except OSError as e:
             if e.errno == errno.ENOENT:
                 print_meta("error: file '%s' was not found" % e.filename)
+                sys.exit(EXIT_CODE_ERROR)
             else:
                 raise(e)
 
@@ -667,14 +678,18 @@ def diff(options, a, b):
             elif child not in a_contents:
                 print_meta("Only in %s: %s" % (b, child))
             elif options.recursive:
-                diff(options,
-                     os.path.join(a, child),
-                     os.path.join(b, child))
+                diffs_found = diffs_found | diff(options,
+                                                 os.path.join(a, child),
+                                                 os.path.join(b, child))
     elif not is_a_file and is_b_file:
         print_meta("File %s is a directory while %s is a file" % (a, b))
+        diffs_found = True
 
     elif is_a_file and not is_b_file:
         print_meta("File %s is a file while %s is a directory" % (a, b))
+        diffs_found = True
+
+    return diffs_found
 
 
 def read_file(fname, options):
@@ -690,7 +705,7 @@ def read_file(fname, options):
         codec_print(
             "error: encoding '%s' was not found." %
             (options.encoding), options)
-        sys.exit()
+        sys.exit(EXIT_CODE_ERROR)
 
 
 def format_label(path, label="{path}"):
@@ -698,12 +713,13 @@ def format_label(path, label="{path}"):
 
     Example:
       For file `/foo/bar.py` and label "Yours: {basename}" -
-      The ouptut is "Yours: bar.py"
+      The output is "Yours: bar.py"
     """
     return label.format(path=path, basename=os.path.basename(path))
 
 
 def diff_files(options, a, b):
+    diff_found = False
     if options.is_git_diff is True:
         # Use $BASE as label when displaying git-diff result
         base = os.getenv("BASE")
@@ -721,7 +737,7 @@ def diff_files(options, a, b):
             else:
                 codec_print("error: to use arbitrary file labels, "
                             "specify -L twice.", options)
-                return
+                sys.exit(EXIT_CODE_ERROR)
         else:
             headers = a, b
     if options.no_headers:
@@ -736,7 +752,7 @@ def diff_files(options, a, b):
         lines_a = read_file(a, options)
         lines_b = read_file(b, options)
     except UnicodeDecodeError:
-        return
+        return diff_found
 
     if head != 0:
         lines_a = lines_a[:head]
@@ -747,6 +763,9 @@ def diff_files(options, a, b):
                    not re.search(options.matcher, line_a)]
         lines_b = [line_b for line_b in lines_b if
                    not re.search(options.matcher, line_b)]
+
+    # Determine if a difference has been detected
+    diff_found = len(lines_a) | len(lines_b)
 
     if options.no_bold:
         for key in color_mapping:
@@ -762,14 +781,14 @@ def diff_files(options, a, b):
                     "Invalid category '%s' in '%s'.  Valid categories are: %s."
                     % (category, command_for_errors,
                        ", ".join(sorted(color_mapping.keys()))))
-                sys.exit()
+                sys.exit(EXIT_CODE_ERROR)
 
             if color not in color_codes:
                 print("Invalid color '%s' in '%s'.  Valid colors are: %s."
                       % (color, command_for_errors,
                          ", ".join([raw_colorize(x, x)
                                     for x in sorted(color_codes.keys())])))
-                sys.exit()
+                sys.exit(EXIT_CODE_ERROR)
 
             color_mapping[category] = color
 
@@ -786,6 +805,8 @@ def diff_files(options, a, b):
             numlines=int(options.unified)):
         codec_print(line, options)
         sys.stdout.flush()
+
+    return diff_found
 
 
 if __name__ == "__main__":
