@@ -6,6 +6,9 @@ setup(
     name="icdiff",
     version=__version__,
     url="http://www.jefftk.com/icdiff",
+    project_urls={
+        "Source": "https://github.com/jeffkaufman/icdiff",
+    },
     author="Jeff Kaufman",
     author_email="jeff@jefftk.com",
     description="improved colored diff",
