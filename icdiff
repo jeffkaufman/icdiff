@@ -14,6 +14,7 @@ Based on Python's difflib.HtmlDiff,
 with changes to provide console output instead of html output.  """
 
 import os
+import stat
 import sys
 import errno
 import difflib
@@ -57,6 +58,7 @@ color_mapping = {
     "change": "yellow_bold",
     "separator": "blue",
     "description": "blue",
+    "permissions": "yellow",
     "meta": "magenta",
     "line-numbers": "white",
 }
@@ -322,7 +324,7 @@ class ConsoleDiff(object):
         return s + self._pad(s, field_width)
 
     def make_table(self, fromlines, tolines, fromdesc='', todesc='',
-                   context=False, numlines=5):
+                   fromperms=None, toperms=None, context=False, numlines=5):
         """Generates table of side by side comparison with change highlights
 
         Arguments:
@@ -330,6 +332,8 @@ class ConsoleDiff(object):
         tolines -- list of "to" lines
         fromdesc -- "from" file column header string
         todesc -- "to" file column header string
+        fromperms -- "from" file permissions
+        toperms -- "to" file permissions
         context -- set to True for contextual differences (defaults to False
             which shows full differences).
         numlines -- number of context lines.  When context is set True,
@@ -362,15 +366,22 @@ class ConsoleDiff(object):
             diffs = self._line_wrapper(diffs)
         diffs = self._collect_lines(diffs)
 
-        for left, right in self._generate_table(fromdesc, todesc, diffs):
+        for left, right in self._generate_table(fromdesc, todesc, fromperms,
+                                                toperms, diffs):
             yield self.colorize(
                 "%s %s" % (self._lpad(left, self.cols // 2 - 1),
                            self._lpad(right, self.cols // 2 - 1)))
 
-    def _generate_table(self, fromdesc, todesc, diffs):
+    def _generate_table(self, fromdesc, todesc, fromperms, toperms, diffs):
         if fromdesc or todesc:
             yield (simple_colorize(fromdesc, "description"),
                    simple_colorize(todesc, "description"))
+
+        if fromperms != toperms:
+            yield (simple_colorize(
+                f"{stat.filemode(fromperms)} ({fromperms:o})", "permissions"),
+                    simple_colorize(f"{stat.filemode(toperms)} ({toperms:o})",
+                                    "permissions"))
 
         for i, line in enumerate(diffs):
             if line is None:
@@ -550,6 +561,10 @@ def create_option_parser():
                       action="store_true",
                       help="show the whole file instead of just changed "
                       "lines and context")
+    parser.add_option("-P", "--permissions", default=False,
+                      action="store_true",
+                      help="compare the file permissions as well as the "
+                      "content of the file")
     parser.add_option("--strip-trailing-cr", default=False,
                       action="store_true",
                       help="strip any trailing carriage return at the end of "
@@ -643,6 +658,11 @@ def codec_print(s, options):
         sys.stdout.write(s.encode(options.output_encoding))
 
 
+def cmp_perms(options, a, b):
+    return not options.permissions or (os.lstat(a).st_mode
+                                       == os.lstat(b).st_mode)
+
+
 def diff(options, a, b):
     def print_meta(s):
         codec_print(simple_colorize(s, "meta"), options)
@@ -657,7 +677,8 @@ def diff(options, a, b):
 
     if is_a_file and is_b_file:
         try:
-            if not filecmp.cmp(a, b, shallow=False):
+            if not (filecmp.cmp(a, b, shallow=False)
+                    and cmp_perms(options, a, b)):
                 diffs_found = diffs_found | diff_files(options, a, b)
             elif options.report_identical_files:
                 print("Files %s and %s are identical." % (a, b))
@@ -765,7 +786,7 @@ def diff_files(options, a, b):
                    not re.search(options.matcher, line_b)]
 
     # Determine if a difference has been detected
-    diff_found = len(lines_a) | len(lines_b)
+    diff_found = len(lines_a) or len(lines_b) or not cmp_perms(options, a, b)
 
     if options.no_bold:
         for key in color_mapping:
@@ -792,6 +813,13 @@ def diff_files(options, a, b):
 
             color_mapping[category] = color
 
+    if options.permissions:
+        mode_a = os.lstat(a).st_mode
+        mode_b = os.lstat(b).st_mode
+    else:
+        mode_a = None
+        mode_b = None
+
     cd = ConsoleDiff(cols=int(options.cols),
                      show_all_spaces=options.show_all_spaces,
                      highlight=options.highlight,
@@ -800,7 +828,7 @@ def diff_files(options, a, b):
                      truncate=options.truncate,
                      strip_trailing_cr=options.strip_trailing_cr)
     for line in cd.make_table(
-            lines_a, lines_b, headers[0], headers[1],
+            lines_a, lines_b, headers[0], headers[1], mode_a, mode_b,
             context=(not options.whole_file),
             numlines=int(options.unified)):
         codec_print(line, options)
