@@ -24,7 +24,7 @@ import filecmp
 import unicodedata
 import codecs
 
-__version__ = "2.0.4"
+__version__ = "2.0.5"
 
 # Exit code constants
 EXIT_CODE_SUCCESS = 0
