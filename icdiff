@@ -32,23 +32,23 @@ EXIT_CODE_DIFF = 1
 EXIT_CODE_ERROR = 2
 
 color_codes = {
-    "black":   '\033[0;30m',
-    "red":     '\033[0;31m',
-    "green":   '\033[0;32m',
-    "yellow":  '\033[0;33m',
-    "blue":    '\033[0;34m',
-    "magenta": '\033[0;35m',
-    "cyan":    '\033[0;36m',
-    "white":   '\033[0;37m',
-    "none":    '\033[m',
-    "black_bold":   '\033[1;30m',
-    "red_bold":     '\033[1;31m',
-    "green_bold":   '\033[1;32m',
-    "yellow_bold":  '\033[1;33m',
-    "blue_bold":    '\033[1;34m',
-    "magenta_bold": '\033[1;35m',
-    "cyan_bold":    '\033[1;36m',
-    "white_bold":   '\033[1;37m',
+    "black": "\033[0;30m",
+    "red": "\033[0;31m",
+    "green": "\033[0;32m",
+    "yellow": "\033[0;33m",
+    "blue": "\033[0;34m",
+    "magenta": "\033[0;35m",
+    "cyan": "\033[0;36m",
+    "white": "\033[0;37m",
+    "none": "\033[m",
+    "black_bold": "\033[1;30m",
+    "red_bold": "\033[1;31m",
+    "green_bold": "\033[1;32m",
+    "yellow_bold": "\033[1;33m",
+    "blue_bold": "\033[1;34m",
+    "magenta_bold": "\033[1;35m",
+    "cyan_bold": "\033[1;36m",
+    "white_bold": "\033[1;37m",
 }
 
 
@@ -89,13 +89,19 @@ class ConsoleDiff(object):
 
     """
 
-    def __init__(self, tabsize=8, wrapcolumn=None, linejunk=None,
-                 charjunk=difflib.IS_CHARACTER_JUNK, cols=80,
-                 line_numbers=False,
-                 show_all_spaces=False,
-                 highlight=False,
-                 truncate=False,
-                 strip_trailing_cr=False):
+    def __init__(
+        self,
+        tabsize=8,
+        wrapcolumn=None,
+        linejunk=None,
+        charjunk=difflib.IS_CHARACTER_JUNK,
+        cols=80,
+        line_numbers=False,
+        show_all_spaces=False,
+        highlight=False,
+        truncate=False,
+        strip_trailing_cr=False,
+    ):
         """ConsoleDiff instance initializer
 
         Arguments:
@@ -135,37 +141,36 @@ class ConsoleDiff(object):
         spaces and vice versa.  At the end of the table generation, the tab
         characters will be replaced with a space.
         """
+
         def expand_tabs(line):
             # hide real spaces
-            line = line.replace(' ', '\0')
+            line = line.replace(" ", "\0")
             # expand tabs into spaces
             line = line.expandtabs(self._tabsize)
             # replace spaces from expanded tabs back into tab characters
             # (we'll replace them with markup after we do differencing)
-            line = line.replace(' ', '\t')
-            return line.replace('\0', ' ').rstrip('\n')
+            line = line.replace(" ", "\t")
+            return line.replace("\0", " ").rstrip("\n")
+
         fromlines = [expand_tabs(line) for line in fromlines]
         tolines = [expand_tabs(line) for line in tolines]
         return fromlines, tolines
 
     def _strip_trailing_cr(self, lines):
-        """ Remove windows return carriage
-        """
-        lines = [line.rstrip('\r') for line in lines]
+        """Remove windows return carriage"""
+        lines = [line.rstrip("\r") for line in lines]
         return lines
 
     def _all_cr_nl(self, lines):
-        """ Whether a file is entirely \r\n line endings
-        """
-        return all(line.endswith('\r') for line in lines)
+        """Whether a file is entirely \r\n line endings"""
+        return all(line.endswith("\r") for line in lines)
 
     def _display_len(self, s):
         # Handle wide characters like Chinese.
         def width(c):
-            if ((isinstance(c, type(u"")) and
-                 unicodedata.east_asian_width(c) == 'W')):
+            if isinstance(c, type("")) and unicodedata.east_asian_width(c) == "W":
                 return 2
-            elif c == '\r':
+            elif c == "\r":
                 return 2
             return 1
 
@@ -190,8 +195,7 @@ class ConsoleDiff(object):
 
             # if line text doesn't need wrapping, just add it to the output
             # list
-            if ((self._display_len(text) - (text.count('\0') * 3) <=
-                 self._wrapcolumn)):
+            if self._display_len(text) - (text.count("\0") * 3) <= self._wrapcolumn:
                 data_list.append((line_num, text))
                 return
 
@@ -199,15 +203,15 @@ class ConsoleDiff(object):
             # point is inside markers
             i = 0
             n = 0
-            mark = ''
+            mark = ""
             while n < self._wrapcolumn and i < len(text):
-                if text[i] == '\0':
+                if text[i] == "\0":
                     i += 1
                     mark = text[i]
                     i += 1
-                elif text[i] == '\1':
+                elif text[i] == "\1":
                     i += 1
-                    mark = ''
+                    mark = ""
                 else:
                     n += self._display_len(text[i])
                     i += 1
@@ -220,8 +224,8 @@ class ConsoleDiff(object):
             # line and start marker at beginning of second line because each
             # line will have its own table tag markup around it.
             if mark:
-                line1 = line1 + '\1'
-                line2 = '\0' + mark + line2
+                line1 = line1 + "\1"
+                line2 = "\0" + mark + line2
 
             # tack on first line onto the output list
             data_list.append((line_num, line1))
@@ -230,7 +234,7 @@ class ConsoleDiff(object):
             # unless truncate is set
             if self.truncate:
                 return
-            line_num = '>'
+            line_num = ">"
             text = line2
 
     def _line_wrapper(self, diffs):
@@ -254,11 +258,11 @@ class ConsoleDiff(object):
                 if fromlist:
                     fromdata = fromlist.pop(0)
                 else:
-                    fromdata = ('', ' ')
+                    fromdata = ("", " ")
                 if tolist:
                     todata = tolist.pop(0)
                 else:
-                    todata = ('', ' ')
+                    todata = ("", " ")
                 yield fromdata, todata, flag
 
     def _collect_lines(self, diffs):
@@ -273,8 +277,7 @@ class ConsoleDiff(object):
             if (fromdata, todata, flag) == (None, None, None):
                 yield None
             else:
-                yield (self._format_line(*fromdata),
-                       self._format_line(*todata))
+                yield (self._format_line(*fromdata), self._format_line(*todata))
 
     def _format_line(self, linenum, text):
         text = text.rstrip()
@@ -284,23 +287,21 @@ class ConsoleDiff(object):
 
     def _add_line_numbers(self, linenum, text):
         try:
-            lid = '%d' % linenum
+            lid = "%d" % linenum
         except TypeError:
             # handle blank lines where linenum is '>' or ''
-            lid = ''
+            lid = ""
             return text
-        return '%s %s' % (
-            self._rpad(simple_colorize(str(lid), "line-numbers"), 8), text)
+        return "%s %s" % (
+            self._rpad(simple_colorize(str(lid), "line-numbers"), 8),
+            text,
+        )
 
     def _real_len(self, s):
         s_len = 0
         in_esc = False
-        prev = ' '
-        for c in replace_all({'\0+': "",
-                              '\0-': "",
-                              '\0^': "",
-                              '\1': "",
-                              '\t': ' '}, s):
+        prev = " "
+        for c in replace_all({"\0+": "", "\0-": "", "\0^": "", "\1": "", "\t": " "}, s):
             if in_esc:
                 if c == "m":
                     in_esc = False
@@ -323,8 +324,17 @@ class ConsoleDiff(object):
     def _lpad(self, s, field_width):
         return s + self._pad(s, field_width)
 
-    def make_table(self, fromlines, tolines, fromdesc='', todesc='',
-                   fromperms=None, toperms=None, context=False, numlines=5):
+    def make_table(
+        self,
+        fromlines,
+        tolines,
+        fromdesc="",
+        todesc="",
+        fromperms=None,
+        toperms=None,
+        context=False,
+        numlines=5,
+    ):
         """Generates table of side by side comparison with change highlights
 
         Arguments:
@@ -352,70 +362,94 @@ class ConsoleDiff(object):
         fromlines, tolines = self._tab_newline_replace(fromlines, tolines)
 
         if self.strip_trailing_cr or (
-                self._all_cr_nl(fromlines) and self._all_cr_nl(tolines)):
+            self._all_cr_nl(fromlines) and self._all_cr_nl(tolines)
+        ):
             fromlines = self._strip_trailing_cr(fromlines)
             tolines = self._strip_trailing_cr(tolines)
 
         # create diffs iterator which generates side by side from/to data
-        diffs = difflib._mdiff(fromlines, tolines, context_lines,
-                               linejunk=self._linejunk,
-                               charjunk=self._charjunk)
+        diffs = difflib._mdiff(
+            fromlines,
+            tolines,
+            context_lines,
+            linejunk=self._linejunk,
+            charjunk=self._charjunk,
+        )
 
         # set up iterator to wrap lines that exceed desired width
         if self._wrapcolumn:
             diffs = self._line_wrapper(diffs)
         diffs = self._collect_lines(diffs)
 
-        for left, right in self._generate_table(fromdesc, todesc, fromperms,
-                                                toperms, diffs):
+        for left, right in self._generate_table(
+            fromdesc, todesc, fromperms, toperms, diffs
+        ):
             yield self.colorize(
-                "%s %s" % (self._lpad(left, self.cols // 2 - 1),
-                           self._lpad(right, self.cols // 2 - 1)))
+                "%s %s"
+                % (
+                    self._lpad(left, self.cols // 2 - 1),
+                    self._lpad(right, self.cols // 2 - 1),
+                )
+            )
 
     def _generate_table(self, fromdesc, todesc, fromperms, toperms, diffs):
         if fromdesc or todesc:
-            yield (simple_colorize(fromdesc, "description"),
-                   simple_colorize(todesc, "description"))
+            yield (
+                simple_colorize(fromdesc, "description"),
+                simple_colorize(todesc, "description"),
+            )
 
         if fromperms != toperms:
-            yield (simple_colorize(
-                f"{stat.filemode(fromperms)} ({fromperms:o})", "permissions"),
-                    simple_colorize(f"{stat.filemode(toperms)} ({toperms:o})",
-                                    "permissions"))
+            yield (
+                simple_colorize(
+                    f"{stat.filemode(fromperms)} ({fromperms:o})", "permissions"
+                ),
+                simple_colorize(
+                    f"{stat.filemode(toperms)} ({toperms:o})", "permissions"
+                ),
+            )
 
         for i, line in enumerate(diffs):
             if line is None:
                 # mdiff yields None on separator lines; skip the bogus ones
                 # generated for the first line
                 if i > 0:
-                    yield (simple_colorize('---', "separator"),
-                           simple_colorize('---', "separator"))
+                    yield (
+                        simple_colorize("---", "separator"),
+                        simple_colorize("---", "separator"),
+                    )
             else:
                 yield line
 
     def colorize(self, s):
         def background(color):
-            return replace_all({"\033[1;": "\033[7;1;",
-                                "\033[0;": "\033[7;"}, color)
+            return replace_all({"\033[1;": "\033[7;1;", "\033[0;": "\033[7;"}, color)
 
         C_ADD = color_codes[color_mapping["add"]]
         C_SUB = color_codes[color_mapping["subtract"]]
         C_CHG = color_codes[color_mapping["change"]]
 
         if self.highlight:
-            C_ADD, C_SUB, C_CHG = (background(C_ADD),
-                                   background(C_SUB),
-                                   background(C_CHG))
+            C_ADD, C_SUB, C_CHG = (
+                background(C_ADD),
+                background(C_SUB),
+                background(C_CHG),
+            )
 
         C_NONE = color_codes["none"]
         colors = (C_ADD, C_SUB, C_CHG, C_NONE)
 
-        s = replace_all({'\0+': C_ADD,
-                         '\0-': C_SUB,
-                         '\0^': C_CHG,
-                         '\1': C_NONE,
-                         '\t': ' ',
-                         '\r': '\\r'}, s)
+        s = replace_all(
+            {
+                "\0+": C_ADD,
+                "\0-": C_SUB,
+                "\0^": C_CHG,
+                "\1": C_NONE,
+                "\t": " ",
+                "\r": "\\r",
+            },
+            s,
+        )
 
         if self.highlight:
             return s
@@ -423,13 +457,14 @@ class ConsoleDiff(object):
         if not self.show_all_spaces:
             # If there's a change consisting entirely of whitespace,
             # don't color it.
-            return re.sub("\033\\[[01];3([01234567])m(\\s+)(\033\\[)",
-                          "\033[7;3\\1m\\2\\3", s)
+            return re.sub(
+                "\033\\[[01];3([01234567])m(\\s+)(\033\\[)", "\033[7;3\\1m\\2\\3", s
+            )
 
         def will_see_coloredspace(i, s):
             while i < len(s) and s[i].isspace():
                 i += 1
-            if i < len(s) and s[i] == '\033':
+            if i < len(s) and s[i] == "\033":
                 return False
             return True
 
@@ -447,9 +482,14 @@ class ConsoleDiff(object):
                 if ns_end.endswith(C_NONE):
                     in_color = False
 
-            if ((c.isspace() and in_color and
-                 (self.show_all_spaces or not (seen_coloredspace or
-                                               will_see_coloredspace(i, s))))):
+            if (
+                c.isspace()
+                and in_color
+                and (
+                    self.show_all_spaces
+                    or not (seen_coloredspace or will_see_coloredspace(i, s))
+                )
+            ):
                 n_s.extend([C_NONE, background(in_color), c, C_NONE, in_color])
             else:
                 if in_color:
@@ -490,101 +530,166 @@ class MultipleOption(Option):
 
 def create_option_parser():
     # If you change any of these, also update README.
-    parser = OptionParser(usage="usage: %prog [options] left_file right_file",
-                          version="icdiff version %s" % __version__,
-                          description="Show differences between files in a "
-                          "two column view.",
-                          option_class=MultipleOption)
-    parser.add_option("--cols", default=None,
-                      help="specify the width of the screen. Autodetection is "
-                      "Unix only")
-    parser.add_option("--encoding", default="utf-8",
-                      help="specify the file encoding; defaults to utf8")
-    parser.add_option("-E", "--exclude-lines",
-                      action="store",
-                      type="string",
-                      dest='matcher',
-                      help="Do not diff lines that match this regex. Not "
-                      "compatible with the 'line-numbers' option")
-    parser.add_option("--head", default=0,
-                      help="consider only the first N lines of each file")
-    parser.add_option("-H", "--highlight", default=False,
-                      action="store_true",
-                      help="color by changing the background color instead of "
-                      "the foreground color.  Very fast, ugly, displays all "
-                      "changes")
-    parser.add_option("-L", "--label",
-                      action="extend",
-                      type="string",
-                      dest='labels',
-                      help="override file labels with arbitrary tags. "
-                      "Use twice, one for each file. You may include the "
-                      "formatting strings '{path}' and '{basename}'")
-    parser.add_option("-N", "--line-numbers", default=False,
-                      action="store_true",
-                      help="generate output with line numbers. Not compatible "
-                      "with the 'exclude-lines' option.")
-    parser.add_option("--no-bold", default=False,
-                      action="store_true",
-                      help="use non-bold colors; recommended for solarized")
-    parser.add_option("--no-headers", default=False,
-                      action="store_true",
-                      help="don't label the left and right sides "
-                      "with their file names")
-    parser.add_option("--output-encoding", default="utf-8",
-                      help="specify the output encoding; defaults to utf8")
-    parser.add_option("-r", "--recursive", default=False,
-                      action="store_true",
-                      help="recursively compare subdirectories")
-    parser.add_option("-s", "--report-identical-files", default=False,
-                      action="store_true",
-                      help="report when two files are the same")
-    parser.add_option("--show-all-spaces", default=False,
-                      action="store_true",
-                      help="color all non-matching whitespace including "
-                      "that which is not needed for drawing the eye to "
-                      "changes.  Slow, ugly, displays all changes")
-    parser.add_option("--tabsize", default=8,
-                      help="tab stop spacing")
-    parser.add_option("-t", "--truncate", default=False,
-                      action="store_true",
-                      help="truncate long lines instead of wrapping them")
-    parser.add_option("-u", "--patch", default=True,
-                      action="store_true",
-                      help="generate patch. This is always true, "
-                      "and only exists for compatibility")
-    parser.add_option("-U", "--unified", "--numlines", default=5,
-                      metavar="NUM",
-                      help="how many lines of context to print; "
-                      "can't be combined with --whole-file")
-    parser.add_option("-W", "--whole-file", default=False,
-                      action="store_true",
-                      help="show the whole file instead of just changed "
-                      "lines and context")
-    parser.add_option("-P", "--permissions", default=False,
-                      action="store_true",
-                      help="compare the file permissions as well as the "
-                      "content of the file")
-    parser.add_option("--strip-trailing-cr", default=False,
-                      action="store_true",
-                      help="strip any trailing carriage return at the end of "
-                      "an input line")
-    parser.add_option("--color-map", default=None,
-                      help="choose which colors are used for which items. "
-                      "Default is --color-map='" +
-                      ",".join("%s:%s" % x
-                               for x in sorted(color_mapping.items())) + "'"
-                      ".  You don't have to override all of them: "
-                      "'--color-map=separator:white,description:cyan")
-    parser.add_option("--is-git-diff", default=False,
-                      action="store_true",
-                      help="Show the real file name when displaying "
-                      "git-diff result")
+    parser = OptionParser(
+        usage="usage: %prog [options] left_file right_file",
+        version="icdiff version %s" % __version__,
+        description="Show differences between files in a " "two column view.",
+        option_class=MultipleOption,
+    )
+    parser.add_option(
+        "--cols",
+        default=None,
+        help="specify the width of the screen. Autodetection is " "Unix only",
+    )
+    parser.add_option(
+        "--encoding",
+        default="utf-8",
+        help="specify the file encoding; defaults to utf8",
+    )
+    parser.add_option(
+        "-E",
+        "--exclude-lines",
+        action="store",
+        type="string",
+        dest="matcher",
+        help="Do not diff lines that match this regex. Not "
+        "compatible with the 'line-numbers' option",
+    )
+    parser.add_option(
+        "--head", default=0, help="consider only the first N lines of each file"
+    )
+    parser.add_option(
+        "-H",
+        "--highlight",
+        default=False,
+        action="store_true",
+        help="color by changing the background color instead of "
+        "the foreground color.  Very fast, ugly, displays all "
+        "changes",
+    )
+    parser.add_option(
+        "-L",
+        "--label",
+        action="extend",
+        type="string",
+        dest="labels",
+        help="override file labels with arbitrary tags. "
+        "Use twice, one for each file. You may include the "
+        "formatting strings '{path}' and '{basename}'",
+    )
+    parser.add_option(
+        "-N",
+        "--line-numbers",
+        default=False,
+        action="store_true",
+        help="generate output with line numbers. Not compatible "
+        "with the 'exclude-lines' option.",
+    )
+    parser.add_option(
+        "--no-bold",
+        default=False,
+        action="store_true",
+        help="use non-bold colors; recommended for solarized",
+    )
+    parser.add_option(
+        "--no-headers",
+        default=False,
+        action="store_true",
+        help="don't label the left and right sides " "with their file names",
+    )
+    parser.add_option(
+        "--output-encoding",
+        default="utf-8",
+        help="specify the output encoding; defaults to utf8",
+    )
+    parser.add_option(
+        "-r",
+        "--recursive",
+        default=False,
+        action="store_true",
+        help="recursively compare subdirectories",
+    )
+    parser.add_option(
+        "-s",
+        "--report-identical-files",
+        default=False,
+        action="store_true",
+        help="report when two files are the same",
+    )
+    parser.add_option(
+        "--show-all-spaces",
+        default=False,
+        action="store_true",
+        help="color all non-matching whitespace including "
+        "that which is not needed for drawing the eye to "
+        "changes.  Slow, ugly, displays all changes",
+    )
+    parser.add_option("--tabsize", default=8, help="tab stop spacing")
+    parser.add_option(
+        "-t",
+        "--truncate",
+        default=False,
+        action="store_true",
+        help="truncate long lines instead of wrapping them",
+    )
+    parser.add_option(
+        "-u",
+        "--patch",
+        default=True,
+        action="store_true",
+        help="generate patch. This is always true, "
+        "and only exists for compatibility",
+    )
+    parser.add_option(
+        "-U",
+        "--unified",
+        "--numlines",
+        default=5,
+        metavar="NUM",
+        help="how many lines of context to print; "
+        "can't be combined with --whole-file",
+    )
+    parser.add_option(
+        "-W",
+        "--whole-file",
+        default=False,
+        action="store_true",
+        help="show the whole file instead of just changed " "lines and context",
+    )
+    parser.add_option(
+        "-P",
+        "--permissions",
+        default=False,
+        action="store_true",
+        help="compare the file permissions as well as the " "content of the file",
+    )
+    parser.add_option(
+        "--strip-trailing-cr",
+        default=False,
+        action="store_true",
+        help="strip any trailing carriage return at the end of " "an input line",
+    )
+    parser.add_option(
+        "--color-map",
+        default=None,
+        help="choose which colors are used for which items. "
+        "Default is --color-map='"
+        + ",".join("%s:%s" % x for x in sorted(color_mapping.items()))
+        + "'"
+        ".  You don't have to override all of them: "
+        "'--color-map=separator:white,description:cyan",
+    )
+    parser.add_option(
+        "--is-git-diff",
+        default=False,
+        action="store_true",
+        help="Show the real file name when displaying " "git-diff result",
+    )
     return parser
 
 
 def set_cols_option(options):
-    if os.name == 'nt':
+    if os.name == "nt":
         try:
             import struct
             from ctypes import windll, create_string_buffer
@@ -600,17 +705,18 @@ def set_cols_option(options):
             pass
 
     else:
+
         def ioctl_GWINSZ(fd):
             try:
                 import fcntl
                 import termios
                 import struct
-                cr = struct.unpack('hh', fcntl.ioctl(fd,
-                                                     termios.TIOCGWINSZ,
-                                                     '1234'))
+
+                cr = struct.unpack("hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234"))
             except Exception:
                 return None
             return cr
+
         cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
         if cr and cr[1] > 0:
             options.cols = cr[1]
@@ -659,8 +765,7 @@ def codec_print(s, options):
 
 
 def cmp_perms(options, a, b):
-    return not options.permissions or (os.lstat(a).st_mode
-                                       == os.lstat(b).st_mode)
+    return not options.permissions or (os.lstat(a).st_mode == os.lstat(b).st_mode)
 
 
 def diff(options, a, b):
@@ -677,8 +782,7 @@ def diff(options, a, b):
 
     if is_a_file and is_b_file:
         try:
-            if not (filecmp.cmp(a, b, shallow=False)
-                    and cmp_perms(options, a, b)):
+            if not (filecmp.cmp(a, b, shallow=False) and cmp_perms(options, a, b)):
                 diffs_found = diffs_found | diff_files(options, a, b)
             elif options.report_identical_files:
                 print("Files %s and %s are identical." % (a, b))
@@ -687,7 +791,7 @@ def diff(options, a, b):
                 print_meta("error: file '%s' was not found" % e.filename)
                 sys.exit(EXIT_CODE_ERROR)
             else:
-                raise(e)
+                raise (e)
 
     elif not is_a_file and not is_b_file:
         a_contents = set(os.listdir(a))
@@ -699,9 +803,9 @@ def diff(options, a, b):
             elif child not in a_contents:
                 print_meta("Only in %s: %s" % (b, child))
             elif options.recursive:
-                diffs_found = diffs_found | diff(options,
-                                                 os.path.join(a, child),
-                                                 os.path.join(b, child))
+                diffs_found = diffs_found | diff(
+                    options, os.path.join(a, child), os.path.join(b, child)
+                )
     elif not is_a_file and is_b_file:
         print_meta("File %s is a directory while %s is a file" % (a, b))
         diffs_found = True
@@ -719,13 +823,13 @@ def read_file(fname, options):
             return inf.readlines()
     except UnicodeDecodeError as e:
         codec_print(
-            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s." %
-            (fname, options.encoding, e.reason, e.start, e.end), options)
+            "error: file '%s' not valid with encoding '%s': <%s> at %s-%s."
+            % (fname, options.encoding, e.reason, e.start, e.end),
+            options,
+        )
         raise
     except LookupError:
-        codec_print(
-            "error: encoding '%s' was not found." %
-            (options.encoding), options)
+        codec_print("error: encoding '%s' was not found." % (options.encoding), options)
         sys.exit(EXIT_CODE_ERROR)
 
 
@@ -744,10 +848,7 @@ def diff_files(options, a, b):
     if options.is_git_diff is True:
         # Use $BASE as label when displaying git-diff result
         base = os.getenv("BASE")
-        headers = [
-            format_label(a, base),
-            format_label(b, base)
-        ]
+        headers = [format_label(a, base), format_label(b, base)]
     else:
         if options.labels:
             if len(options.labels) == 2:
@@ -756,8 +857,9 @@ def diff_files(options, a, b):
                     format_label(b, options.labels[1]),
                 ]
             else:
-                codec_print("error: to use arbitrary file labels, "
-                            "specify -L twice.", options)
+                codec_print(
+                    "error: to use arbitrary file labels, " "specify -L twice.", options
+                )
                 sys.exit(EXIT_CODE_ERROR)
         else:
             headers = a, b
@@ -780,10 +882,12 @@ def diff_files(options, a, b):
         lines_b = lines_b[:head]
 
     if options.matcher:
-        lines_a = [line_a for line_a in lines_a if
-                   not re.search(options.matcher, line_a)]
-        lines_b = [line_b for line_b in lines_b if
-                   not re.search(options.matcher, line_b)]
+        lines_a = [
+            line_a for line_a in lines_a if not re.search(options.matcher, line_a)
+        ]
+        lines_b = [
+            line_b for line_b in lines_b if not re.search(options.matcher, line_b)
+        ]
 
     # Determine if a difference has been detected
     diff_found = len(lines_a) or len(lines_b) or not cmp_perms(options, a, b)
@@ -800,15 +904,25 @@ def diff_files(options, a, b):
             if category not in color_mapping:
                 print(
                     "Invalid category '%s' in '%s'.  Valid categories are: %s."
-                    % (category, command_for_errors,
-                       ", ".join(sorted(color_mapping.keys()))))
+                    % (
+                        category,
+                        command_for_errors,
+                        ", ".join(sorted(color_mapping.keys())),
+                    )
+                )
                 sys.exit(EXIT_CODE_ERROR)
 
             if color not in color_codes:
-                print("Invalid color '%s' in '%s'.  Valid colors are: %s."
-                      % (color, command_for_errors,
-                         ", ".join([raw_colorize(x, x)
-                                    for x in sorted(color_codes.keys())])))
+                print(
+                    "Invalid color '%s' in '%s'.  Valid colors are: %s."
+                    % (
+                        color,
+                        command_for_errors,
+                        ", ".join(
+                            [raw_colorize(x, x) for x in sorted(color_codes.keys())]
+                        ),
+                    )
+                )
                 sys.exit(EXIT_CODE_ERROR)
 
             color_mapping[category] = color
@@ -820,17 +934,25 @@ def diff_files(options, a, b):
         mode_a = None
         mode_b = None
 
-    cd = ConsoleDiff(cols=int(options.cols),
-                     show_all_spaces=options.show_all_spaces,
-                     highlight=options.highlight,
-                     line_numbers=options.line_numbers,
-                     tabsize=int(options.tabsize),
-                     truncate=options.truncate,
-                     strip_trailing_cr=options.strip_trailing_cr)
+    cd = ConsoleDiff(
+        cols=int(options.cols),
+        show_all_spaces=options.show_all_spaces,
+        highlight=options.highlight,
+        line_numbers=options.line_numbers,
+        tabsize=int(options.tabsize),
+        truncate=options.truncate,
+        strip_trailing_cr=options.strip_trailing_cr,
+    )
     for line in cd.make_table(
-            lines_a, lines_b, headers[0], headers[1], mode_a, mode_b,
-            context=(not options.whole_file),
-            numlines=int(options.unified)):
+        lines_a,
+        lines_b,
+        headers[0],
+        headers[1],
+        mode_a,
+        mode_b,
+        context=(not options.whole_file),
+        numlines=int(options.unified),
+    ):
         codec_print(line, options)
         sys.stdout.flush()
 
