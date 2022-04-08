@@ -159,17 +159,17 @@ check_gold 2 gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_
 
 rm tests/permissions-{a,b}
 touch tests/permissions-{a,b}
-check_gold 0 gold-permissions-same.txt tests/permissions-{a,b} -P
+check_gold 0 gold-permissions-same.txt tests/permissions-{a,b} -P --cols=80
 
 chmod 666 tests/permissions-a
 chmod 665 tests/permissions-b
-check_gold 1 gold-permissions-diff.txt tests/permissions-{a,b} -P
+check_gold 1 gold-permissions-diff.txt tests/permissions-{a,b} -P --cols=80
 
 echo "some text" >> tests/permissions-a
-check_gold 1 gold-permissions-diff-text.txt tests/permissions-{a,b} -P
+check_gold 1 gold-permissions-diff-text.txt tests/permissions-{a,b} -P --cols=80
 
 echo -e "\04" >> tests/permissions-b
-check_gold 1 gold-permissions-diff-binary.txt tests/permissions-{a,b} -P
+check_gold 1 gold-permissions-diff-binary.txt tests/permissions-{a,b} -P --cols=80
 rm tests/permissions-{a,b}
 
 if git show 4e86205629 &> /dev/null; then

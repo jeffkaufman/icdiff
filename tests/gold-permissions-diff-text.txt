@@ -1,3 +1,3 @@
-[0;34mtests/permissions-a[m                                 [0;34mtests/permissions-b[m                                
-[0;33m-rw-rw-rw- (100666)[m                                 [0;33m-rw-rw-r-x (100665)[m                                
-[1;31msome text[m                                                                                              
+[0;34mtests/permissions-a[m                     [0;34mtests/permissions-b[m                    
+[0;33m-rw-rw-rw- (100666)[m                     [0;33m-rw-rw-r-x (100665)[m                    
+[1;31msome text[m                                                                      
