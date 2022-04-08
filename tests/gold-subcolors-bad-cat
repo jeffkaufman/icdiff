@@ -1,1 +1,1 @@
-Invalid category 'chnge' in '--color-map="chnge:magenta,description:cyan_bold"'.  Valid categories are: add, change, description, line-numbers, meta, separator, subtract.
+Invalid category 'chnge' in '--color-map="chnge:magenta,description:cyan_bold"'.  Valid categories are: add, change, description, line-numbers, meta, permissions, separator, subtract.

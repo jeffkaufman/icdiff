@@ -157,6 +157,21 @@ check_gold 2 gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map=
 check_gold 0 gold-identical-on.txt tests/input-{1,1}.txt -s
 check_gold 2 gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
 
+rm tests/permissions-{a,b}
+touch tests/permissions-{a,b}
+check_gold 0 gold-permissions-same.txt tests/permissions-{a,b} -P
+
+chmod 666 tests/permissions-a
+chmod 665 tests/permissions-b
+check_gold 1 gold-permissions-diff.txt tests/permissions-{a,b} -P
+
+echo "some text" >> tests/permissions-a
+check_gold 1 gold-permissions-diff-text.txt tests/permissions-{a,b} -P
+
+echo -e "\04" >> tests/permissions-b
+check_gold 1 gold-permissions-diff-binary.txt tests/permissions-{a,b} -P
+rm tests/permissions-{a,b}
+
 if git show 4e86205629 &> /dev/null; then
   # We're in the repo, so test git.
   check_git_diff gitdiff-only-newlines.txt 4e86205629~1 4e86205629
