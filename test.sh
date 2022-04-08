@@ -192,15 +192,27 @@ if [ "$VERSION" != $(head -n 1 ChangeLog) ]; then
   fail
 fi
 
-if ! command -v 'flake8' >/dev/null 2>&1; then
-  echo 'Could not find flake8. Ensure flake8 is installed and on your $PATH.'
-  if [ -z "$VIRTUAL_ENV" ]; then
-    echo 'It appears you have have forgotten to activate your virtualenv.'
+function ensure_installed() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "Could not find $1."
+    echo 'Ensure it is installed and on your $PATH.'
+    if [ -z "$VIRTUAL_ENV" ]; then
+      echo 'It appears you have have forgotten to activate your virtualenv.'
+    fi
+    echo 'See README.md for details on setting up your environment.'
+    fail
   fi
-  echo 'See README.md for details on setting up your environment.'
+}
+
+ensure_installed "black"
+echo 'Running black formatter...'
+if ! black icdiff --line-length 79 --check; then
+  echo ""
+  echo 'Consider running `black icdiff --line-length 79`'
   fail
 fi
 
+ensure_installed "flake8"
 echo 'Running flake8 linter...'
 if ! flake8 icdiff; then
   fail
