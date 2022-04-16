@@ -10,7 +10,7 @@ Download the [latest](https://github.com/jeffkaufman/icdiff/releases) `icdiff` b
 
 Alternatively, install with pip:
 ```
-  pip install git+https://github.com/jeffkaufman/icdiff.git
+  pip install icdiff
 ```
 
 It can be also installed using [AUR](https://aur.archlinux.org/packages/icdiff/)
