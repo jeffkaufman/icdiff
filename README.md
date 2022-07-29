@@ -1,6 +1,8 @@
 # Icdiff
 
-Improved colored diff
+## Overview
+
+Icdiff is a improved color optimizer. It can be used to show the text color diff in Terminal. 
 
 ![screenshot](http://www.jefftk.com/icdiff-css-demo.png)
 
