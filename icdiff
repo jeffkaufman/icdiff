@@ -170,7 +170,7 @@ class ConsoleDiff(object):
         def width(c):
             if (
                 isinstance(c, type(""))
-                and unicodedata.east_asian_width(c) == "W"
+                and unicodedata.east_asian_width(c) in ["F", "W"]
             ):
                 return 2
             elif c == "\r":
