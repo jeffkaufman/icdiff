@@ -23,6 +23,7 @@ import re
 import filecmp
 import unicodedata
 import codecs
+import fnmatch
 
 __version__ = "2.0.5"
 
@@ -706,6 +707,14 @@ def create_option_parser():
         action="store_true",
         help="Show the real file name when displaying " "git-diff result",
     )
+    parser.add_option(
+        "-x",
+        "--exclude",
+        metavar="PAT",
+        action="append",
+        default=[],
+        help="exclude files that match PAT",
+    )
     return parser
 
 
@@ -793,6 +802,10 @@ def cmp_perms(options, a, b):
     )
 
 
+def should_be_excluded(name, pats):
+    return any(fnmatch.fnmatchcase(name, pat) for pat in pats)
+
+
 def diff(options, a, b):
     def print_meta(s):
         codec_print(simple_colorize(s, "meta"), options)
@@ -825,6 +838,8 @@ def diff(options, a, b):
         b_contents = set(os.listdir(b))
 
         for child in sorted(a_contents.union(b_contents)):
+            if should_be_excluded(child, options.exclude):
+                continue
             if child not in b_contents:
                 print_meta("Only in %s: %s" % (a, child))
             elif child not in a_contents:

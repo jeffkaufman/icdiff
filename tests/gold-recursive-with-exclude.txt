@@ -1,0 +1,4 @@
+error: file 'tests/b/1' not valid with encoding 'utf-8': <invalid start byte> at 4461-4462.
+[0;35mOnly in tests/b: d[m
+[0;35mOnly in tests/b: i[m
+[0;35mOnly in tests/a: j[m

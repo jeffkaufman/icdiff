@@ -156,6 +156,8 @@ check_gold 2 gold-subcolors-bad-cat tests/input-{1,2}.txt --cols=80 --color-map=
 check_gold 2 gold-subcolors-bad-fmt tests/input-{1,2}.txt --cols=80 --color-map='change:magenta:gold,description:cyan_bold'
 check_gold 0 gold-identical-on.txt tests/input-{1,1}.txt -s
 check_gold 2 gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
+check_gold 0 gold-recursive-with-exclude.txt --recursive -x c tests/{a,b} --cols=80
+check_gold 1 gold-recursive-with-exclude2.txt --recursive -x 'excl*' tests/test-with-exclude/{a,b} --cols=80
 
 rm tests/permissions-{a,b}
 touch tests/permissions-{a,b}

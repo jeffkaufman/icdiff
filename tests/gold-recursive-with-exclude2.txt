@@ -1,0 +1,8 @@
+error: file 'tests/test-with-exclude/b/1' not valid with encoding 'utf-8': <invalid start byte> at 4461-4462.
+[0;34mtests/test-with-exclude/a/c/f[m           [0;34mtests/test-with-exclude/b/c/f[m          
+[1;31m2[m                                       [1;32m3[m                                      
+[0;35mOnly in tests/test-with-exclude/b/c: g[m
+[0;35mOnly in tests/test-with-exclude/b/c: h[m
+[0;35mOnly in tests/test-with-exclude/b: d[m
+[0;35mOnly in tests/test-with-exclude/b: i[m
+[0;35mOnly in tests/test-with-exclude/a: j[m
