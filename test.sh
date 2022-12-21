@@ -174,6 +174,11 @@ echo -e "\04" >> tests/permissions-b
 check_gold 1 gold-permissions-diff-binary.txt tests/permissions-{a,b} -P --cols=80
 rm tests/permissions-{a,b}
 
+if ! $INVOCATION tests/input-1.txt <(cat tests/input-1.txt) > /dev/null; then
+  echo 'Diffing a file with an identical non-file should exit with code 0'
+  fail
+fi
+
 if git show 4e86205629 &> /dev/null; then
   # We're in the repo, so test git.
   check_git_diff gitdiff-only-newlines.txt 4e86205629~1 4e86205629

@@ -940,7 +940,7 @@ def diff_files(options, a, b):
         ]
 
     # Determine if a difference has been detected
-    diff_found = len(lines_a) or len(lines_b) or not cmp_perms(options, a, b)
+    diff_found = lines_a != lines_b or not cmp_perms(options, a, b)
 
     if options.no_bold:
         for key in color_mapping:
