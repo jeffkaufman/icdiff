@@ -1,3 +1,8 @@
+2.0.6
+	Fix process exit code for non-file inputs #205
+	Make fullwidth characters take two columns #202
+	Add -x/--exclude optin to to exclude files matching patterns #199
+
 2.0.5
 	Set process exit code to indicate differences #195
 	Support -P/--permissions option #197
