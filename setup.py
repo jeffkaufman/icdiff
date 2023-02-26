@@ -5,7 +5,7 @@ from icdiff import __version__
 setup(
     name="icdiff",
     version=__version__,
-    url="http://www.jefftk.com/icdiff",
+    url="https://www.jefftk.com/icdiff",
     project_urls={
         "Source": "https://github.com/jeffkaufman/icdiff",
     },

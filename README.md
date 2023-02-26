@@ -2,7 +2,7 @@
 
 Improved colored diff
 
-![screenshot](http://www.jefftk.com/icdiff-css-demo.png)
+![screenshot](https://www.jefftk.com/icdiff-css-demo.png)
 
 ## Installation
 
@@ -122,7 +122,7 @@ cmd.icdiff=icdiff
 opts.icdiff=--recursive --line-numbers
 ```
 
-Or check more [in-depth setup instructions](http://ianobermiller.com/blog/2016/07/14/side-by-side-diffs-for-mercurial-hg-icdiff-revisited/).
+Or check more [in-depth setup instructions](https://ianobermiller.com/blog/2016/07/14/side-by-side-diffs-for-mercurial-hg-icdiff-revisited/).
 
 ## Setting up a dev environment
 
@@ -155,5 +155,5 @@ pip install -r requirements-dev.txt
 
 ## License
 
-This file is derived from `difflib.HtmlDiff` which is under [license](http://www.python.org/download/releases/2.6.2/license/).
+This file is derived from `difflib.HtmlDiff` which is under [license](https://www.python.org/download/releases/2.6.2/license/).
 I release my changes here under the same license.  This is GPL compatible.
