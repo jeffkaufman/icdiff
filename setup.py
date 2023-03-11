@@ -9,6 +9,9 @@ setup(
     project_urls={
         "Source": "https://github.com/jeffkaufman/icdiff",
     },
+    classifiers=[
+        "License :: OSI Approved :: Python Software Foundation License"
+    ],
     author="Jeff Kaufman",
     author_email="jeff@jefftk.com",
     description="improved colored diff",
