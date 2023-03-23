@@ -158,7 +158,7 @@ check_gold 0 gold-identical-on.txt tests/input-{1,1}.txt -s
 check_gold 2 gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_encoding
 check_gold 0 gold-recursive-with-exclude.txt --recursive -x c tests/{a,b} --cols=80
 check_gold 1 gold-recursive-with-exclude2.txt --recursive -x 'excl*' tests/test-with-exclude/{a,b} --cols=80
-check_gold 0 gold-exit-process-sub tests/input-1.txt <(cat tests/input-1.txt) --cols=80
+check_gold 0 gold-exit-process-sub tests/input-1.txt <(cat tests/input-1.txt) --no-headers --cols=80
 
 rm tests/permissions-{a,b}
 touch tests/permissions-{a,b}
