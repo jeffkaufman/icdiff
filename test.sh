@@ -160,7 +160,7 @@ check_gold 0 gold-recursive-with-exclude.txt --recursive -x c tests/{a,b} --cols
 check_gold 1 gold-recursive-with-exclude2.txt --recursive -x 'excl*' tests/test-with-exclude/{a,b} --cols=80
 check_gold 0 gold-exit-process-sub tests/input-1.txt <(cat tests/input-1.txt) --cols=80
 
-rm tests/permissions-{a,b}
+rm -f tests/permissions-{a,b}
 touch tests/permissions-{a,b}
 check_gold 0 gold-permissions-same.txt tests/permissions-{a,b} -P --cols=80
 
@@ -173,7 +173,7 @@ check_gold 1 gold-permissions-diff-text.txt tests/permissions-{a,b} -P --cols=80
 
 echo -e "\04" >> tests/permissions-b
 check_gold 1 gold-permissions-diff-binary.txt tests/permissions-{a,b} -P --cols=80
-rm tests/permissions-{a,b}
+rm -f tests/permissions-{a,b}
 
 if git show 4e86205629 &> /dev/null; then
   # We're in the repo, so test git.
@@ -209,7 +209,7 @@ function ensure_installed() {
 
 ensure_installed "black"
 echo 'Running black formatter...'
-if ! black icdiff --line-length 79 --check; then
+if ! black icdiff --quiet --line-length 79 --check; then
   echo ""
   echo 'Consider running `black icdiff --line-length 79`'
   fail
