@@ -99,6 +99,7 @@ class ConsoleDiff(object):
         cols=80,
         line_numbers=False,
         show_all_spaces=False,
+        show_no_spaces=False,
         highlight=False,
         truncate=False,
         strip_trailing_cr=False,
@@ -118,6 +119,7 @@ class ConsoleDiff(object):
         self.line_numbers = line_numbers
         self.cols = cols
         self.show_all_spaces = show_all_spaces
+        self.show_no_spaces = show_no_spaces
         self.highlight = highlight
         self.strip_trailing_cr = strip_trailing_cr
         self.truncate = truncate
@@ -469,7 +471,15 @@ class ConsoleDiff(object):
         if self.highlight:
             return s
 
-        if not self.show_all_spaces:
+        if self.show_no_spaces:
+            # Don't show whitespace even if it's a whitespace-only line.
+            return re.sub(
+                "\033\\[[01];3([01234567])m(\\s+)(\033\\[)",
+                "\033[0;3\\1m\\2\\3",
+                s,
+            )
+
+        elif not self.show_all_spaces:
             # If there's a change consisting entirely of whitespace,
             # don't color it.
             return re.sub(
@@ -642,6 +652,12 @@ def create_option_parser():
         help="color all non-matching whitespace including "
         "that which is not needed for drawing the eye to "
         "changes.  Slow, ugly, displays all changes",
+    )
+    parser.add_option(
+        "--show-no-spaces",
+        default=False,
+        action="store_true",
+        help="don't color whitespace-only changes"
     )
     parser.add_option("--tabsize", default=8, help="tab stop spacing")
     parser.add_option(
@@ -990,6 +1006,7 @@ def diff_files(options, a, b):
     cd = ConsoleDiff(
         cols=int(options.cols),
         show_all_spaces=options.show_all_spaces,
+        show_no_spaces=options.show_no_spaces,
         highlight=options.highlight,
         line_numbers=options.line_numbers,
         tabsize=int(options.tabsize),

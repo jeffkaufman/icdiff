@@ -128,6 +128,9 @@ check_gold 1 gold-45-h.txt            tests/input-{4,5}.txt --cols=80 --highligh
 check_gold 1 gold-45-nb.txt           tests/input-{4,5}.txt --cols=80 --no-bold
 check_gold 1 gold-45-sas-h.txt        tests/input-{4,5}.txt --cols=80 --show-all-spaces --highlight
 check_gold 1 gold-45-sas-h-nb.txt     tests/input-{4,5}.txt --cols=80 --show-all-spaces --highlight --no-bold
+check_gold 1 gold-sas.txt             tests/input-{10,11}.txt --cols=80 --show-all-spaces
+check_gold 1 gold-sns.txt             tests/input-{10,11}.txt --cols=80 --show-no-spaces
+check_gold 1 gold-show-spaces.txt     tests/input-{10,11}.txt --cols=80
 check_gold 1 gold-45-h-nb.txt         tests/input-{4,5}.txt --cols=80 --highlight --no-bold
 check_gold 1 gold-45-ln.txt           tests/input-{4,5}.txt --cols=80 --line-numbers
 check_gold 1 gold-45-ln-color.txt     tests/input-{4,5}.txt --cols=80 --line-numbers --color-map='line-numbers:cyan'

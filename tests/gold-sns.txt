@@ -1,0 +1,11 @@
+[0;34mtests/input-10.txt[m                      [0;34mtests/input-11.txt[m                     
+void main ()                            void main ()                           
+{                                       {                                      
+  int x;                                  int x;                               
+  int y;                                  int y;                               
+}                                       }                                      
+                                        [0;32m [m                                      
+                                        [1;32mvoid foo ()[m                            
+                                        [1;32m{[m                                      
+                                        [0;32m [m                                      
+                                        [1;32m}[m                                      
