@@ -6,7 +6,7 @@ Improved colored diff
 
 ## Installation
 
-Download the [latest](https://github.com/jeffkaufman/icdiff/tags) `icdiff` binary and put it on your PATH.
+Download the [latest](https://github.com/jeffkaufman/icdiff/tags) `icdiff` and put it on your PATH.
 
 Alternatively, install with packaging tools:
 ```
