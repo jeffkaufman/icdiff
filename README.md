@@ -6,21 +6,24 @@ Improved colored diff
 
 ## Installation
 
-Download the [latest](https://github.com/jeffkaufman/icdiff/releases) `icdiff` binary and put it on your PATH.
+Download the [latest](https://github.com/jeffkaufman/icdiff/tags) `icdiff` binary and put it on your PATH.
 
-Alternatively, install with pip:
+Alternatively, install with packaging tools:
 ```
-  pip install icdiff
-```
+# pip
+pip install icdiff
 
-It can be also installed using [AUR](https://aur.archlinux.org/packages/icdiff/)
-```
-  yay -S icdiff
-```
-It can be also installed using [Nix](https://nixos.org/nix/)
+# apt
+sudo apt install icdiff
 
-```
-  nix-env -i icdiff
+# homebrew
+brew install icdiff
+
+# aur
+yay -S icdiff
+
+# nix
+nix-env -i icdiff
 ```
 
 ## Usage
