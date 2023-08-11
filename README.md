@@ -155,8 +155,7 @@ pip install -r requirements-dev.txt
 - `git push`
 - `git tag release-${version}`
 - `git push origin release-${version}`
-- `./prepare-release.sh ${prev-version} ${version}`
-- `python3 -m twine upload icdiff-${version}.tar.gz --user "__token__" --password "$TOKEN"`
+- A GitHub Action should be triggered due to the release tag being pushed, and will upload to PyPI.
 
 ## License
 
