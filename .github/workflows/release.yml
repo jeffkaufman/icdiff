@@ -1,0 +1,36 @@
+name: Release Package
+
+on:
+  push:
+    tags: ["release-*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build_package:
+    name: Build Package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build sdist and wheel
+        run: pipx run build --sdist --wheel
+      - uses: actions/upload-artifact@v3
+        with:
+          path: dist
+
+  pypi-publish:
+    needs: [build_package]
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifact
+          path: dist
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
