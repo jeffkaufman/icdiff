@@ -1,3 +1,6 @@
+2.0.7
+	Add --show-no-spaces #173
+
 2.0.6
 	Fix process exit code for non-file inputs #205
 	Make fullwidth characters take two columns #202
