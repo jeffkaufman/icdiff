@@ -9,6 +9,7 @@ Improved colored diff
 Download the [latest](https://github.com/jeffkaufman/icdiff/tags) `icdiff` and put it on your PATH.
 
 Alternatively, install with packaging tools:
+
 ```
 # pip
 pip install icdiff
@@ -35,6 +36,7 @@ icdiff [options] left_file right_file
 Show differences between files in a two column view.
 
 ### Options
+
 ```
   --version             show program's version number and exit
   -h, --help            show this help message and exit
@@ -146,17 +148,16 @@ pip install -r requirements-dev.txt
 
 ## Making a release
 
-* Update ChangeLog with all the changes since the last release
-* Update `__version__` in `icdiff`
-* Run tests, make sure they pass
-* `git commit -a -m "release ${version}"`
-* `git push`
-* `git tag release-${version}`
-* `git push origin release-${version}`
-* `./prepare-release.sh ${prev-version} ${version}`
-* `python3 -m twine upload icdiff-${version}.tar.gz --user "__token__" --password "$TOKEN"`
+- Update ChangeLog with all the changes since the last release
+- Update `__version__` in `icdiff`
+- Run tests, make sure they pass
+- `git commit -a -m "release ${version}"`
+- `git push`
+- `git tag release-${version}`
+- `git push origin release-${version}`
+- A GitHub Action should be triggered due to the release tag being pushed, and will upload to PyPI.
 
 ## License
 
 This file is derived from `difflib.HtmlDiff` which is under [license](https://www.python.org/download/releases/2.6.2/license/).
-I release my changes here under the same license.  This is GPL compatible.
+I release my changes here under the same license. This is GPL compatible.

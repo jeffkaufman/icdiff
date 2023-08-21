@@ -1,5 +1,4 @@
-from distutils.util import convert_path
-from setuptools import setup, find_packages
+from setuptools import setup
 from icdiff import __version__
 
 setup(
@@ -16,6 +15,7 @@ setup(
     author_email="jeff@jefftk.com",
     description="improved colored diff",
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     scripts=['git-icdiff'],
     py_modules=['icdiff'],
     entry_points={
