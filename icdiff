@@ -701,6 +701,11 @@ def create_option_parser():
         "content of the file",
     )
     parser.add_option(
+            "--new-file",
+            default=False,
+            action="store_true"
+    )
+    parser.add_option(
         "--strip-trailing-cr",
         default=False,
         action="store_true",
@@ -834,6 +839,7 @@ def diff(options, a, b):
     is_a_file = not os.path.isdir(a)
     is_b_file = not os.path.isdir(b)
 
+
     if is_a_file and is_b_file:
         try:
             if not (
@@ -856,13 +862,23 @@ def diff(options, a, b):
         for child in sorted(a_contents.union(b_contents)):
             if should_be_excluded(child, options.exclude):
                 continue
+
+            a_file_path = os.path.join(a, child)
+            b_file_path = os.path.join(b, child)
+
             if child not in b_contents:
-                print_meta("Only in %s: %s" % (a, child))
+                if not options.new_file:
+                    print_meta("Only in %s: %s" % (a, child))
+                    continue
+                b_file_path = "/dev/null"
             elif child not in a_contents:
-                print_meta("Only in %s: %s" % (b, child))
-            elif options.recursive:
+                if not options.new_file:
+                    print_meta("Only in %s: %s" % (b, child))
+                    continue
+                a_file_path = "/dev/null"
+            if options.recursive:
                 diffs_found = diffs_found | diff(
-                    options, os.path.join(a, child), os.path.join(b, child)
+                    options, a_file_path, b_file_path
                 )
     elif not is_a_file and is_b_file:
         print_meta("File %s is a directory while %s is a file" % (a, b))
