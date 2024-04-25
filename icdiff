@@ -870,12 +870,12 @@ def diff(options, a, b):
                 if not options.new_file:
                     print_meta("Only in %s: %s" % (a, child))
                     continue
-                b_file_path = "/dev/null"
+                b_file_path = os.devnull
             elif child not in a_contents:
                 if not options.new_file:
                     print_meta("Only in %s: %s" % (b, child))
                     continue
-                a_file_path = "/dev/null"
+                a_file_path = os.devnull
             if options.recursive:
                 diffs_found = diffs_found | diff(
                     options, a_file_path, b_file_path
