@@ -726,10 +726,10 @@ def create_option_parser():
     parser.add_option(
         "-x",
         "--exclude",
-        metavar="PAT",
+        metavar="PATH",
         action="append",
         default=[],
-        help="exclude files that match PAT",
+        help="exclude files that match PATH",
     )
     return parser
 
