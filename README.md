@@ -92,6 +92,8 @@ Show differences between files in a two column view.
                         result
   -x PATH, --exclude=PATH
                         exclude files that match PATH
+  -R RESTRICT, --restrict=RESTRICT
+                        Only color text that matches this regex
 ```
 
 ## Using with Git
