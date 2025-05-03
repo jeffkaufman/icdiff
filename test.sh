@@ -102,11 +102,10 @@ function check_git_diff() {
     FIRST_TIME_CHECK_GIT_DIFF=false
     # Set default args when first time check git diff
     yes | git difftool --extcmd icdiff > /dev/null
-    git config --global icdiff.options '--cols=80'
     export PATH="$(pwd)":$PATH
   fi
   local tmp=/tmp/git-icdiff.output
-  git icdiff $1 $2 &> $tmp
+  git -c icdiff.options='--cols=80' icdiff $1 $2 &> $tmp
   if ! diff $tmp $gitdiff; then
     echo "Got: ($tmp)"
     cat $tmp
