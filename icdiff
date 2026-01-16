@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" icdiff.py
+"""icdiff.py
 
 Author: Jeff Kaufman, derived from difflib.HtmlDiff
 
@@ -11,7 +11,7 @@ Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation;
 All Rights Reserved
 
 Based on Python's difflib.HtmlDiff,
-with changes to provide console output instead of html output.  """
+with changes to provide console output instead of html output."""
 
 import os
 import stat
@@ -845,7 +845,7 @@ def diff(options, a, b):
 
 def read_file(fname, options):
     try:
-        with open(fname, encoding=options.encoding) as inf:
+        with open(fname, encoding=options.encoding, newline="") as inf:
             return inf.readlines()
     except UnicodeDecodeError as e:
         codec_print(
