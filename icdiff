@@ -22,10 +22,9 @@ from optparse import Option, OptionParser
 import re
 import filecmp
 import unicodedata
-import codecs
 import fnmatch
 
-__version__ = "2.0.8"
+__version__ = "2.0.9"
 
 # Exit code constants
 EXIT_CODE_SUCCESS = 0

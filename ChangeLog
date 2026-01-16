@@ -1,5 +1,10 @@
+2.0.9
+	Fix newline handling regression from #226
+	Simplify terminal width detection using shutil.get_terminal_size()
+	Fix buffer overflow with Python 3.14 #229
+
 2.0.8
-  Correct deprecation warning #225
+	Correct deprecation warning #225
 
 2.0.7
 	Add --show-no-spaces #173
