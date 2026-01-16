@@ -759,8 +759,8 @@ def set_cols_option(options):
                 import struct
 
                 cr = struct.unpack(
-                    "hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234")
-                )
+                    "hhhh", fcntl.ioctl(0, termios.TIOCGWINSZ, b"12345678")
+                )[0:2]
             except Exception:
                 return None
             return cr
