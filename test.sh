@@ -102,11 +102,10 @@ function check_git_diff() {
     FIRST_TIME_CHECK_GIT_DIFF=false
     # Set default args when first time check git diff
     yes | git difftool --extcmd icdiff > /dev/null
-    git config --global icdiff.options '--cols=80'
     export PATH="$(pwd)":$PATH
   fi
   local tmp=/tmp/git-icdiff.output
-  git icdiff $1 $2 &> $tmp
+  git -c icdiff.options='--cols=80' icdiff $1 $2 &> $tmp
   if ! diff $tmp $gitdiff; then
     echo "Got: ($tmp)"
     cat $tmp
@@ -162,6 +161,10 @@ check_gold 2 gold-bad-encoding.txt tests/input-{1,2}.txt --encoding=nonexistend_
 check_gold 0 gold-recursive-with-exclude.txt --recursive -x c tests/{a,b} --cols=80
 check_gold 1 gold-recursive-with-exclude2.txt --recursive -x 'excl*' tests/test-with-exclude/{a,b} --cols=80
 check_gold 0 gold-exit-process-sub tests/input-1.txt <(cat tests/input-1.txt) --no-headers --cols=80
+check_gold 1 gold-restrict-clip-none.txt tests/input-restrict-0{1,2}.txt --restrict="(%|A).*(%|A)?" --cols=100
+check_gold 1 gold-restrict-clip-lhs.txt tests/input-restrict-0{1,2}.txt --restrict="(;|O).+;" --cols=100
+check_gold 1 gold-restrict-clip-rhs.txt tests/input-restrict-0{1,2}.txt --restrict=":.+(:|O)" --cols=100
+check_gold 1 gold-restrict-clip-both.txt tests/input-restrict-0{1,2}.txt --restrict="Q.+Q" --cols=100
 
 rm -f tests/permissions-{a,b}
 touch tests/permissions-{a,b}

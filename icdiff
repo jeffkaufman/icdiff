@@ -102,6 +102,7 @@ class ConsoleDiff(object):
         highlight=False,
         truncate=False,
         strip_trailing_cr=False,
+        restrict=False,
     ):
         """ConsoleDiff instance initializer
 
@@ -122,6 +123,7 @@ class ConsoleDiff(object):
         self.highlight = highlight
         self.strip_trailing_cr = strip_trailing_cr
         self.truncate = truncate
+        self.restrict = restrict
 
         if wrapcolumn is None:
             if not line_numbers:
@@ -181,7 +183,57 @@ class ConsoleDiff(object):
 
         return sum(width(c) for c in s)
 
-    def _split_line(self, data_list, line_num, text):
+    def _mark_clipper(self, origin, marked):
+        xranges = [
+            (i.start(), i.end()) for i in re.finditer(self.restrict, origin)
+        ]
+        result = ""
+        c0 = 0
+
+        def wipe_all(s):
+            return replace_all({"\0+": "", "\0-": "", "\0^": "", "\1": ""}, s)
+
+        if not xranges:
+            return wipe_all(marked)
+
+        # we can interpolate restricted and marked text from left to right.
+        # See https://docs.python.org/3/library/re.html#re.finditer
+        rex = re.escape("\0") + "[^" + re.escape("\0") + "]+" + re.escape("\1")
+        for i, m in enumerate(re.finditer(rex, marked)):
+            m0, m1, m2, m3 = m.start(), m.start() + 2, m.end() - 1, m.end()
+            offset = i * 3 + 2
+            c1 = c0
+
+            for xstart, xend in xranges:
+                x1, x2 = xstart + offset, xend + offset
+                restricted = range(x1, x2 + 1)  # include the last
+
+                if m1 >= x1 and m2 <= x2:
+                    result += marked[c0:m3]
+                elif m1 < x1 and m2 in restricted:
+                    result += marked[c0:m0] + marked[m1:x1]
+                    result += marked[m0:m1] + marked[x1:m3]
+                elif m1 in restricted and m2 > x2:
+                    result += marked[c0:x2] + marked[m2:m3]
+                    result += marked[x2:m2]
+                elif m1 < x1 and m2 > x2:
+                    result += marked[c0:m0] + marked[m1:x1]
+                    result += marked[m0:m1] + marked[x1:x2]
+                    result += marked[m2:m3] + marked[x2:m2]
+                else:
+                    continue
+
+                c0 = m3
+                break
+
+            if c0 == c1:
+                result += wipe_all(marked[c0:m3])
+                c0 = m3
+
+        result += marked[c0:]
+        return result
+
+    def _split_line(self, orig_list, data_list, line_num, text):
         """Builds list of text lines by splitting text lines at wrap point
 
         This function will determine if the input text line needs to be
@@ -191,6 +243,7 @@ class ConsoleDiff(object):
         the second part of the split line to further split it.
         """
 
+        i = 0
         while True:
             # if blank line or context separator, just add it to the output
             # list
@@ -204,6 +257,11 @@ class ConsoleDiff(object):
                 self._display_len(text) - (text.count("\0") * 3)
                 <= self._wrapcolumn
             ):
+                if self.restrict:
+                    orig_text = orig_list[line_num - 1]
+                    text = self._mark_clipper(orig_text[i:], text)
+
+                line_num = line_num if not i else ">"
                 data_list.append((line_num, text))
                 return
 
@@ -235,6 +293,10 @@ class ConsoleDiff(object):
                 line1 = line1 + "\1"
                 line2 = "\0" + mark + line2
 
+            if self.restrict:
+                orig_text = orig_list[line_num - 1]
+                line1 = self._mark_clipper(orig_text[:i], line1)
+
             # tack on first line onto the output list
             data_list.append((line_num, line1))
 
@@ -242,10 +304,9 @@ class ConsoleDiff(object):
             # unless truncate is set
             if self.truncate:
                 return
-            line_num = ">"
             text = line2
 
-    def _line_wrapper(self, diffs):
+    def _line_wrapper(self, fromlines, tolines, diffs):
         """Returns iterator that splits (wraps) mdiff text lines"""
 
         # pull from/to data and flags from mdiff iterator
@@ -258,8 +319,8 @@ class ConsoleDiff(object):
             # for each from/to line split it at the wrap column to form
             # list of text lines.
             fromlist, tolist = [], []
-            self._split_line(fromlist, fromline, fromtext)
-            self._split_line(tolist, toline, totext)
+            self._split_line(fromlines, fromlist, fromline, fromtext)
+            self._split_line(tolines, tolist, toline, totext)
             # yield from/to line in pairs inserting blank lines as
             # necessary when one side has more wrapped lines
             while fromlist or tolist:
@@ -391,7 +452,7 @@ class ConsoleDiff(object):
 
         # set up iterator to wrap lines that exceed desired width
         if self._wrapcolumn:
-            diffs = self._line_wrapper(diffs)
+            diffs = self._line_wrapper(fromlines, tolines, diffs)
         diffs = self._collect_lines(diffs)
 
         for left, right in self._generate_table(
@@ -725,10 +786,18 @@ def create_option_parser():
     parser.add_option(
         "-x",
         "--exclude",
-        metavar="PAT",
+        metavar="PATH",
         action="append",
         default=[],
-        help="exclude files that match PAT",
+        help="exclude files that match PATH",
+    )
+    parser.add_option(
+        "-R",
+        "--restrict",
+        action="store",
+        type="string",
+        dest="restrict",
+        help="Only color text that matches this regex",
     )
     return parser
 
@@ -979,6 +1048,7 @@ def diff_files(options, a, b):
         tabsize=int(options.tabsize),
         truncate=options.truncate,
         strip_trailing_cr=options.strip_trailing_cr,
+        restrict=options.restrict,
     )
     for line in cd.make_table(
         lines_a,
