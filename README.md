@@ -85,7 +85,7 @@ Show differences between files in a two column view.
                         '--color-map=separator:white,description:cyan
 ```
 
-## Using with Git
+## Using with Git Diff
 
 To see what it looks like, try:
 
@@ -105,6 +105,23 @@ You can configure `git-icdiff` in Git's config:
 ```
 git config --global icdiff.options '--highlight --line-numbers'
 ```
+
+## Using with Git Show
+
+To see what it looks like, try:
+
+```sh
+GIT_EXTERNAL_DIFF=path/to/icdiff-git-extdiff git show --ext-diff
+```
+
+To install this as a tool you can use with Git, copy
+`git-icshow` and ``icdiff-git-extdiff into your PATH and run:
+
+```sh
+git icshow
+```
+
+It uses the same `icdiff.options` configuration used by `git-icdiff`.
 
 ## Using with subversion
 
