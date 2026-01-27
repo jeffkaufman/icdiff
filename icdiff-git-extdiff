@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+ICDIFF_OPTIONS=$(git config --get icdiff.options)
+
+sh -c "exec icdiff $ICDIFF_OPTIONS '$2' '$5'" || true

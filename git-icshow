@@ -1,0 +1,3 @@
+#!/bin/sh
+
+GIT_EXTERNAL_DIFF=icdiff-git-extdiff git show --ext-diff
