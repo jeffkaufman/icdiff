@@ -24,7 +24,7 @@ import filecmp
 import unicodedata
 import fnmatch
 
-__version__ = "2.0.9"
+__version__ = "2.0.10"
 
 # Exit code constants
 EXIT_CODE_SUCCESS = 0
@@ -734,9 +734,41 @@ def create_option_parser():
 
 
 def set_cols_option(options):
-    import shutil
+    if os.name == "nt":
+        try:
+            import struct
+            from ctypes import windll, create_string_buffer
 
-    options.cols = shutil.get_terminal_size().columns
+            fh = windll.kernel32.GetStdHandle(-12)  # stderr is -12
+            csbi = create_string_buffer(22)
+            windll.kernel32.GetConsoleScreenBufferInfo(fh, csbi)
+            res = struct.unpack("hhhhHhhhhhh", csbi.raw)
+            options.cols = res[7] - res[5] + 1  # right - left + 1
+            return
+
+        except Exception:
+            pass
+
+    else:
+
+        def ioctl_GWINSZ(fd):
+            try:
+                import fcntl
+                import termios
+                import struct
+
+                cr = struct.unpack(
+                    "hhhh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "12345678")
+                )
+            except Exception:
+                return None
+            return cr
+
+        cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+        if cr and cr[1] > 0:
+            options.cols = cr[1]
+            return
+    options.cols = 80
 
 
 def validate_has_two_arguments(parser, args):
