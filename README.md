@@ -52,7 +52,8 @@ Show differences between files in a two column view.
                         changes
   -L LABELS, --label=LABELS
                         override file labels with arbitrary tags. Use twice,
-                        one for each file
+                        one for each file. You may include the formatting
+                        strings '{path}' and '{basename}'
   -N, --line-numbers    generate output with line numbers. Not compatible with
                         the 'exclude-lines' option.
   --no-bold             use non-bold colors; recommended for solarized
@@ -66,6 +67,7 @@ Show differences between files in a two column view.
   --show-all-spaces     color all non-matching whitespace including that which
                         is not needed for drawing the eye to changes.  Slow,
                         ugly, displays all changes
+  --show-no-spaces      don't color whitespace-only changes
   --tabsize=TABSIZE     tab stop spacing
   -t, --truncate        truncate long lines instead of wrapping them
   -u, --patch           generate patch. This is always true, and only exists
@@ -75,14 +77,23 @@ Show differences between files in a two column view.
                         with --whole-file
   -W, --whole-file      show the whole file instead of just changed lines and
                         context
+  -P, --permissions     compare the file permissions as well as the content of
+                        the file
   --strip-trailing-cr   strip any trailing carriage return at the end of an
                         input line
   --color-map=COLOR_MAP
                         choose which colors are used for which items. Default
                         is --color-map='add:green_bold,change:yellow_bold,desc
-                        ription:blue,meta:magenta,separator:blue,subtract:red_
-                        bold'.  You don't have to override all of them:
-                        '--color-map=separator:white,description:cyan
+                        ription:blue,line-numbers:white,meta:magenta,permissio
+                        ns:yellow,separator:blue,subtract:red_bold'.  You
+                        don't have to override all of them: '--color-
+                        map=separator:white,description:cyan
+  --is-git-diff         Show the real file name when displaying git-diff
+                        result
+  -x PATH, --exclude=PATH
+                        exclude files that match PATH
+  -R RESTRICT, --restrict=RESTRICT
+                        Only color text that matches this regex
 ```
 
 ## Using with Git
