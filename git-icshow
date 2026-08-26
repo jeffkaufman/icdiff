@@ -1,0 +1,5 @@
+#!/bin/sh
+
+GIT_EXTERNAL_DIFF="icdiff-git-extdiff" \
+GIT_EXTERNAL_DIFF_TRUST_EXIT_CODE="true" \
+  git show --ext-diff "$@"

@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+ICDIFF_OPTIONS=$(git config --get icshow.options || git config --get icdiff.options || true)
+
+lhs_label="a/$1"
+if [ "$2" = "/dev/null" ]; then lhs_label="$2"; fi
+rhs_label="b/$1"
+if [ "$5" = "/dev/null" ]; then lhs_label="$5"; fi
+
+sh -c "exec icdiff --label='${lhs_label}' --label='${rhs_label}' $ICDIFF_OPTIONS '$2' '$5'" || true
