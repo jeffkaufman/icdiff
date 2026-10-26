@@ -43,6 +43,10 @@ function fail() {
   exit 1
 }
 
+if ! "$PYTHON" -m unittest discover -s tests -p 'test_*.py'; then
+  fail
+fi
+
 function check_gold() {
   local error_code
   local expect=$1
