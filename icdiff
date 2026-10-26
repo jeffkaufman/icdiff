@@ -108,7 +108,8 @@ class ConsoleDiff(object):
         Arguments:
         tabsize -- tab stop spacing, defaults to 8.
         wrapcolumn -- column number where lines are broken and wrapped,
-            defaults to None where lines are not wrapped.
+            defaults to None to derive the width from cols. Set to 0 to
+            disable wrapping.
         linejunk, charjunk -- keyword arguments passed into ndiff() (used by
             ConsoleDiff() to generate the side by side differences).  See
             ndiff() documentation for argument default values and descriptions.
@@ -128,6 +129,7 @@ class ConsoleDiff(object):
                 wrapcolumn = self.cols // 2 - 2
             else:
                 wrapcolumn = self.cols // 2 - 10
+            wrapcolumn = max(1, wrapcolumn)
 
         self._wrapcolumn = wrapcolumn
         self._linejunk = linejunk
