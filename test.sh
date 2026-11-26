@@ -178,6 +178,14 @@ echo -e "\04" >> tests/permissions-b
 check_gold 1 gold-permissions-diff-binary.txt tests/permissions-{a,b} -P --cols=80
 rm -f tests/permissions-{a,b}
 
+# Git passes the tracked path as BASE, including any literal braces.
+git_label='invoice-{id}.txt'
+header=$(BASE="$git_label" $INVOCATION --is-git-diff --cols=80 tests/input-{1,2}.txt | head -n 1)
+if [[ "$header" != *"$git_label"*"$git_label"* ]]; then
+  echo "Expected the Git path on both sides, got: $header"
+  fail
+fi
+
 if git show 4e86205629 &> /dev/null; then
   # We're in the repo, so test git.
   check_git_diff gitdiff-only-newlines.txt 4e86205629~1 4e86205629

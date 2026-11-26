@@ -907,7 +907,7 @@ def diff_files(options, a, b):
     if options.is_git_diff is True:
         # Use $BASE as label when displaying git-diff result
         base = os.getenv("BASE")
-        headers = [format_label(a, base), format_label(b, base)]
+        headers = base, base
     else:
         if options.labels:
             if len(options.labels) == 2:
